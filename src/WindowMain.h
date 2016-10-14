@@ -17,14 +17,18 @@
 #include "WindowExivData.h"
 #include "WindowSecureCheck.h"
 #include "WindowSecureImage.h"
+#include "WindowAllExivData.h"
 
 #include "ExivOperations.h"
+#include "DrawingOperations.h"
 
 #include <QFileDialog>
 #include <QStringList>
 #include <QMessageBox>
 
-class WindowMain : QMainWindow
+class ExivOperations;
+
+class WindowMain : public QMainWindow
 {
 	Q_OBJECT
 
@@ -33,27 +37,41 @@ private:
 	WindowExivData* exivData;
 	WindowSecureImage* secureImage;
 	WindowSecureCheck* secureCheck;
+	WindowAllExivData* allExivData;
 
 	QStackedWidget *stackedWidget;
 	QVBoxLayout *layout;
 	QComboBox *pageComboBox;
+	//QMessageBox message;
+	QLabel image;
+
 	QMessageBox message;
 
 	// TODO Potem zrobic jakas klase ktora przechowuje to by byl podzial a nie nie wiem co ... |
 	// 																						   V
+
 	ExivOperations* exivOperations;
-
-
-	bool checkImageFile(char* fileName);
+	DrawingOperations* drawingOperations;
 
 public:
 	WindowMain();
 	virtual ~WindowMain();
+
+	bool checkImageFile(std::string path);
+	std::vector<int> getCorners() const;
+	int* getHistGTones() const;
+
+	// TODO pomyslec nad tym jak to tutaj bedzie !!!
+	void checkPixels(std::vector<int> rgbs);
 
 public slots:
 	void showMenu();
 	void showExivData(QString fileName);
 	void showSecureImage(QString fileName);
 	void showSecureCheck(QString fileName);
+	void showAllExivData();
+	void showExivDataAgain();
+
+	void saveImage(QString path); // potem zrobic by przekazywany byl obraz
 };
 #endif /* WINDOWMAIN_H_ */

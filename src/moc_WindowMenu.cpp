@@ -22,7 +22,7 @@ static const uint qt_meta_data_WindowMenu[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,6 +34,8 @@ static const uint qt_meta_data_WindowMenu[] = {
       25,   11,   11,   11, 0x0a,
       45,   11,   11,   11, 0x0a,
       68,   11,   11,   11, 0x0a,
+      91,   11,   11,   11, 0x0a,
+     118,  113,   11,   11, 0x08,
 
        0        // eod
 };
@@ -41,6 +43,8 @@ static const uint qt_meta_data_WindowMenu[] = {
 static const char qt_meta_stringdata_WindowMenu[] = {
     "WindowMenu\0\0chooseFile()\0setMapperExivInfo()\0"
     "setMapperSecureImage()\0setMapperSecureCheck()\0"
+    "setMapperTextEdited()\0path\0"
+    "validateImage(QString)\0"
 };
 
 void WindowMenu::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -53,10 +57,11 @@ void WindowMenu::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->setMapperExivInfo(); break;
         case 2: _t->setMapperSecureImage(); break;
         case 3: _t->setMapperSecureCheck(); break;
+        case 4: _t->setMapperTextEdited(); break;
+        case 5: _t->validateImage((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData WindowMenu::staticMetaObjectExtraData = {
@@ -91,9 +96,9 @@ int WindowMenu::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 6;
     }
     return _id;
 }

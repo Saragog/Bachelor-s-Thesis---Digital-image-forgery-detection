@@ -15,14 +15,25 @@
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QSignalMapper>
+#include <QImageReader>
+#include <QPixmap>
+#include <QImage>
+#include <QMessageBox>
+
+#include "WindowMain.h"
 
 class WindowMenu : public QWidget
 {
 	Q_OBJECT
 
+private:
+
+	//void validateImage();
+
+	void setDefaultImage();
 public:
 
-	QWidget* mainWindow;
+	WindowMain* mainWindow;
 	QLabel* label;
 	QLineEdit* editableLine;
 	QPushButton* buttonExivInfo;
@@ -33,8 +44,13 @@ public:
 	QSignalMapper* mapperExivInfo;
 	QSignalMapper* mapperSecureImage;
 	QSignalMapper* mapperSecureCheck;
+	QSignalMapper* mapperTextEdited;
 
-	WindowMenu(QWidget* main);
+	// TODO
+	QImage defaultImage;
+	QLabel* imageLabel;
+
+	WindowMenu(WindowMain* main);
 	virtual ~WindowMenu();
 
 public slots:
@@ -42,6 +58,12 @@ public slots:
 	void setMapperExivInfo();
 	void setMapperSecureImage();
 	void setMapperSecureCheck();
+
+	void setMapperTextEdited();
+
+private slots:
+	void validateImage(QString path);
+
 };
 
 #endif /* WINDOWMENU_H_ */

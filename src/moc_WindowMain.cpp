@@ -22,7 +22,7 @@ static const uint qt_meta_data_WindowMain[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,6 +34,9 @@ static const uint qt_meta_data_WindowMain[] = {
       32,   23,   11,   11, 0x0a,
       54,   23,   11,   11, 0x0a,
       79,   23,   11,   11, 0x0a,
+     104,   11,   11,   11, 0x0a,
+     122,   11,   11,   11, 0x0a,
+     147,  142,   11,   11, 0x0a,
 
        0        // eod
 };
@@ -41,7 +44,8 @@ static const uint qt_meta_data_WindowMain[] = {
 static const char qt_meta_stringdata_WindowMain[] = {
     "WindowMain\0\0showMenu()\0fileName\0"
     "showExivData(QString)\0showSecureImage(QString)\0"
-    "showSecureCheck(QString)\0"
+    "showSecureCheck(QString)\0showAllExivData()\0"
+    "showExivDataAgain()\0path\0saveImage(QString)\0"
 };
 
 void WindowMain::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -54,6 +58,9 @@ void WindowMain::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->showExivData((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 2: _t->showSecureImage((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: _t->showSecureCheck((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: _t->showAllExivData(); break;
+        case 5: _t->showExivDataAgain(); break;
+        case 6: _t->saveImage((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -91,9 +98,9 @@ int WindowMain::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 7;
     }
     return _id;
 }

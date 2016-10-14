@@ -10,58 +10,108 @@
 
 WindowExivData::WindowExivData (QWidget* main)
 {
-	// TODO Auto-generated constructor stub
-
-	std::cout << "Robie Konstruktora WindowExivData !!!";
-
 	mainWindow = main;
 
 	palette.setColor(QPalette::Background, Qt::cyan);
 	this->setAutoFillBackground(true);
 	this->setPalette(palette);
 
-    //this->setGeometry(100, 100, 500, 400);
+	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
+
     this->setWindowTitle("JPGAnalizer");
 
-    label = new QLabel("Informacje EXIF i diagram ... jakistam ... nie wiem jaki :D ", this);
-    label->setGeometry(20, 20, 200, 100);
+    label = new QLabel("Informacje EXIF i histogramy obrazu", this);
+    label->setGeometry(20, 20, 400, 100);
 
-    button = new QPushButton("Powrot", this);
-    button->setGeometry(100,600, 200, 100);
+    buttonReturn = new QPushButton("Powrot", this);
+    buttonReturn->setGeometry(50,800, 200, 60);
 
-    exivInfoScroll = new QScrollArea(this);
+    buttonAll = new QPushButton("Pokaz wszystkie informacje exif", this);
+    buttonAll->setGeometry(250, 800, 350, 60);
 
+    imageLabel = new QLabel(this);
+    imageLabel->setGeometry(10, 10, 600, 450);
 
+    histogramGreyLabel = new QLabel(this);
+    histogramGreyLabel->setGeometry(620, 10, 600, 450);
 
-    infoLayout = new QGridLayout;
+    histogramRGBLabel = new QLabel(this);
+    histogramRGBLabel->setGeometry(620, 470, 900, 450);
 
-    infoLabel = new QLabel("Ten tekst chce wyswietlic ...");
-    infoLabel->setGeometry(100,200,100,50);
+    connect(buttonReturn, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
 
-    infoLabel2 = new QLabel("Tekst do wyswietlenia nr 2 ...");
-    infoLabel2->setGeometry(100,300,100, 50);
-
-    infoLayout->addWidget(infoLabel);
-    infoLayout->addWidget(infoLabel2);
-
-    infoWidget = new QWidget;
-    infoWidget->setLayout(infoLayout);
-    exivInfoScroll->setWidget(infoWidget);
-
-    exivInfoScroll->viewport()->setBackgroundRole(QPalette::Dark);
-    exivInfoScroll->viewport()->setAutoFillBackground(true);
-
-    exivInfoScroll->setWidgetResizable(true);
-    exivInfoScroll->setGeometry(100, 200, 100, 400);
-
-    connect(button, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
+    connect (buttonAll, SIGNAL(clicked()), mainWindow, SLOT(showAllExivData()));
 }
 
-WindowExivData::~WindowExivData() {
-	// TODO Auto-generated destructor stub
+WindowExivData::~WindowExivData()
+{
+	clearInfo();
+	delete label;
+	delete buttonReturn;
+	delete buttonAll;
+	delete imageLabel;
+	delete histogramGreyLabel;
+	delete histogramRGBLabel;
+}
+
+void WindowExivData::clearInfo()
+{
+	QLayoutItem* temp;
+	while ((temp = infoLayout.takeAt(0)) != 0)
+	{
+		delete temp;
+	}
+	return;
 }
 
 void WindowExivData::prepareWindow(std::vector<std::string> data)
 {
+	clearInfo();
 
+    exivInfoScroll = new QScrollArea(this);
+
+    infoWidget = new QWidget;
+    infoWidget->setLayout(&infoLayout);
+    exivInfoScroll->setWidget(infoWidget);
+
+    exivInfoScroll->viewport()->setAutoFillBackground(true);
+    exivInfoScroll->viewport()->setPalette(scrollPalette);
+
+    exivInfoScroll->setWidgetResizable(true);
+    exivInfoScroll->setGeometry(50, 450, 550, 350);
+
+	for (unsigned int step = 0; step < data.size(); step++)
+	{
+		infoLabel = new QLabel(QString::fromStdString(data.at(step)));
+		infoLabel->setGeometry(100, 200 + 100*step, 100, 50);
+
+		infoLayout.addWidget(infoLabel);
+	}
+}
+
+void WindowExivData::setImage(QString path)
+{
+	QPixmap pixmap(path);
+	pixmap = pixmap.scaled(600, 450);
+	imageLabel->setPixmap(pixmap);
+
+	return;
+}
+
+void WindowExivData::setHistogramGrey(QImage image)
+{
+	QPixmap pixmap;
+	pixmap = pixmap.fromImage(image);
+	//pixmap = pixmap.scaled(559, 450);
+	histogramGreyLabel->setPixmap(pixmap);
+	return;
+}
+
+void WindowExivData::setHistogramRGB(QImage image)
+{
+	QPixmap pixmap;
+	pixmap = pixmap.fromImage(image);
+	//pixmap = pixmap.scaled( , 450);
+	histogramRGBLabel->setPixmap(pixmap);
+	return;
 }

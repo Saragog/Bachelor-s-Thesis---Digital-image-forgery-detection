@@ -4,37 +4,46 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/DrawingOperations.cpp \
 ../src/ExivOperations.cpp \
 ../src/Inzynierka.cpp \
+../src/WindowAllExivData.cpp \
 ../src/WindowExivData.cpp \
 ../src/WindowMain.cpp \
 ../src/WindowMenu.cpp \
 ../src/WindowSecureCheck.cpp \
 ../src/WindowSecureImage.cpp \
 ../src/moc_WindowMain.cpp \
-../src/moc_WindowMenu.cpp 
+../src/moc_WindowMenu.cpp \
+../src/moc_WindowSecureImage.cpp 
 
 OBJS += \
+./src/DrawingOperations.o \
 ./src/ExivOperations.o \
 ./src/Inzynierka.o \
+./src/WindowAllExivData.o \
 ./src/WindowExivData.o \
 ./src/WindowMain.o \
 ./src/WindowMenu.o \
 ./src/WindowSecureCheck.o \
 ./src/WindowSecureImage.o \
 ./src/moc_WindowMain.o \
-./src/moc_WindowMenu.o 
+./src/moc_WindowMenu.o \
+./src/moc_WindowSecureImage.o 
 
 CPP_DEPS += \
+./src/DrawingOperations.d \
 ./src/ExivOperations.d \
 ./src/Inzynierka.d \
+./src/WindowAllExivData.d \
 ./src/WindowExivData.d \
 ./src/WindowMain.d \
 ./src/WindowMenu.d \
 ./src/WindowSecureCheck.d \
 ./src/WindowSecureImage.d \
 ./src/moc_WindowMain.d \
-./src/moc_WindowMenu.d 
+./src/moc_WindowMenu.d \
+./src/moc_WindowSecureImage.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

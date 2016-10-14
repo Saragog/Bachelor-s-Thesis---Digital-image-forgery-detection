@@ -17,25 +17,38 @@
 
 class WindowExivData : public QWidget
 {
+private:
+	void clearInfo();
+
 public:
 
 	QWidget* mainWindow;
 	QLabel* label;
-	QPushButton* button;
+
+	QPushButton* buttonReturn;
+	QPushButton* buttonAll;
+
 	QPalette palette;
+	QPalette scrollPalette;
 	QString fileName;
 	QScrollArea* exivInfoScroll;
 
-	QGridLayout* infoLayout;
+	QLabel* infoLabel;
+	QGridLayout infoLayout;
 	QWidget* infoWidget;
 
-	QLabel* infoLabel;
-	QLabel* infoLabel2;
+	QLabel* imageLabel;
+	QLabel* histogramGreyLabel;
+	QLabel* histogramRGBLabel;
 
 	WindowExivData(QWidget* main);
 	virtual ~WindowExivData();
 
 	void prepareWindow(std::vector<std::string> data);
+	void setImage(QString path);
+	void setHistogramGrey(QImage histogram);
+	void setHistogramRGB(QImage histogram);
+
 };
 
 #endif /* WindowExivData_H_ */

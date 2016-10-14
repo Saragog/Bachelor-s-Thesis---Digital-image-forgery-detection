@@ -6,12 +6,10 @@
  */
 #include <iostream>
 #include "WindowMenu.h"
+#include <fstream>
 
-WindowMenu::WindowMenu(QWidget* main) {
-	// TODO Auto-generated constructor stub
-
-	std::cout << "Robie Konstruktora WindowMenu !!!";
-
+WindowMenu::WindowMenu(WindowMain* main)
+{
 	mainWindow = main;
 
 	palette.setColor(QPalette::Background, Qt::cyan);	// TODO potem mozna zamienic to na rysunek background !!!
@@ -20,18 +18,16 @@ WindowMenu::WindowMenu(QWidget* main) {
 	this->setAutoFillBackground(true);
 	this->setPalette(palette);
 
-	//mapperExivData = new QSignalMapper(this);
-	//mapperSecureImage = new QSignalMapper(this);
-	//mapperSecureCheck = new QSignalMapper(this);
 	mapperExivInfo = new QSignalMapper(this);
 	mapperSecureImage = new QSignalMapper(this);
 	mapperSecureCheck = new QSignalMapper(this);
+	mapperTextEdited = new QSignalMapper (this);
 
     this->setGeometry(100, 100, 500, 400);
     this->setWindowTitle("JPGAnalizer");
 
     label = new QLabel("Informacje Exiv i diagram", this);
-    label->setGeometry(450, 100, 200, 100);
+    label->setGeometry(650, 100, 200, 100);
 
     editableLine = new QLineEdit("Edit Me", this);
     editableLine->setGeometry(50, 600, 400, 20);
@@ -40,15 +36,29 @@ WindowMenu::WindowMenu(QWidget* main) {
     buttonChooseImage->setGeometry(450, 580, 100, 60);
 
     buttonExivInfo = new QPushButton("Pokaz informacje Exiv", this);
-    buttonExivInfo->setGeometry(600, 200, 300, 100);
+    buttonExivInfo->setGeometry(900, 200, 250, 80);
 
     buttonSecureImage = new QPushButton("Zabezpiecz obraz", this);
-    buttonSecureImage->setGeometry(600, 350, 300, 100);
+    buttonSecureImage->setGeometry(900, 350, 250, 80);
 
     buttonSecureCheck = new QPushButton("Sprawdz zabezpieczenia obrazu", this);
-    buttonSecureCheck->setGeometry(600, 500, 300, 100);
+    buttonSecureCheck->setGeometry(900, 500, 250, 80);
+
+    QImageReader reader(QString::fromAscii("./ProgramImages/No-image-found.jpg"));
+    defaultImage = reader.read();
+
+    imageLabel = new QLabel(this);
+    imageLabel->setGeometry(10, 10, 600, 450);
+
+    setDefaultImage();
+
+    // connecting editing text to validating image ...
+
+    connect(editableLine, SIGNAL(textEdited(QString)), this, SLOT(setMapperTextEdited()));
+    connect(editableLine, SIGNAL(textEdited(QString)), mapperTextEdited, SLOT(map()));
 
     // connecting chooseImage button with appropriate slot
+
     connect(buttonChooseImage, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
     connect(buttonExivInfo, SIGNAL(clicked()), this, SLOT(setMapperExivInfo()));
@@ -62,14 +72,16 @@ WindowMenu::WindowMenu(QWidget* main) {
     mapperExivInfo->setMapping(buttonExivInfo, editableLine->text());
     mapperSecureImage->setMapping(buttonSecureImage, editableLine->text());
     mapperSecureCheck->setMapping(buttonSecureCheck, editableLine->text());
+    mapperTextEdited->setMapping(editableLine, editableLine->text());
 
     connect(mapperExivInfo, SIGNAL(mapped(QString)), mainWindow, SLOT(showExivData(QString)));
     connect(mapperSecureImage, SIGNAL(mapped(QString)), mainWindow, SLOT(showSecureImage(QString)));
     connect(mapperSecureCheck, SIGNAL(mapped(QString)), mainWindow, SLOT(showSecureCheck(QString)));
+    connect(mapperTextEdited, SIGNAL(mapped(QString)), this, SLOT(validateImage(QString)));
 }
 
-WindowMenu::~WindowMenu() {
-	// TODO Auto-generated destructor stub
+WindowMenu::~WindowMenu()
+{
 	delete label;
 	delete buttonExivInfo;
 	delete buttonSecureImage;
@@ -100,6 +112,12 @@ void WindowMenu::setMapperSecureCheck()
 	return;
 }
 
+void WindowMenu::setMapperTextEdited()
+{
+	mapperTextEdited->setMapping(editableLine, editableLine->text());
+	return;
+}
+
 void WindowMenu::chooseFile()
 {
 	QFileDialog dialog(this);
@@ -117,6 +135,32 @@ void WindowMenu::chooseFile()
 		std::cout << fileNames.at(0).toStdString() << std::endl;
 
 		editableLine->setText(fileNames.at(0));
+		validateImage(fileNames.at(0));
 	}
 	return;
+}
+
+void WindowMenu::validateImage(QString path)
+{
+	if (mainWindow->checkImageFile(path.toStdString()))
+	{
+		QPixmap pixmap(path);
+		pixmap = pixmap.scaled(600, 450);
+		imageLabel->setPixmap(pixmap);
+	}
+	else
+	{
+		setDefaultImage();
+	}
+
+	return;
+}
+
+void WindowMenu::setDefaultImage()
+{
+    QPixmap pixmap;
+    pixmap.convertFromImage(defaultImage);
+    pixmap = pixmap.scaled(600, 450);
+    imageLabel->setPixmap(pixmap);
+    return;
 }

@@ -35,9 +35,20 @@ src/WindowSecureImage.d: ../src/WindowSecureImage.cpp \
  /usr/include/qt4/QtGui/qcursor.h /usr/include/qt4/QtGui/qkeysequence.h \
  /usr/include/qt4/QtGui/QLabel /usr/include/qt4/QtGui/qlabel.h \
  /usr/include/qt4/QtGui/qframe.h /usr/include/qt4/QtGui/qwidget.h \
- /usr/include/qt4/QtGui/QPushButton /usr/include/qt4/QtGui/qpushbutton.h \
+ /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
+ /usr/include/qt4/QtGui/qtextcursor.h \
+ /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtCore/qvariant.h \
+ /usr/include/qt4/QtCore/qmetatype.h /usr/include/qt4/QtCore/qmap.h \
+ /usr/include/qt4/QtCore/qhash.h /usr/include/qt4/QtGui/qpen.h \
+ /usr/include/qt4/QtGui/qtextoption.h /usr/include/qt4/QtGui/QPushButton \
+ /usr/include/qt4/QtGui/qpushbutton.h \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/qicon.h \
- /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h
+ /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h \
+ /usr/include/qt4/QtCore/QSignalMapper \
+ /usr/include/qt4/QtCore/qsignalmapper.h \
+ /usr/include/qt4/QtGui/QFileDialog /usr/include/qt4/QtGui/qfiledialog.h \
+ /usr/include/qt4/QtCore/qdir.h /usr/include/qt4/QtCore/qfileinfo.h \
+ /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtGui/qdialog.h
 
 ../src/WindowSecureImage.h:
 
@@ -155,6 +166,26 @@ src/WindowSecureImage.d: ../src/WindowSecureImage.cpp \
 
 /usr/include/qt4/QtGui/qwidget.h:
 
+/usr/include/qt4/QtGui/QLineEdit:
+
+/usr/include/qt4/QtGui/qlineedit.h:
+
+/usr/include/qt4/QtGui/qtextcursor.h:
+
+/usr/include/qt4/QtGui/qtextformat.h:
+
+/usr/include/qt4/QtCore/qvariant.h:
+
+/usr/include/qt4/QtCore/qmetatype.h:
+
+/usr/include/qt4/QtCore/qmap.h:
+
+/usr/include/qt4/QtCore/qhash.h:
+
+/usr/include/qt4/QtGui/qpen.h:
+
+/usr/include/qt4/QtGui/qtextoption.h:
+
 /usr/include/qt4/QtGui/QPushButton:
 
 /usr/include/qt4/QtGui/qpushbutton.h:
@@ -166,3 +197,19 @@ src/WindowSecureImage.d: ../src/WindowSecureImage.cpp \
 /usr/include/qt4/QtGui/QPalette:
 
 /usr/include/qt4/QtGui/qpalette.h:
+
+/usr/include/qt4/QtCore/QSignalMapper:
+
+/usr/include/qt4/QtCore/qsignalmapper.h:
+
+/usr/include/qt4/QtGui/QFileDialog:
+
+/usr/include/qt4/QtGui/qfiledialog.h:
+
+/usr/include/qt4/QtCore/qdir.h:
+
+/usr/include/qt4/QtCore/qfileinfo.h:
+
+/usr/include/qt4/QtCore/qfile.h:
+
+/usr/include/qt4/QtGui/qdialog.h:

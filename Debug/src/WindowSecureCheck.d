@@ -37,7 +37,8 @@ src/WindowSecureCheck.d: ../src/WindowSecureCheck.cpp \
  /usr/include/qt4/QtGui/qframe.h /usr/include/qt4/QtGui/qwidget.h \
  /usr/include/qt4/QtGui/QPushButton /usr/include/qt4/QtGui/qpushbutton.h \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/qicon.h \
- /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h
+ /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h \
+ /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h
 
 ../src/WindowSecureCheck.h:
 
@@ -166,3 +167,7 @@ src/WindowSecureCheck.d: ../src/WindowSecureCheck.cpp \
 /usr/include/qt4/QtGui/QPalette:
 
 /usr/include/qt4/QtGui/qpalette.h:
+
+/usr/include/qt4/QtGui/QImage:
+
+/usr/include/qt4/QtGui/qimage.h:

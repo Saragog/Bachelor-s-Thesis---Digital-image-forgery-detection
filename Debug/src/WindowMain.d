@@ -59,7 +59,14 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
  /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
- ../src/WindowSecureCheck.h ../src/WindowSecureImage.h \
+ ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QImage \
+ /usr/include/qt4/QtGui/qimage.h ../src/WindowSecureImage.h \
+ /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
+ /usr/include/qt4/QtGui/qtextcursor.h \
+ /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
+ /usr/include/qt4/QtGui/qtextoption.h \
+ /usr/include/qt4/QtCore/QSignalMapper \
+ /usr/include/qt4/QtCore/qsignalmapper.h ../src/WindowAllExivData.h \
  ../src/ExivOperations.h /usr/local/include/exiv2/exiv2.hpp \
  /usr/local/include/exiv2/basicio.hpp /usr/local/include/exiv2/types.hpp \
  /usr/local/include/exiv2/config.h /usr/local/include/exiv2/exv_conf.h \
@@ -88,19 +95,19 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
  /usr/local/include/exiv2/rw2image.hpp \
  /usr/local/include/exiv2/tgaimage.hpp \
  /usr/local/include/exiv2/tiffimage.hpp \
- /usr/local/include/exiv2/xmpsidecar.hpp \
+ /usr/local/include/exiv2/xmpsidecar.hpp ../src/DrawingOperations.h \
  /usr/include/qt4/QtGui/QFileDialog /usr/include/qt4/QtGui/qfiledialog.h \
  /usr/include/qt4/QtCore/qdir.h /usr/include/qt4/QtCore/qfileinfo.h \
  /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtGui/qdialog.h \
  /usr/include/qt4/QtCore/QStringList \
  /usr/include/qt4/QtCore/qstringlist.h /usr/include/qt4/QtGui/QMessageBox \
  /usr/include/qt4/QtGui/qmessagebox.h ../src/WindowMenu.h \
- /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
- /usr/include/qt4/QtGui/qtextcursor.h \
- /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
- /usr/include/qt4/QtGui/qtextoption.h \
- /usr/include/qt4/QtCore/QSignalMapper \
- /usr/include/qt4/QtCore/qsignalmapper.h
+ /usr/include/qt4/QtGui/QImageReader \
+ /usr/include/qt4/QtGui/qimagereader.h \
+ /usr/include/qt4/QtGui/qimageiohandler.h \
+ /usr/include/qt4/QtCore/qplugin.h /usr/include/qt4/QtCore/qpointer.h \
+ /usr/include/qt4/QtCore/qfactoryinterface.h \
+ /usr/include/qt4/QtGui/QPixmap /usr/include/qt4/QtGui/qpixmap.h
 
 ../src/WindowMain.h:
 
@@ -304,7 +311,29 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
 
 ../src/WindowSecureCheck.h:
 
+/usr/include/qt4/QtGui/QImage:
+
+/usr/include/qt4/QtGui/qimage.h:
+
 ../src/WindowSecureImage.h:
+
+/usr/include/qt4/QtGui/QLineEdit:
+
+/usr/include/qt4/QtGui/qlineedit.h:
+
+/usr/include/qt4/QtGui/qtextcursor.h:
+
+/usr/include/qt4/QtGui/qtextformat.h:
+
+/usr/include/qt4/QtGui/qpen.h:
+
+/usr/include/qt4/QtGui/qtextoption.h:
+
+/usr/include/qt4/QtCore/QSignalMapper:
+
+/usr/include/qt4/QtCore/qsignalmapper.h:
+
+../src/WindowAllExivData.h:
 
 ../src/ExivOperations.h:
 
@@ -384,6 +413,8 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
 
 /usr/local/include/exiv2/xmpsidecar.hpp:
 
+../src/DrawingOperations.h:
+
 /usr/include/qt4/QtGui/QFileDialog:
 
 /usr/include/qt4/QtGui/qfiledialog.h:
@@ -406,18 +437,18 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
 
 ../src/WindowMenu.h:
 
-/usr/include/qt4/QtGui/QLineEdit:
+/usr/include/qt4/QtGui/QImageReader:
 
-/usr/include/qt4/QtGui/qlineedit.h:
+/usr/include/qt4/QtGui/qimagereader.h:
 
-/usr/include/qt4/QtGui/qtextcursor.h:
+/usr/include/qt4/QtGui/qimageiohandler.h:
 
-/usr/include/qt4/QtGui/qtextformat.h:
+/usr/include/qt4/QtCore/qplugin.h:
 
-/usr/include/qt4/QtGui/qpen.h:
+/usr/include/qt4/QtCore/qpointer.h:
 
-/usr/include/qt4/QtGui/qtextoption.h:
+/usr/include/qt4/QtCore/qfactoryinterface.h:
 
-/usr/include/qt4/QtCore/QSignalMapper:
+/usr/include/qt4/QtGui/QPixmap:
 
-/usr/include/qt4/QtCore/qsignalmapper.h:
+/usr/include/qt4/QtGui/qpixmap.h:

@@ -92,11 +92,19 @@ src/Inzynierka.d: ../src/Inzynierka.cpp \
  /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
- ../src/WindowSecureCheck.h ../src/WindowSecureImage.h \
- ../src/ExivOperations.h /usr/include/qt4/QtGui/QFileDialog \
- /usr/include/qt4/QtGui/qfiledialog.h /usr/include/qt4/QtCore/qdir.h \
- /usr/include/qt4/QtCore/qfileinfo.h /usr/include/qt4/QtCore/qfile.h \
- /usr/include/qt4/QtGui/qdialog.h /usr/include/qt4/QtCore/QStringList \
+ ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QImage \
+ /usr/include/qt4/QtGui/qimage.h ../src/WindowSecureImage.h \
+ /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
+ /usr/include/qt4/QtGui/qtextcursor.h \
+ /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
+ /usr/include/qt4/QtGui/qtextoption.h \
+ /usr/include/qt4/QtCore/QSignalMapper \
+ /usr/include/qt4/QtCore/qsignalmapper.h ../src/WindowAllExivData.h \
+ ../src/ExivOperations.h ../src/DrawingOperations.h \
+ /usr/include/qt4/QtGui/QFileDialog /usr/include/qt4/QtGui/qfiledialog.h \
+ /usr/include/qt4/QtCore/qdir.h /usr/include/qt4/QtCore/qfileinfo.h \
+ /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtGui/qdialog.h \
+ /usr/include/qt4/QtCore/QStringList \
  /usr/include/qt4/QtCore/qstringlist.h /usr/include/qt4/QtGui/QMessageBox \
  /usr/include/qt4/QtGui/qmessagebox.h
 
@@ -388,9 +396,33 @@ src/Inzynierka.d: ../src/Inzynierka.cpp \
 
 ../src/WindowSecureCheck.h:
 
+/usr/include/qt4/QtGui/QImage:
+
+/usr/include/qt4/QtGui/qimage.h:
+
 ../src/WindowSecureImage.h:
 
+/usr/include/qt4/QtGui/QLineEdit:
+
+/usr/include/qt4/QtGui/qlineedit.h:
+
+/usr/include/qt4/QtGui/qtextcursor.h:
+
+/usr/include/qt4/QtGui/qtextformat.h:
+
+/usr/include/qt4/QtGui/qpen.h:
+
+/usr/include/qt4/QtGui/qtextoption.h:
+
+/usr/include/qt4/QtCore/QSignalMapper:
+
+/usr/include/qt4/QtCore/qsignalmapper.h:
+
+../src/WindowAllExivData.h:
+
 ../src/ExivOperations.h:
+
+../src/DrawingOperations.h:
 
 /usr/include/qt4/QtGui/QFileDialog:
 
