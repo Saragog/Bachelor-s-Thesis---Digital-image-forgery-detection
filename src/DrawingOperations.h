@@ -21,9 +21,14 @@ private:
 	int blueTones[256];
 	int accDif; 			// acceptable difference - maksymalne akceptowane odchylenie wartosci kolorow rgb piksela
 
-	bool** blockResults;	// weryfikacja blokow obrazu ktore bloki sa falszywe
-							// wykorzystywane do zamalowywania sasiednich blokow jesli
-	int colIndex, rowIndex; // centralne punkty maja te same rgb
+	bool** blockResults;	// weryfikacja blokow obrazu ktore piksele sa falszywe
+							// inna niz pixelsChanged ( mowi w ktorych pikselach wykryto falszerstwo a nie ktore maja byc zamalowane)
+
+	bool** pixelsChanged;   // tablica wskazuje ktore piksele zostaly przemalowane ( do pokazania miejsca zmian )
+							// procz samych pikseli wykrytych bedzie malowane wokol by lepiej bylo widac efekt pracy
+							// istnieje po to aby 2 razy tych samych pikseli nie kolorowac
+							// false wskazuje ze nie mozna zamalowac - bo juz jest zamalowany ten piksel
+
 	int columns, rows;
 
 	QImage image;
@@ -43,7 +48,7 @@ private:
 	bool checkPixel(unsigned int row, unsigned int col, int r, int g, int b) const;
 
 	void drawChange(int col, int row); 										// podswietlac bedzie na czerwono zmiane w obrazie
-	void checkAdjacentSquares(int col, int row, int colInd, int rowInd); 	// funkcja rekurencyjna sprawdzajaca czy sasiednie obszary nie sa takie same
+	void checkAdjacentSquares(int col, int row);						 	// funkcja rekurencyjna sprawdzajaca czy sasiednie obszary nie sa takie same
 																			// jesli sa to zamalowuje je za pomoca drawchange
 	bool checkChanges();
 	void checkHistogramGrey (std::vector<int> greyTones);

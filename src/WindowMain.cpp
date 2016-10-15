@@ -141,6 +141,23 @@ void WindowMain::showSecureCheck(QString fileName)
 			// TODO zamienic to na ze obraz nie jest zabezpieczony lub usunieto informacje exif
 			message.setText("W pliku nie znaleziono informacji exif !!!");
 			message.exec();
+
+			secureCheck->setFile(fileName);
+			drawingOperations->setImage(fileName.toStdString());
+			//exivOperations->checkExifSecurity();
+
+			//drawingOperations->checkImageSecurity(savedValues);
+
+			//exifRaport = exivOperations->getRaportExif();
+			drawingOperations->checkImageSecurity(savedValues);
+			checkedImage = drawingOperations->getCheckedImage();
+
+			//secureCheck->setHistogramC(histogramComparison);
+
+
+			secureCheck->setCheckedImage(checkedImage);
+
+			stackedWidget->setCurrentIndex(3);
 		}
 		else
 		{
