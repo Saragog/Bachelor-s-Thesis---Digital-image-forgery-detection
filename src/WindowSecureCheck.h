@@ -13,11 +13,13 @@
 #include <QPushButton>
 #include <QPalette>
 #include <QImage>
+#include <QTimer>
 
 class WindowSecureCheck : public QWidget
 {
-public:
+	Q_OBJECT
 
+private:
 	QWidget* mainWindow;
 	QLabel* label;
 
@@ -27,19 +29,32 @@ public:
 	QLabel* exifYDimensionLabel;
 	QLabel* exifDateTimeLabel;
 
+	QPixmap pixmapImage;
+	QPixmap pixmapCheckedImage;
 	QLabel* histogramCLabel;
-	QLabel* checkedImageLabel;
+	QLabel* imageLabel;
+
+	QTimer* timer;
 
 	QPushButton* backButton;
 	QPalette palette;
-	QString fileName;
+	std::string fileName;
+	bool currentImage; 	// mowi ktory obraz aktualnie jest pokazywany
+						// potrzebne do przestawiania obrazkow za pomoca timera
+						// true oznacza ze pokazywany jest zwykly obraz
+						// false oznacza ze pokazywany jest obraz wynikajacy ze sprawdzenia obrazu
+public:
 
 	WindowSecureCheck(QWidget* main);
 	virtual ~WindowSecureCheck();
-	void setFile(const QString name);
+	void setImage(QString path);
 	void setExifRaport(std::vector<std::pair<bool, std::string> > raport);
 	void setHistogramC(QImage histogram);
 	void setCheckedImage(QImage image);
+
+private slots:
+	void changeImage();
+	void stopTimer();
 };
 
 #endif /* WINDOWSECURECHECK_H_ */

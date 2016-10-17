@@ -30,7 +30,7 @@ public:
 
 	QPalette palette;
 	QPalette scrollPalette;
-	QString fileName;
+	std::string fileName;
 	QScrollArea* exivInfoScroll;
 
 	QLabel* infoLabel;

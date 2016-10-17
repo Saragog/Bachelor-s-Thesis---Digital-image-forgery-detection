@@ -28,13 +28,13 @@ public:
 	QPushButton* chooseWhereToSaveButton;
 	QPushButton* saveButton;
 	QPalette palette;
-	QString fileName;
+	std::string fileName;
 	QSignalMapper* mapper;
 
 	WindowSecureImage(QWidget* main);
 	virtual ~WindowSecureImage();
 
-	void setFile(QString name);
+	void setImage(QString name);
 
 private slots:
 	void chooseWhereToSave();

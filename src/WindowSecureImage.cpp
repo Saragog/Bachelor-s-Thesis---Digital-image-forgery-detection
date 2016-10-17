@@ -55,11 +55,9 @@ WindowSecureImage::~WindowSecureImage()
 	delete mapper;
 }
 
-void WindowSecureImage::setFile(QString name)
+void WindowSecureImage::setImage(QString name)
 {
-	fileName = name;
-
-	// wszystko tutaj trzeba przygotowac dalej
+	fileName = name.toStdString();
 
 	return;
 }

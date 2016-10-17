@@ -19,7 +19,7 @@ DrawingOperations::DrawingOperations()
     QImageReader reader(QString::fromAscii("./ProgramImages/blank.jpg"));
     histogramBase = reader.read();
     actualFileName = "";
-    accDif = 25;//35;//10;
+    accDif = 10;//35;//10;
 }
 
 DrawingOperations::~DrawingOperations()
@@ -165,8 +165,6 @@ void DrawingOperations::drawHistogramRGB(int greatestRGBNumber)
 
 void DrawingOperations::secureImage()
 {
-	// TODO zabezpieczyc jakos ten obraz a nie ... :D
-	// TERAZ TO TRZEBA ZROBIC !!!
 
 	QRgb pixel;
 	QColor color;
@@ -233,21 +231,6 @@ void DrawingOperations::secureImage()
 		}
 	}
 
-	/*
-
-	for (int row = 0; row < image.height(); row++)
-	{
-		for (int col = 0; col < image.width(); col++)
-		{
-			if ((row + col) % 3 == 0)
-			{
-
-			}
-		}
-	}
-
-	*/
-
 	return;
 }
 
@@ -269,6 +252,7 @@ bool DrawingOperations::saveImage(QString path)
 		file.open(QIODevice::WriteOnly);
 
 		secureImage();
+		void prepareHistograms();
 		securedImage.save(&file, "JPG");
 
 		file.close();
@@ -331,16 +315,17 @@ bool DrawingOperations::checkPixel(unsigned int col, unsigned int row, int r, in
 		b >= color.blue() - accDif && b <= color.blue() + accDif
 	)
 	{
-	//	std::cout << "\nPiksel " << col << " " << row << " pasuje :D \n";
+		std::cout << "\nPiksel " << col << " " << row << " pasuje :D \n";
 		return true;
 	}
-	//std::cout << "\nPiksel " << col << " " << row << " nie pasuje ... \n";
+	std::cout << "\nPiksel " << col << " " << row << " nie pasuje ... \n";
 	return false;
 }
 
 void DrawingOperations::drawChange(int col, int row)
 {
-	checkedImage.setPixel(col, row, qRgb(255, 0, 0));
+	QRgb pixel;
+	QColor color;
 
 	for (int c = col - 2; c < col + 3; c++)
 	{
@@ -348,6 +333,8 @@ void DrawingOperations::drawChange(int col, int row)
 		{
 			if (c >= 0 && c < columns && r >= 0 && r < rows && pixelsChanged[c][r])
 			{
+				pixel = image.pixel(c, r);
+				color.setRgb(pixel);
 				// TODO wyliczanie koloru na jaki trzeba zamalowac ten piksel tutaj !!!
 
 				checkedImage.setPixel(c, r, qRgb(255, 0, 0));
@@ -359,19 +346,384 @@ void DrawingOperations::drawChange(int col, int row)
 	return;
 }
 
-void DrawingOperations::checkAdjacentSquares(int col, int row)
+void DrawingOperations::lookForSimilarPixels(int col, int row)
+{
+	drawChange(col, row);
+
+	if (row - 1 >= 0 && pixelResults[col][row-1])
+	{
+		// sprawdzanie otoczenia piksela gornego
+		checkAdjacentPixels(col, row-1);
+	}
+	if (col - 1 >= 0 && pixelResults[col-1][row])
+	{
+		// sprawdzanie otoczenia piksela lewego
+		checkAdjacentPixels(col-1, row);
+	}
+	if (col + 1 < columns && pixelResults[col+1][row])
+	{
+		// sprawdzanie otoczenia piksela prawego
+		checkAdjacentPixels(col+1, row);
+	}
+	if (row + 1 < rows && pixelResults[col][row+1])
+	{
+		// sprawdzanie otoczenia piksela dolnego
+		checkAdjacentPixels(col, row+1);
+	}
+
+	return;
+}
+
+// _________________________________________
+
+void DrawingOperations::checkAdjacentPixels(int col, int row)
 {
 	QRgb pixel;
-	QColor colorActual, checked;
-	drawChange(col, row);
+	QColor colorActual;
+	int red, green, blue;
+
 	pixel = image.pixel(col, row);
 	colorActual.setRgb(pixel);
 
-	//std::cout << "\nrowInd - 1 = " << rowInd - 1 << " blockRes = " << blockResults[colInd][rowInd-1] <<
-	//		" ";
+	red = colorActual.red();
+	green = colorActual.green();
+	blue = colorActual.blue();
+
+	pixelResults[col][row] = false;
+
+	checkAdjacentUp(col, row, red, green, blue);
+	checkAdjacentLeft(col, row, red, green, blue);
+	checkAdjacentRight(col, row, red, green, blue);
+	checkAdjacentDown(col, row, red, green, blue);
+
+	return;
+}
+
+void DrawingOperations::checkAdjacentUp(int col, int row, int red, int green, int blue)
+{
+	QRgb pixel;
+	QColor checked;
+
+	// leci w gore
+
+	if (row - 1 >= 0)
+	{
+		pixel = image.pixel(col, row-1);
+		checked.setRgb(pixel);
+
+		for (int actualRow = row-1, actualCol = col; actualRow >= 0 &&
+				pixelResults[actualCol][actualRow-1] &&
+				red == checked.red() &&
+				green == checked.green() &&
+				blue == checked.blue(); actualRow--
+				)
+		{
+			// sprawdza na lewo i prawo
+			pixelResults[actualCol][actualRow-1] = false;
+			drawChange(actualCol, actualRow-1);
+
+			pixel = image.pixel(actualCol-1, actualRow);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow, innerCol = actualCol-1; innerCol-1 >= 0 &&
+					pixelResults[col-1][row] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerCol--
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerCol-1 >= 0)
+				{
+					pixel = image.pixel(innerCol-1, actualRow);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol+1, actualRow);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow, innerCol = actualCol+1; innerCol < columns &&
+					pixelResults[col+1][row] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerCol++
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerCol+1 < columns)
+				{
+					pixel = image.pixel(innerCol+1, actualRow);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol, actualRow-1);
+			checked.setRgb(pixel);
+		}
+	}
+
+	return;
+}
+
+void DrawingOperations::checkAdjacentLeft(int col, int row, int red, int green, int blue)
+{
+	QRgb pixel;
+	QColor checked;
+
+	// leci w lewo
+
+	if (col-1 >= 0)
+	{
+		pixel = image.pixel(col-1, row);
+		checked.setRgb(pixel);
+
+		for (int actualRow = row, actualCol = col-1; actualCol >= 0 &&
+				pixelResults[actualCol][actualRow] &&
+				red == checked.red() &&
+				green == checked.green() &&
+				blue == checked.blue(); actualCol--
+				)
+		{
+			// sprawdza na gore i dol
+			pixelResults[actualCol-1][actualRow] = false;
+			drawChange(actualCol-1, actualRow);
+
+			pixel = image.pixel(actualCol, actualRow-1);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow-1, innerCol = actualCol; innerRow-1 >= 0 &&
+					pixelResults[col][row-1] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerRow--
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerRow-1 >= 0)
+				{
+					pixel = image.pixel(innerCol, innerRow-1);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol, actualRow+1);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow+1, innerCol = actualCol; innerRow < rows &&
+					pixelResults[col][row+1] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerRow++
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerRow+1 < rows)
+				{
+					pixel = image.pixel(innerCol, innerRow+1);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol-1, actualRow);
+			checked.setRgb(pixel);
+		}
+	}
+
+	return;
+}
+
+void DrawingOperations::checkAdjacentRight(int col, int row, int red, int green, int blue)
+{
+	QRgb pixel;
+	QColor checked;
+
+	// leci w prawo
+
+	if (col+1 < columns)
+	{
+		pixel = image.pixel(col+1, row);
+		checked.setRgb(pixel);
+
+		for (int actualRow = row, actualCol = col+1; actualCol >= 0 &&
+				pixelResults[actualCol][actualRow] &&
+				red == checked.red() &&
+				green == checked.green() &&
+				blue == checked.blue(); actualCol++
+				)
+		{
+			// sprawdza na gore i dol
+			pixelResults[actualCol+1][actualRow] = false;
+			drawChange(actualCol+1, actualRow);
+
+			pixel = image.pixel(actualCol, actualRow-1);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow-1, innerCol = actualCol; innerRow-1 >= 0 &&
+					pixelResults[col][row-1] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerRow--
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerRow-1 >= 0)
+				{
+					pixel = image.pixel(innerCol, innerRow-1);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol, actualRow+1);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow+1, innerCol = actualCol; innerRow+1 < rows &&
+					pixelResults[col][row+1] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerRow++
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerRow+1 < rows)
+				{
+					pixel = image.pixel(innerCol, innerRow+1);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol+1, actualRow);
+			checked.setRgb(pixel);
+		}
+	}
+
+	return;
+}
+
+void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, int blue)
+{
+	QRgb pixel;
+	QColor checked;
+
+	// leci w dol
+
+	if (row+1 < rows)
+	{
+		pixel = image.pixel(col, row+1);
+		checked.setRgb(pixel);
+
+		for (int actualRow = row+1, actualCol = col; actualRow < rows &&
+				pixelResults[actualCol][actualRow+1] &&
+				red == checked.red() &&
+				green == checked.green() &&
+				blue == checked.blue(); actualRow++
+				)
+		{
+			// sprawdza na lewo i prawo
+			pixelResults[actualCol][actualRow+1] = false;
+			drawChange(actualCol, actualRow+1);
+
+			pixel = image.pixel(actualCol-1, actualRow);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow, innerCol = actualCol-1; innerCol-1 >= 0 &&
+					pixelResults[col-1][row] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerCol--
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerCol-1 >= 0)
+				{
+					pixel = image.pixel(innerCol-1, actualRow);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol+1, actualRow);
+			checked.setRgb(pixel);
+
+			for (int innerRow = actualRow, innerCol = actualCol+1; innerCol+1 < columns &&
+					pixelResults[col+1][row] &&
+					red == checked.red() &&
+					green == checked.green() &&
+					blue == checked.blue(); innerCol++
+					)
+			{
+				pixelResults[innerCol][innerRow] = false;
+				drawChange(innerCol, innerRow);
+
+				if (innerCol+1 < columns)
+				{
+					pixel = image.pixel(innerCol+1, actualRow);
+					checked.setRgb(pixel);
+				}
+			}
+
+			pixel = image.pixel(actualCol, actualRow+1);
+			checked.setRgb(pixel);
+		}
+	}
+
+	return;
+}
+
+// _____________________________________________
+
+/*
+void DrawingOperations::checkAdjacentPixels(int col, int row)
+{
+	QRgb pixel;
+	QColor colorActual, checked;
+
+	pixel = image.pixel(col, row);
+	colorActual.setRgb(pixel);
+
+	pixelResults[col][row] = false;
+
+	std::cout << " Actual Red = " << colorActual.red() << " Actual Green = " << colorActual.green() << " Actual Blue = " << colorActual.blue() << std::endl;
+
+	pixel = image.pixel(col, row - 1);
+	checked.setRgb(pixel);
+	std::cout << " Gora Red = " << checked.red() << " Gora Green = " << checked.green() << " Gora Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col - 1, row);
+	checked.setRgb(pixel);
+	std::cout << " Lewo Red = " << checked.red() << " Lewo Green = " << checked.green() << " Lewo Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col + 1, row);
+	checked.setRgb(pixel);
+	std::cout << " Prawo Red = " << checked.red() << " Prawo Green = " << checked.green() << " Prawo Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col, row + 1);
+	checked.setRgb(pixel);
+	std::cout << " Dol Red = " << checked.red() << " Dol Green = " << checked.green() << " Dol Blue = " << checked.blue() << std::endl;
+
+
+	std::cout << "Kolumna = " << col << " Szereg = " << row << std::endl;
+	if (pixelResults[col][row-1]) std::cout << "Mozna isc w gore\n";
+	if (pixelResults[col-1][row]) std::cout << "Mozna isc w lewo\n";
+	if (pixelResults[col+1][row]) std::cout << "Mozna isc w prawo\n";
+	if (pixelResults[col][row+1]) std::cout << "Mozna isc w dol\n";
+	std::cout << "\n\n";
 
 	// gora
-	if (row - 1 >= 0 && blockResults[col][row-1])
+	if (row - 1 >= 0 && pixelResults[col][row-1])
 	{
 		pixel = image.pixel(col, row - 1);
 		checked.setRgb(pixel);
@@ -380,12 +732,14 @@ void DrawingOperations::checkAdjacentSquares(int col, int row)
 			colorActual.green() == checked.green() &&
 			colorActual.blue() == checked.blue())
 		{
-			blockResults[col][row-1] = false;
-			checkAdjacentSquares(col, row - 1);
+		//	std::cout << "Ide w gore\n";
+			pixelResults[col][row-1] = false;
+			drawChange(col, row-1);
+			checkAdjacentPixels(col, row - 1);
 		}
 	}
 	// lewo
-	if (col - 1 >= 0 && blockResults[col-1][row])
+	if (col - 1 >= 0 && pixelResults[col-1][row])
 	{
 		pixel = image.pixel(col - 1, row);
 		checked.setRgb(pixel);
@@ -394,12 +748,14 @@ void DrawingOperations::checkAdjacentSquares(int col, int row)
 			colorActual.green() == checked.green() &&
 			colorActual.blue() == checked.blue())
 		{
-			blockResults[col-1][row] = false;
-			checkAdjacentSquares(col - 1, row);
+		//	std::cout << "Ide w lewo\n";
+			pixelResults[col-1][row] = false;
+			drawChange(col-1, row);
+			checkAdjacentPixels(col - 1, row);
 		}
 	}
 	// prawo
-	if (col + 1 < columns && blockResults[col+1][row])
+	if (col + 1 < columns && pixelResults[col+1][row])
 	{
 		pixel = image.pixel(col + 1, row);
 		checked.setRgb(pixel);
@@ -408,12 +764,14 @@ void DrawingOperations::checkAdjacentSquares(int col, int row)
 			colorActual.green() == checked.green() &&
 			colorActual.blue() == checked.blue())
 		{
-			blockResults[col+1][row] = false;
-			checkAdjacentSquares(col + 1, row);
+		//	std::cout << "Ide w prawo\n";
+			pixelResults[col+1][row] = false;
+			drawChange(col+1, row);
+			checkAdjacentPixels(col + 1, row);
 		}
 	}
 	// dol
-	if (row + 1 < rows && blockResults[col][row+1])
+	if (row + 1 < rows && pixelResults[col][row+1])
 	{
 
 		pixel = image.pixel(col, row + 1);
@@ -423,13 +781,15 @@ void DrawingOperations::checkAdjacentSquares(int col, int row)
 			colorActual.green() == checked.green() &&
 			colorActual.blue() == checked.blue())
 		{
-			blockResults[col][row+1] = false;
-			checkAdjacentSquares(col, row + 1);
+		//	std::cout << "Ide w dol\n";
+			pixelResults[col][row+1] = false;
+			drawChange(col, row+1);
+			checkAdjacentPixels(col, row + 1);
 		}
 	}
 	return;
 }
-
+*/
 
 bool DrawingOperations::checkChanges()
 {
@@ -442,15 +802,15 @@ bool DrawingOperations::checkChanges()
 
 	checkedImage = QImage(image);
 
-	blockResults = new bool*[columns];
+	pixelResults = new bool*[columns];
 
 	for (int col = 0; col < columns; col++)
 	{
-		blockResults[col] = new bool[rows];
+		pixelResults[col] = new bool[rows];
 
 		for (int row = 0; row < rows; row++)
 		{
-			blockResults[col][row] = true;
+			pixelResults[col][row] = true;
 		}
 	}
 
@@ -465,12 +825,38 @@ bool DrawingOperations::checkChanges()
 			pixelsChanged[col][row] = true;
 		}
 	}
+/*
+	// _______________________________________
+	//QRgb pixel;
+	QColor colorActual, checked;
+	pixel = image.pixel(col, row);
+	colorActual.setRgb(pixel);
 
-	for (int col = 1, colInd = 0; col < columns; col+=1, colInd++)
+	std::cout << " Actual Red = " << colorActual.red() << " Actual Green = " << colorActual.green() << " Actual Blue = " << colorActual.blue() << std::endl;
+
+	pixel = image.pixel(col, row - 1);
+	checked.setRgb(pixel);
+	std::cout << " Gora Red = " << checked.red() << " Gora Green = " << checked.green() << " Gora Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col - 1, row);
+	checked.setRgb(pixel);
+	std::cout << " Lewo Red = " << checked.red() << " Lewo Green = " << checked.green() << " Lewo Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col + 1, row);
+	checked.setRgb(pixel);
+	std::cout << " Prawo Red = " << checked.red() << " Prawo Green = " << checked.green() << " Prawo Blue = " << checked.blue() << std::endl;
+
+	pixel = image.pixel(col, row + 1);
+	checked.setRgb(pixel);
+	std::cout << " Dol Red = " << checked.red() << " Dol Green = " << checked.green() << " Dol Blue = " << checked.blue() << std::endl;
+
+	// __________________________________________
+*/
+	for (int col = 0; col < columns; col++)//columns; col++) //580 581//columns; col++)
 	{
-		for (int row = 1, rowInd = 0; row < rows ; row+=1, rowInd++)//rows; row++)
+		for (int row = 0; row < rows; row++)//rows ; row++)
 		{
-				if (!blockResults[colInd][rowInd])
+				if (!pixelResults[col][row])
 				{
 					continue;
 				}
@@ -533,26 +919,26 @@ bool DrawingOperations::checkChanges()
 					blue >= mediumBlue - accDif && blue <= mediumBlue + accDif
 					)
 				{
-					//std::cout << "\nPiksel jest ok !!!\n";
+				//	std::cout << "\nPiksel jest ok !!!\n";
 				}
 				else
 				{
-					//std::cout << "\nPiksel sie nie zgadza !!!\n";
-					//std::cout << "\nPiksel: " << row << " " << col << " wartosci: " << red << " " << green << " " << blue <<
-					//			" srednie wartosci to: " << mediumRed << " " << mediumGreen << " " << mediumBlue << std::endl;
+				//	std::cout << "\nPiksel sie nie zgadza !!!\n";
+				//	std::cout << "Piksel: " << col << " " << row << " wartosci: " << red << " " << green << " " << blue <<
+				//				" srednie wartosci to: " << mediumRed << " " << mediumGreen << " " << mediumBlue << std::endl;
 
-					blockResults[col][row] = false;
-					checkAdjacentSquares(col, row);
+					pixelResults[col][row] = false;
+					lookForSimilarPixels(col, row);
 				}
 		}
 	}
 
 	for (int col = 0; col < columns; col++)
 	{
-		delete blockResults[col];
+		delete pixelResults[col];
 		delete pixelsChanged[col];
 	}
-	delete blockResults;
+	delete pixelResults;
 	delete pixelsChanged;
 
 	return false;
@@ -561,29 +947,28 @@ bool DrawingOperations::checkChanges()
 void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 {
 	int heightSecured, heightActual;
-	int greatestSecured, greatestActual;
+	int greatestNumber;
 	int xPos, yPos;
 
 	histogramGComparison = QImage(histogramBase);
 
 	QPainter painter(&histogramGComparison);
 
-	greatestSecured = savedGreyTones[0];
-	greatestActual = greyTones[0];
+	// szukanie najwiekszej wartosci sposrod aktualnych i zapisanych
 
-	// TODO zrobic by tworzyl sie histogram porownujacy obie wartosci
-
-	for (int tone = 1; tone < 153; tone++)
+	for (int tone = 0; tone < 153; tone++)
 	{
-		if (greatestSecured < savedGreyTones[tone])
+		if (greatestNumber < savedGreyTones[tone])
 		{
-			greatestSecured = savedGreyTones[tone];
+			greatestNumber = savedGreyTones[tone];
 		}
-		if (greatestActual < greyTones[tone])
+		if (greatestNumber < greyTones[tone])
 		{
-			greatestActual = greyTones[tone];
+			greatestNumber = greyTones[tone];
 		}
 	}
+
+	// wyliczanie polozenia, kolejnosci rysowania i wysokosci prostokatow
 
 	for (int tone = 0; tone < 153; tone++)
 	{
@@ -592,8 +977,8 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		painter.setBrush(Qt::green);
 		painter.setPen(Qt::green);
 
-		heightSecured = ((float)savedGreyTones[tone] / greatestSecured ) * 400;
-		heightActual = ((float)greyTones[tone] / greatestActual ) * 400;
+		heightSecured = ((float)savedGreyTones[tone] / greatestNumber ) * 400;
+		heightActual = ((float)greyTones[tone] / greatestNumber ) * 400;
 
 		if (heightActual > heightSecured)
 		{
@@ -635,20 +1020,22 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 	return;
 }
 
-void DrawingOperations::checkImageSecurity(std::vector<int>* savedValues)
+void DrawingOperations::checkImageSecurity(std::vector<int> sCRGBs, std::vector<int> savedGreyTones)
 {
 	std::vector<int> rgbs;
 
-	if (savedValues->size() == 2)
+	if (sCRGBs.size() == 12 && savedGreyTones.size() == 153)				// sprawdza wielkosci wektorow
 	{
-		rgbs = savedValues[0];
+		checkPixel(0, 0, sCRGBs[0], sCRGBs[1], sCRGBs[2]);
+		checkPixel(image.width() - 1, 0, sCRGBs[3], sCRGBs[4], sCRGBs[5]);
+		checkPixel(0, image.height() - 1, sCRGBs[6], sCRGBs[7], sCRGBs[8]);
+		checkPixel(image.width() - 1, image.height() - 1, sCRGBs[9], sCRGBs[10], sCRGBs[11]);
 
-		checkPixel(0, 0, rgbs[0], rgbs[1], rgbs[2]);
-		checkPixel(image.width() - 1, 0, rgbs[3], rgbs[4], rgbs[5]);
-		checkPixel(0, image.height() - 1, rgbs[6], rgbs[7], rgbs[8]);
-		checkPixel(image.width() - 1, image.height() - 1, rgbs[9], rgbs[10], rgbs[11]);
-
-		checkHistogramGrey(savedValues[1]);
+		checkHistogramGrey(savedGreyTones);
+	}
+	else
+	{
+		histogramGComparison = QImage(histogramBase);
 	}
 
 	checkChanges();

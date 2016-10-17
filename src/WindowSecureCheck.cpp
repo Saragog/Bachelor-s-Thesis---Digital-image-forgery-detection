@@ -9,8 +9,6 @@
 
 WindowSecureCheck::WindowSecureCheck(QWidget* main)
 {
-	// TODO Auto-generated constructor stub
-
 	this->mainWindow = main;
 
 	label = new QLabel("Window Secure Check", this);
@@ -34,17 +32,23 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 	histogramCLabel = new QLabel(this);
 	histogramCLabel->setGeometry(620, 10, 600, 450);
 
-	checkedImageLabel = new QLabel(this);
-	checkedImageLabel->setGeometry(10, 10, 600, 450);
+	imageLabel = new QLabel(this);
+	imageLabel->setGeometry(10, 10, 600, 450);
 
 	backButton = new QPushButton("Powrot", this);
 	backButton->setGeometry(100, 500, 100, 100);
+
+	timer = new QTimer(this);
 
 	palette.setColor(QPalette::Background, Qt::cyan);
 	this->setAutoFillBackground(true);
 	this->setPalette(palette);
 
+	currentImage = true;
+
 	connect(backButton, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
+	connect(backButton, SIGNAL(clicked()), this, SLOT(stopTimer()));
+	connect(timer, SIGNAL(timeout()), this, SLOT(changeImage()));
 }
 
 WindowSecureCheck::~WindowSecureCheck()
@@ -52,9 +56,12 @@ WindowSecureCheck::~WindowSecureCheck()
 	// TODO Auto-generated destructor stub
 }
 
-void WindowSecureCheck::setFile(QString name)
+void WindowSecureCheck::setImage(QString path)
 {
-	fileName = name;
+	fileName = path.toStdString();
+
+	pixmapImage = QPixmap(path);
+	pixmapImage = pixmapImage.scaled(600, 450);
 
 	return;
 }
@@ -84,9 +91,39 @@ void WindowSecureCheck::setHistogramC(QImage histogram)
 
 void WindowSecureCheck::setCheckedImage(QImage image)
 {
-	QPixmap pixmap;
-	pixmap = pixmap.fromImage(image);
-	pixmap = pixmap.scaled(600, 450);
-	checkedImageLabel->setPixmap(pixmap);
+	// TODO zrobic by co jakis czas sie zmienialo za pomoca timera !!!
+	pixmapCheckedImage = QPixmap::fromImage(image);
+	pixmapCheckedImage = pixmapCheckedImage.scaled(600, 450);
+	//QPixmap pixmap;
+	//pixmap = pixmap.fromImage(image);
+	//pixmap = pixmap.scaled(600, 450);
+	//imageLabel->setPixmap(pixmap);
+	imageLabel->setPixmap(pixmapImage);
+
+	currentImage = true;
+	timer->start(1000);
+
+	return;
+}
+
+void WindowSecureCheck::changeImage()
+{
+	if (currentImage)
+	{
+		currentImage = false;
+		imageLabel->setPixmap(pixmapCheckedImage);
+	}
+	else
+	{
+		currentImage = true;
+		imageLabel->setPixmap(pixmapImage);
+	}
+
+	return;
+}
+
+void WindowSecureCheck::stopTimer()
+{
+	timer->stop();
 	return;
 }

@@ -91,6 +91,7 @@ void WindowExivData::prepareWindow(std::vector<std::string> data)
 
 void WindowExivData::setImage(QString path)
 {
+	fileName = path.toStdString(); // TODO mozna dorobic pokazywanie nazwy / sciezki aktualnego pliku
 	QPixmap pixmap(path);
 	pixmap = pixmap.scaled(600, 450);
 	imageLabel->setPixmap(pixmap);

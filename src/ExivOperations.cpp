@@ -399,6 +399,8 @@ bool ExivOperations::checkExifSecurity()
 	curIndexSTag = 0;
 	int temp;
 
+	raportExif.clear();
+
 	try
 	{
 		securityTagContent = exifData["Exif.Photo.UserComment"].value().toString();

@@ -92,6 +92,7 @@ void WindowMain::showExivData(QString fileName)
 		data = exivOperations->getBasicExifData();
 
 		drawingOperations->setImage(fileName.toStdString());
+
 		QImage histogramGrey = drawingOperations->getHistogramGrey();
 		QImage histogramRGB = drawingOperations->getHistogramRGB();
 
@@ -115,7 +116,7 @@ void WindowMain::showSecureImage(QString fileName)
 		exivOperations->readFromFile(fileName.toStdString()); // TODO ta funkcja zwraca true false
 															  // mozna wywalic info ze zapis zakonczony powodzeniem czy cos
 
-		secureImage->setFile(fileName);
+		secureImage->setImage(fileName);
 		drawingOperations->setImage(fileName.toStdString());
 		stackedWidget->setCurrentIndex(2);
 	}
@@ -129,50 +130,47 @@ void WindowMain::showSecureImage(QString fileName)
 void WindowMain::showSecureCheck(QString fileName)
 {
 	std::vector<std::pair<bool, std::string> > exifRaport;
-	std::vector<int> savedValues[2];
+	std::vector<int> savedCornerRGBs;
+	std::vector<int> savedGreyTones;
 	QImage histogramComparison;
 	QImage checkedImage;
 
 	if (checkImageFile(fileName.toLatin1().data()))
 	{
 
+		secureCheck->setImage(fileName);
+		drawingOperations->setImage(fileName.toStdString());
+
 		if (!exivOperations->readFromFile(fileName.toStdString()))
 		{
-			// TODO zamienic to na ze obraz nie jest zabezpieczony lub usunieto informacje exif
-			message.setText("W pliku nie znaleziono informacji exif !!!");
-			message.exec();
+			exivOperations->checkExifSecurity();
+			drawingOperations->checkImageSecurity(savedCornerRGBs, savedGreyTones);
 
-			secureCheck->setFile(fileName);
-			drawingOperations->setImage(fileName.toStdString());
-			//exivOperations->checkExifSecurity();
-
-			//drawingOperations->checkImageSecurity(savedValues);
-
-			//exifRaport = exivOperations->getRaportExif();
-			drawingOperations->checkImageSecurity(savedValues);
+			exifRaport = exivOperations->getRaportExif();
+			histogramComparison = drawingOperations->getHistogramComparison();
 			checkedImage = drawingOperations->getCheckedImage();
 
-			//secureCheck->setHistogramC(histogramComparison);
-
-
+			secureCheck->setExifRaport(exifRaport);
+			secureCheck->setHistogramC(histogramComparison);
 			secureCheck->setCheckedImage(checkedImage);
 
 			stackedWidget->setCurrentIndex(3);
+
+			// TODO zamienic to na ze obraz nie jest zabezpieczony lub usunieto informacje exif
+			message.setText("W pliku nie znaleziono informacji exif !!!");
+			message.exec();
 		}
 		else
 		{
-			secureCheck->setFile(fileName);
-			drawingOperations->setImage(fileName.toStdString());
-
 			if (exivOperations->checkExifSecurity())
 			{
 				// TODO by to zwracalo jakis raport wyniku sprawdzania exifow
 				// moze tam jak sie wykonuje to raport jest tworzony i inna funkcja go zwracac bedzie
 
-				savedValues[0] = exivOperations->getSavedCornerRGBs();
-				savedValues[1] = exivOperations->getSavedGreyTones();
+				savedCornerRGBs = exivOperations->getSavedCornerRGBs();
+				savedGreyTones = exivOperations->getSavedGreyTones();
 
-				drawingOperations->checkImageSecurity(savedValues);
+				drawingOperations->checkImageSecurity(savedCornerRGBs, savedGreyTones);
 
 				// TODO zrobic raporty w sprawdzaniu exif i raport w sprawdzaniu obrazu
 				// tutaj to pobierac i przekazac na wyjscie
