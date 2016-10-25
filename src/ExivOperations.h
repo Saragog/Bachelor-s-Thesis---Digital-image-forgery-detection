@@ -51,7 +51,7 @@ public:
 	bool checkPixelYDimension(int ydim);
 	bool checkDateTime(std::string word);
 
-	void saveExifIntoFile(std::string path); // TODO NA TYM SKONCZYLEM TRZEBA TO JAKOS POLACZYC !!!
+	void saveExifIntoFile(std::string path);
 
 	bool readFromFile(std::string path);
 	std::vector<std::string> getBasicExifData() const;

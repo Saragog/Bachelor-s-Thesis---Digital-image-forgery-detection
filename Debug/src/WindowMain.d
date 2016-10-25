@@ -60,9 +60,10 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
  ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QImage \
- /usr/include/qt4/QtGui/qimage.h ../src/WindowSecureImage.h \
- /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
- /usr/include/qt4/QtGui/qtextcursor.h \
+ /usr/include/qt4/QtGui/qimage.h /usr/include/qt4/QtCore/QTimer \
+ /usr/include/qt4/QtCore/qtimer.h /usr/include/qt4/QtCore/qbasictimer.h \
+ ../src/WindowSecureImage.h /usr/include/qt4/QtGui/QLineEdit \
+ /usr/include/qt4/QtGui/qlineedit.h /usr/include/qt4/QtGui/qtextcursor.h \
  /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
  /usr/include/qt4/QtGui/qtextoption.h \
  /usr/include/qt4/QtCore/QSignalMapper \
@@ -314,6 +315,12 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
 /usr/include/qt4/QtGui/QImage:
 
 /usr/include/qt4/QtGui/qimage.h:
+
+/usr/include/qt4/QtCore/QTimer:
+
+/usr/include/qt4/QtCore/qtimer.h:
+
+/usr/include/qt4/QtCore/qbasictimer.h:
 
 ../src/WindowSecureImage.h:
 

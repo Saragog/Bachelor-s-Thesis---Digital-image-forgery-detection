@@ -29,6 +29,13 @@ private:
 							// istnieje po to aby 2 razy tych samych pikseli nie kolorowac
 							// false wskazuje ze nie mozna zamalowac - bo juz jest zamalowany ten piksel
 
+	// TODO prace nad znaczkiem:
+	int signLength;
+	int signHeight;
+	int digitColorRange;
+
+	int signBeginningX, signBeginningY;
+
 	int columns, rows;
 
 	QImage image;
@@ -43,8 +50,15 @@ private:
 	void drawHistogramGrey(int greatestGreyNumber);
 	void drawHistogramRGB(int greatestRGBNumber);
 	void secureImage();
-	void prepareHistograms();
 
+	void prepareHistogramsData();
+	void drawHistograms();
+
+	void drawSign();
+	int convertDigitsToInt(int* digits);
+
+
+	unsigned char readPixelDigit(int col, int row);
 	bool checkPixel(unsigned int row, unsigned int col, int r, int g, int b) const;
 
 	void drawChange(int col, int row); 									// podswietlac bedzie na czerwono zmiane w obrazie
@@ -72,7 +86,7 @@ public:
 	int* getHistGTones();
 	QImage getHistogramComparison() const;
 	QImage getCheckedImage() const;
-	void checkImageSecurity(std::vector<int> savedCornerRGBs, std::vector<int> savedGreyTones);
+	void checkImageSecurity(std::vector<int> savedGreyTones);
 };
 
 #endif /* DRAWINGOPERATIONS_H_ */

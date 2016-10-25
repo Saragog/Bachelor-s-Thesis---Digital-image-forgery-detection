@@ -17,12 +17,10 @@ using namespace std;
 ExivOperations::ExivOperations(WindowMain* con)
 {
 	controller = con;
-	// TODO Auto-generated constructor stub
-
 }
 
-ExivOperations::~ExivOperations() {
-	// TODO Auto-generated destructor stub
+ExivOperations::~ExivOperations()
+{
 }
 
 bool ExivOperations::readFromFile(std::string path)
@@ -153,14 +151,41 @@ void ExivOperations::saveExifIntoFile(std::string path)
 
 void ExivOperations::prepareSecurityExifData()
 {
+	bool isPixelXDimSet, isPixelYDimSet;
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::unsignedLong);
 
     std::string temp;
     std::string dateTime = "";
     std::string securityInfoToSave = "SECURED ";
-    securityInfoToSave += exifData["Exif.Photo.PixelXDimension"].value().toString();
-    securityInfoToSave += " ";
-    securityInfoToSave += exifData["Exif.Photo.PixelYDimension"].value().toString();
+
+    isPixelXDimSet = true;
+    isPixelYDimSet = true;
+
+	try
+	{
+		securityInfoToSave += exifData["Exif.Photo.PixelXDimension"].value().toString();
+		securityInfoToSave += " ";
+	}
+	catch (std::exception &e)
+	{
+		// Nie wykryto pola XDimension !!!
+		securityInfoToSave += '0';
+		securityInfoToSave += " ";
+		isPixelXDimSet = false;
+	}
+
+	try
+	{
+		securityInfoToSave += exifData["Exif.Photo.PixelYDimension"].value().toString();
+		securityInfoToSave += " ";
+	}
+	catch (std::exception &e)
+	{
+		// Nie wykryto pola YDimension !!!
+		securityInfoToSave += '0';
+		securityInfoToSave += " ";
+		isPixelYDimSet = false;
+	}
 
     v->read(securityInfoToSave);
 
@@ -168,7 +193,7 @@ void ExivOperations::prepareSecurityExifData()
 	time_t t = time(0);
 	struct tm * now = localtime( & t );
 
-	dateTime = dateTime + convertIntToStr(now->tm_year + 1900) + ":";
+	dateTime += convertIntToStr(now->tm_year + 1900) + ":";
 	temp = convertIntToStr(now->tm_mon + 1);
 	if (temp.size() == 1) dateTime += "0";
 	dateTime = dateTime + temp + ":";
@@ -188,9 +213,9 @@ void ExivOperations::prepareSecurityExifData()
 	else if (temp.size() == 0) dateTime += "00";
 	dateTime += temp;
 
-	securityInfoToSave += " ";
 	securityInfoToSave += dateTime;
 
+	/*
     std::vector<int> cornerPixelsRGBs = controller->getCorners();
 
     for (int step = 0; step < 12; step++)
@@ -198,15 +223,7 @@ void ExivOperations::prepareSecurityExifData()
     	securityInfoToSave += " ";
     	securityInfoToSave += convertIntToStr(cornerPixelsRGBs.at(step));
     }
-
-
-    // TODO sprawdzic czy to dziala zrobic wczytywanie tego histogramu i sprawdzanie czy jest ok
-    // zobaczyc jak to wyglada w komentazu exifowym
-    // Testowac dzialanie zabezpieczenia !!!
-    // Jesli dziala to mozna zajac sie sprawdzaniu przy rotacjach
-    // Po rotacjach bedzie mozna pomyslec o rozszerzaniu i zwezaniu na podstawie kilku algorytmow
-    // Zrobic zabezpieczenie tego pola z informacja / pomyslec nad ukrywaniem tego moze cos
-    // no i chyba jesli to bedzie dzialac to mozna prawie uznac za zakonczone chyba :D ( testy testy )
+	*/
 
     int* histogramGrey = controller->getHistGTones();
 
@@ -217,6 +234,10 @@ void ExivOperations::prepareSecurityExifData()
     }
 
 	exifData["Exif.Image.Software"] = "JPG Analizer";
+
+	if (!isPixelXDimSet) exifData["Exif.Photo.PixelXDimension"] = "0";
+	if (!isPixelYDimSet) exifData["Exif.Photo.PixelYDimension"] = "0";
+
 	exifData["Exif.Photo.UserComment"] = securityInfoToSave;
 	exifData["Exif.Image.DateTime"] = dateTime;
 	return;
@@ -255,8 +276,6 @@ bool ExivOperations::checkSoftware()
 		return false;
 	}
 
-	std::cout << "Program ma nazwe: " << programName << std::endl;
-
 	if (programName == "JPG Analizer")
 	{
 		partialRaport.first = true;
@@ -277,7 +296,6 @@ bool ExivOperations::checkSoftware()
 
 bool ExivOperations::checkIfProtected(std::string word)
 {
-	//std::pair<bool, std::string> partialRaport;
 	if (word == "SECURED")
 	{
 		partialRaport.first = true;
@@ -285,14 +303,12 @@ bool ExivOperations::checkIfProtected(std::string word)
 		raportExif.push_back(partialRaport);
 		return true;
 	}
-	//cout << "\nNie jest secured ... najwyrazniej \n";
 	return false;
 }
 
 bool ExivOperations::checkPixelXDimension(int xdim)
 {
 	int exifXDim;
-
 	try
 	{
 		exifXDim = exifData["Exif.Photo.PixelXDimension"].value().toLong();
@@ -427,8 +443,6 @@ bool ExivOperations::checkExifSecurity()
 
 	if (word == "")
 	{
-		// TODO
-		// Nie wykryto zabezpieczenia exif !!!
 
 		partialRaport.first = false;
 		partialRaport.second = "Nie wykryto zabezpieczen";
@@ -458,6 +472,7 @@ bool ExivOperations::checkExifSecurity()
 	return true;
 }
 
+/*
 std::vector<int> ExivOperations::getSavedCornerRGBs()
 {
 	std::vector<int> rgbs;
@@ -468,6 +483,7 @@ std::vector<int> ExivOperations::getSavedCornerRGBs()
 	}
 	return rgbs;
 }
+*/
 
 std::vector<int> ExivOperations::getSavedGreyTones()
 {

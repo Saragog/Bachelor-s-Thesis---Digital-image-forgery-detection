@@ -53,7 +53,6 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 
 WindowSecureCheck::~WindowSecureCheck()
 {
-	// TODO Auto-generated destructor stub
 }
 
 void WindowSecureCheck::setImage(QString path)
@@ -68,8 +67,6 @@ void WindowSecureCheck::setImage(QString path)
 
 void WindowSecureCheck::setExifRaport(std::vector<std::pair<bool, std::string> > raport)
 {
-	// TODO tutaaaj !!! :D
-
 	exifProtectionLabel->setText(QString::fromStdString(raport.at(0).second));
 	if (raport.size() > 1)
 	{
@@ -78,7 +75,6 @@ void WindowSecureCheck::setExifRaport(std::vector<std::pair<bool, std::string> >
 		exifYDimensionLabel->setText(QString::fromStdString(raport.at(3).second));
 		exifDateTimeLabel->setText(QString::fromStdString(raport.at(4).second));
 	}
-
 }
 
 void WindowSecureCheck::setHistogramC(QImage histogram)
@@ -91,13 +87,8 @@ void WindowSecureCheck::setHistogramC(QImage histogram)
 
 void WindowSecureCheck::setCheckedImage(QImage image)
 {
-	// TODO zrobic by co jakis czas sie zmienialo za pomoca timera !!!
 	pixmapCheckedImage = QPixmap::fromImage(image);
 	pixmapCheckedImage = pixmapCheckedImage.scaled(600, 450);
-	//QPixmap pixmap;
-	//pixmap = pixmap.fromImage(image);
-	//pixmap = pixmap.scaled(600, 450);
-	//imageLabel->setPixmap(pixmap);
 	imageLabel->setPixmap(pixmapImage);
 
 	currentImage = true;

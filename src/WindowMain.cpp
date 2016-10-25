@@ -130,7 +130,6 @@ void WindowMain::showSecureImage(QString fileName)
 void WindowMain::showSecureCheck(QString fileName)
 {
 	std::vector<std::pair<bool, std::string> > exifRaport;
-	std::vector<int> savedCornerRGBs;
 	std::vector<int> savedGreyTones;
 	QImage histogramComparison;
 	QImage checkedImage;
@@ -144,7 +143,7 @@ void WindowMain::showSecureCheck(QString fileName)
 		if (!exivOperations->readFromFile(fileName.toStdString()))
 		{
 			exivOperations->checkExifSecurity();
-			drawingOperations->checkImageSecurity(savedCornerRGBs, savedGreyTones);
+			drawingOperations->checkImageSecurity(savedGreyTones);
 
 			exifRaport = exivOperations->getRaportExif();
 			histogramComparison = drawingOperations->getHistogramComparison();
@@ -156,7 +155,6 @@ void WindowMain::showSecureCheck(QString fileName)
 
 			stackedWidget->setCurrentIndex(3);
 
-			// TODO zamienic to na ze obraz nie jest zabezpieczony lub usunieto informacje exif
 			message.setText("W pliku nie znaleziono informacji exif !!!");
 			message.exec();
 		}
@@ -164,17 +162,9 @@ void WindowMain::showSecureCheck(QString fileName)
 		{
 			if (exivOperations->checkExifSecurity())
 			{
-				// TODO by to zwracalo jakis raport wyniku sprawdzania exifow
-				// moze tam jak sie wykonuje to raport jest tworzony i inna funkcja go zwracac bedzie
-
-				savedCornerRGBs = exivOperations->getSavedCornerRGBs();
 				savedGreyTones = exivOperations->getSavedGreyTones();
 
-				drawingOperations->checkImageSecurity(savedCornerRGBs, savedGreyTones);
-
-				// TODO zrobic raporty w sprawdzaniu exif i raport w sprawdzaniu obrazu
-				// tutaj to pobierac i przekazac na wyjscie
-				// teraz robie przekazanie obrazka histogramu zmienionego i sprawdzonego obrazu
+				drawingOperations->checkImageSecurity(savedGreyTones);
 
 				exifRaport = exivOperations->getRaportExif();
 				histogramComparison = drawingOperations->getHistogramComparison();
@@ -226,15 +216,10 @@ void WindowMain::saveImage(QString path)
 	}
 	else
 	{
-		// TODO wyswietlenie komunikatu ze nie udalo sie zapisac pliku
+		message.setText("Nie udalo sie zapisac pliku !!!");
+		message.exec();
 	}
 	return;
-}
-
-std::vector<int> WindowMain::getCorners() const
-{
-	std::vector<int> cornerRGBs = drawingOperations->getCornerRGBs();
-	return cornerRGBs;
 }
 
 int* WindowMain::getHistGTones() const

@@ -42,7 +42,6 @@ private:
 	QStackedWidget *stackedWidget;
 	QVBoxLayout *layout;
 	QComboBox *pageComboBox;
-	//QMessageBox message;
 	QLabel image;
 
 	QMessageBox message;
@@ -58,11 +57,7 @@ public:
 	virtual ~WindowMain();
 
 	bool checkImageFile(std::string path);
-	std::vector<int> getCorners() const;
 	int* getHistGTones() const;
-
-	// TODO pomyslec nad tym jak to tutaj bedzie !!!
-	void checkPixels(std::vector<int> rgbs);
 
 public slots:
 	void showMenu();

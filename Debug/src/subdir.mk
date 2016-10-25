@@ -15,6 +15,7 @@ CPP_SRCS += \
 ../src/WindowSecureImage.cpp \
 ../src/moc_WindowMain.cpp \
 ../src/moc_WindowMenu.cpp \
+../src/moc_WindowSecureCheck.cpp \
 ../src/moc_WindowSecureImage.cpp 
 
 OBJS += \
@@ -29,6 +30,7 @@ OBJS += \
 ./src/WindowSecureImage.o \
 ./src/moc_WindowMain.o \
 ./src/moc_WindowMenu.o \
+./src/moc_WindowSecureCheck.o \
 ./src/moc_WindowSecureImage.o 
 
 CPP_DEPS += \
@@ -43,6 +45,7 @@ CPP_DEPS += \
 ./src/WindowSecureImage.d \
 ./src/moc_WindowMain.d \
 ./src/moc_WindowMenu.d \
+./src/moc_WindowSecureCheck.d \
 ./src/moc_WindowSecureImage.d 
 
 

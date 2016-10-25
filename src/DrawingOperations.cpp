@@ -10,6 +10,10 @@
 #include <QColor>
 #include <QPainter>
 
+// ___
+#include <QImageWriter>
+// ___
+
 #include <QFile>
 
 #include <iostream>
@@ -19,7 +23,14 @@ DrawingOperations::DrawingOperations()
     QImageReader reader(QString::fromAscii("./ProgramImages/blank.jpg"));
     histogramBase = reader.read();
     actualFileName = "";
-    accDif = 10;//35;//10;
+
+    accDif = 3;
+
+    signLength = 37;
+    signHeight = 33;
+
+    // ______
+    digitColorRange = 10;
 }
 
 DrawingOperations::~DrawingOperations()
@@ -37,18 +48,17 @@ void DrawingOperations::setImage(std::string fileName)
 		columns = image.width();
 		rows = image.height();
 
-		prepareHistograms();
+		prepareHistogramsData();
+		drawHistograms();
 	}
 	return;
 }
 
-void DrawingOperations::prepareHistograms()
+void DrawingOperations::prepareHistogramsData()
 {
 	QRgb pixel;
 	QColor color;
 	int red, green, blue, tone;
-	int greatestGreyNumber = 0;
-	int greatestRGBNumber = 0;
 
 	for (int t = 0; t < 153; t++) greyTones[t] = 0; // preparing table for counting pixels with grey tones
 
@@ -58,9 +68,6 @@ void DrawingOperations::prepareHistograms()
 		greenTones[t] = 0;
 		blueTones[t] = 0;
 	}
-
-	histogramGrey = QImage(histogramBase);
-	histogramRGB = QImage(histogramBase);
 
 	for (int pixelC = 0; pixelC < columns; pixelC++)
 	{
@@ -77,9 +84,23 @@ void DrawingOperations::prepareHistograms()
 			blueTones[blue]++;
 
 			tone = (red + green + blue) / 5;
-			greyTones[tone]++;
+			if (tone == 153)
+			{
+				greyTones[152]++;
+			}
+			else greyTones[tone]++;
 		}
 	}
+	return;
+}
+
+void DrawingOperations::drawHistograms()
+{
+	int greatestGreyNumber = 0;
+	int greatestRGBNumber = 0;
+
+	histogramGrey = QImage(histogramBase);
+	histogramRGB = QImage(histogramBase);
 
 	for (int x = 0; x < 256; x++)
 	{
@@ -179,8 +200,12 @@ void DrawingOperations::secureImage()
 
 	for (int col = 0; col < columns; col++)
 	{
-		for (int row = 0; row < rows; row++)
+		for (int row = col % 3; row < rows; row+=3)
 		{
+			if ((col + row) % 3 != 0) continue;
+
+			if (col > columns - 40 && row > rows - 40) continue;
+
 			sumRed = 0;
 			sumGreen = 0;
 			sumBlue = 0;
@@ -195,7 +220,7 @@ void DrawingOperations::secureImage()
 				sumGreen += color.green();
 				sumBlue += color.blue();
 			}
-			if (col < columns - 1)
+			if (col < columns - 1 && ( col + 1 < columns - signLength || row < rows - signLength))
 			{
 				pixel = image.pixel(col + 1, row);
 				color.setRgb(pixel);
@@ -213,7 +238,7 @@ void DrawingOperations::secureImage()
 				sumGreen += color.green();
 				sumBlue += color.blue();
 			}
-			if (row < rows - 1)
+			if (row < rows - 1 && ( col + 1 < columns - signHeight || row < rows - signHeight))
 			{
 				pixel = image.pixel(col, row + 1);
 				color.setRgb(pixel);
@@ -226,6 +251,62 @@ void DrawingOperations::secureImage()
 			mediumRed = sumRed / adjacentPixels;
 			mediumGreen = sumGreen / adjacentPixels;
 			mediumBlue = sumBlue / adjacentPixels;
+
+			// _____________________
+
+/*			int red, green, blue;
+
+			if (col >= 1300 && col < 1400 && row >= 1100 && row < 1200)
+			{
+				std::cout << "\nDla piksela o pozycji: " << col << " " << row << std::endl;
+				std::cout << "Srednia wynosi: " << mediumRed << " " <<mediumGreen << " " << mediumBlue << std::endl;
+
+				if (row - 1 >= 0)
+				{
+					pixel = image.pixel(col, row-1);
+					color.setRgb(pixel);
+
+					red = color.red();
+					green = color.green();
+					blue = color.blue();
+					std::cout << "Piksel na gorze: " << red << " " << green << " " << blue << std::endl;
+				}
+
+				if (col - 1 >= 0)
+				{
+					pixel = image.pixel(col-1, row);
+					color.setRgb(pixel);
+
+					red = color.red();
+					green = color.green();
+					blue = color.blue();
+					std::cout << "Piksel po lewej: " << red << " " << green << " " << blue << std::endl;
+				}
+
+				if (col + 1 < columns)
+				{
+					pixel = image.pixel(col+1, row);
+					color.setRgb(pixel);
+
+					red = color.red();
+					green = color.green();
+					blue = color.blue();
+					std::cout << "Piksel po prawej: " << red << " " << green << " " << blue << std::endl;
+				}
+
+				if (row + 1 < rows)
+				{
+					pixel = image.pixel(col, row+1);
+					color.setRgb(pixel);
+
+					red = color.red();
+					green = color.green();
+					blue = color.blue();
+					std::cout << "Piksel na dole: " << red << " " << green << " " << blue << std::endl;
+				}
+			}
+*/
+			// _____________________
 
 			securedImage.setPixel(col, row, qRgb(mediumRed, mediumGreen, mediumBlue));
 		}
@@ -246,16 +327,32 @@ QImage DrawingOperations::getHistogramRGB() const
 
 bool DrawingOperations::saveImage(QString path)
 {
+	// ____
+	// ____
+
 	try
 	{
 		QFile file(path);
 		file.open(QIODevice::WriteOnly);
 
 		secureImage();
-		void prepareHistograms();
-		securedImage.save(&file, "JPG");
+
+		drawSign(); // Funkcja do tworzenia znaczka zabezpieczajacego przed utrata danych exif
+
+		prepareHistogramsData();
+
+		securedImage.save(&file, "JPG", 100);
 
 		file.close();
+
+		// ___
+
+		QFile f2("/home/andrzej/workspace/Inzynierka/Zdjecia_Edytowane/x.jpg");
+		QImageWriter writer(&f2, "JPG");
+		writer.setCompression(0);
+		writer.setQuality(100);
+		writer.write(securedImage);
+
 	}
 	catch (std::exception& e)
 	{
@@ -263,6 +360,109 @@ bool DrawingOperations::saveImage(QString path)
 	}
 
 	return true;
+}
+
+void DrawingOperations::drawSign()
+{
+	int digit;
+	int actualTone;
+
+	signBeginningX = columns - signLength;
+	signBeginningY = rows - signHeight;
+
+	std::cout << "\nRysuje znaczek !!!\n";
+
+	// rysowanie gornej i dolnej czesci ramki:
+	for (int x = signBeginningX; x < columns; x++)
+	{
+		securedImage.setPixel(x, signBeginningY, qRgb(255, 255, 255));
+		securedImage.setPixel(x, rows-1, qRgb(255, 255, 255));
+	}
+
+	// rysowanie lewej i prawej czesci ramki:
+	for (int y = signBeginningY+1; y < rows-1; y++)
+	{
+		securedImage.setPixel(signBeginningX , y, qRgb(255, 255, 255));
+		securedImage.setPixel(columns-1 , y, qRgb(255, 255, 255));
+	}
+
+	// rysowanie zawartosci znaku zabezpieczajacego:
+	for (int y = signBeginningY+1, tone = 0; y < rows-1; y++)
+	{
+		for (int step = 0; step < 5; step++, tone++)
+		{
+			if (tone < 153) actualTone = greyTones[tone];
+			else actualTone = 0;
+
+			std::cout << "\nDla tone: " << tone + 1<< " CalyGreyTone = " << actualTone;
+
+			for (int part = 0, divisor = 1000000; part < 7; part++, divisor/=10)
+			{
+				//std::cout << "\nZamalowuje 1 piksel znaczka: " << signBeginningX+1 + step * 7 + part << " " << y;
+
+				digit = actualTone / divisor;
+				actualTone = actualTone - digit * divisor;
+				std::cout << std::endl << digit;
+				//std::cout << std::endl << actualTone;
+
+				switch (digit)
+				{
+					case 0:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(0, 0, 0));
+						break;
+					}
+					case 1:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(28, 28, 28));
+						break;
+					}
+					case 2:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(56, 56, 56));
+						break;
+					}
+					case 3:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(84, 84, 84));
+						break;
+					}
+					case 4:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(112, 112, 112));
+						break;
+					}
+					case 5:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(140, 140, 140));
+						break;
+					}
+					case 6:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(168, 168, 168));
+						break;
+					}
+					case 7:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(196, 196, 196));
+						break;
+					}
+					case 8:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(224, 224, 224));
+						break;
+					}
+					case 9:
+					{
+						securedImage.setPixel(signBeginningX+1 + step * 7 + part, y, qRgb(255, 255, 255));
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return;
 }
 
 std::vector<int> DrawingOperations::getCornerRGBs() const
@@ -331,11 +531,12 @@ void DrawingOperations::drawChange(int col, int row)
 	{
 		for (int r = row - 2; r < row + 3; r++)
 		{
+			if (c >= signBeginningX && r >= signBeginningY) continue;
+
 			if (c >= 0 && c < columns && r >= 0 && r < rows && pixelsChanged[c][r])
 			{
 				pixel = image.pixel(c, r);
 				color.setRgb(pixel);
-				// TODO wyliczanie koloru na jaki trzeba zamalowac ten piksel tutaj !!!
 
 				checkedImage.setPixel(c, r, qRgb(255, 0, 0));
 				pixelsChanged[c][r] = false;
@@ -393,8 +594,9 @@ void DrawingOperations::checkAdjacentPixels(int col, int row)
 
 	checkAdjacentUp(col, row, red, green, blue);
 	checkAdjacentLeft(col, row, red, green, blue);
-	checkAdjacentRight(col, row, red, green, blue);
-	checkAdjacentDown(col, row, red, green, blue);
+
+	if (col < signBeginningX || row < signBeginningY) checkAdjacentRight(col, row, red, green, blue);
+	if (col < signBeginningX || row < signBeginningY) checkAdjacentDown(col, row, red, green, blue);
 
 	return;
 }
@@ -665,6 +867,7 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 					blue == checked.blue(); innerCol++
 					)
 			{
+
 				pixelResults[innerCol][innerRow] = false;
 				drawChange(innerCol, innerRow);
 
@@ -683,122 +886,21 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 	return;
 }
 
-// _____________________________________________
-
-/*
-void DrawingOperations::checkAdjacentPixels(int col, int row)
-{
-	QRgb pixel;
-	QColor colorActual, checked;
-
-	pixel = image.pixel(col, row);
-	colorActual.setRgb(pixel);
-
-	pixelResults[col][row] = false;
-
-	std::cout << " Actual Red = " << colorActual.red() << " Actual Green = " << colorActual.green() << " Actual Blue = " << colorActual.blue() << std::endl;
-
-	pixel = image.pixel(col, row - 1);
-	checked.setRgb(pixel);
-	std::cout << " Gora Red = " << checked.red() << " Gora Green = " << checked.green() << " Gora Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col - 1, row);
-	checked.setRgb(pixel);
-	std::cout << " Lewo Red = " << checked.red() << " Lewo Green = " << checked.green() << " Lewo Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col + 1, row);
-	checked.setRgb(pixel);
-	std::cout << " Prawo Red = " << checked.red() << " Prawo Green = " << checked.green() << " Prawo Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col, row + 1);
-	checked.setRgb(pixel);
-	std::cout << " Dol Red = " << checked.red() << " Dol Green = " << checked.green() << " Dol Blue = " << checked.blue() << std::endl;
-
-
-	std::cout << "Kolumna = " << col << " Szereg = " << row << std::endl;
-	if (pixelResults[col][row-1]) std::cout << "Mozna isc w gore\n";
-	if (pixelResults[col-1][row]) std::cout << "Mozna isc w lewo\n";
-	if (pixelResults[col+1][row]) std::cout << "Mozna isc w prawo\n";
-	if (pixelResults[col][row+1]) std::cout << "Mozna isc w dol\n";
-	std::cout << "\n\n";
-
-	// gora
-	if (row - 1 >= 0 && pixelResults[col][row-1])
-	{
-		pixel = image.pixel(col, row - 1);
-		checked.setRgb(pixel);
-
-		if (colorActual.red() == checked.red() &&
-			colorActual.green() == checked.green() &&
-			colorActual.blue() == checked.blue())
-		{
-		//	std::cout << "Ide w gore\n";
-			pixelResults[col][row-1] = false;
-			drawChange(col, row-1);
-			checkAdjacentPixels(col, row - 1);
-		}
-	}
-	// lewo
-	if (col - 1 >= 0 && pixelResults[col-1][row])
-	{
-		pixel = image.pixel(col - 1, row);
-		checked.setRgb(pixel);
-
-		if (colorActual.red() == checked.red() &&
-			colorActual.green() == checked.green() &&
-			colorActual.blue() == checked.blue())
-		{
-		//	std::cout << "Ide w lewo\n";
-			pixelResults[col-1][row] = false;
-			drawChange(col-1, row);
-			checkAdjacentPixels(col - 1, row);
-		}
-	}
-	// prawo
-	if (col + 1 < columns && pixelResults[col+1][row])
-	{
-		pixel = image.pixel(col + 1, row);
-		checked.setRgb(pixel);
-
-		if (colorActual.red() == checked.red() &&
-			colorActual.green() == checked.green() &&
-			colorActual.blue() == checked.blue())
-		{
-		//	std::cout << "Ide w prawo\n";
-			pixelResults[col+1][row] = false;
-			drawChange(col+1, row);
-			checkAdjacentPixels(col + 1, row);
-		}
-	}
-	// dol
-	if (row + 1 < rows && pixelResults[col][row+1])
-	{
-
-		pixel = image.pixel(col, row + 1);
-		checked.setRgb(pixel);
-
-		if (colorActual.red() == checked.red() &&
-			colorActual.green() == checked.green() &&
-			colorActual.blue() == checked.blue())
-		{
-		//	std::cout << "Ide w dol\n";
-			pixelResults[col][row+1] = false;
-			drawChange(col, row+1);
-			checkAdjacentPixels(col, row + 1);
-		}
-	}
-	return;
-}
-*/
-
 bool DrawingOperations::checkChanges()
 {
+	signBeginningX = columns - signLength;
+	signBeginningY = rows - signHeight;
+
+	//std::cout << std::endl << signBeginningX << " " << signBeginningY << std::endl;
+
 	QRgb pixel;
 	QColor color;
 	int sumRed, sumGreen, sumBlue;
 	int mediumRed, mediumGreen, mediumBlue;
 	int adjacentPixels;
 	int red, green, blue;
+
+	int biggestRed, biggestGreen, biggestBlue;
 
 	checkedImage = QImage(image);
 
@@ -825,37 +927,26 @@ bool DrawingOperations::checkChanges()
 			pixelsChanged[col][row] = true;
 		}
 	}
-/*
-	// _______________________________________
-	//QRgb pixel;
-	QColor colorActual, checked;
-	pixel = image.pixel(col, row);
-	colorActual.setRgb(pixel);
 
-	std::cout << " Actual Red = " << colorActual.red() << " Actual Green = " << colorActual.green() << " Actual Blue = " << colorActual.blue() << std::endl;
-
-	pixel = image.pixel(col, row - 1);
-	checked.setRgb(pixel);
-	std::cout << " Gora Red = " << checked.red() << " Gora Green = " << checked.green() << " Gora Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col - 1, row);
-	checked.setRgb(pixel);
-	std::cout << " Lewo Red = " << checked.red() << " Lewo Green = " << checked.green() << " Lewo Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col + 1, row);
-	checked.setRgb(pixel);
-	std::cout << " Prawo Red = " << checked.red() << " Prawo Green = " << checked.green() << " Prawo Blue = " << checked.blue() << std::endl;
-
-	pixel = image.pixel(col, row + 1);
-	checked.setRgb(pixel);
-	std::cout << " Dol Red = " << checked.red() << " Dol Green = " << checked.green() << " Dol Blue = " << checked.blue() << std::endl;
-
-	// __________________________________________
-*/
-	for (int col = 0; col < columns; col++)//columns; col++) //580 581//columns; col++)
+	for (int c = signBeginningX; c < columns; c++)	// zaznaczenie znaczka ze jest juz wykorzystane by nie sprawdzalo w srodku
 	{
-		for (int row = 0; row < rows; row++)//rows ; row++)
+		for (int r = signBeginningY; r < rows; r++)
 		{
+			pixelResults[c][r] = false;
+		}
+	}
+
+	for (int col = 0; col < columns; col++)//0; col < columns; col++)
+	{
+		for (int row = col % 3; row < rows; row+=3)
+		{
+
+			if ((col + row) % 3 != 0) continue;
+
+			biggestRed = 0;
+			biggestGreen = 0;
+			biggestBlue = 0;
+
 				if (!pixelResults[col][row])
 				{
 					continue;
@@ -874,8 +965,12 @@ bool DrawingOperations::checkChanges()
 					sumRed += color.red();
 					sumGreen += color.green();
 					sumBlue += color.blue();
+
+					if (color.red() > biggestRed) biggestRed = color.red();
+					if (color.green() > biggestGreen) biggestGreen = color.green();
+					if (color.blue() > biggestBlue) biggestBlue = color.blue();
 				}
-				if (col < columns - 1)
+				if (col < columns - 1 && (col + 1 < signBeginningX || row < signBeginningY))
 				{
 					pixel = image.pixel(col + 1, row);
 					color.setRgb(pixel);
@@ -883,6 +978,10 @@ bool DrawingOperations::checkChanges()
 					sumRed += color.red();
 					sumGreen += color.green();
 					sumBlue += color.blue();
+
+					if (color.red() > biggestRed) biggestRed = color.red();
+					if (color.green() > biggestGreen) biggestGreen = color.green();
+					if (color.blue() > biggestBlue) biggestBlue = color.blue();
 				}
 				if (row >= 1)
 				{
@@ -892,8 +991,12 @@ bool DrawingOperations::checkChanges()
 					sumRed += color.red();
 					sumGreen += color.green();
 					sumBlue += color.blue();
+
+					if (color.red() > biggestRed) biggestRed = color.red();
+					if (color.green() > biggestGreen) biggestGreen = color.green();
+					if (color.blue() > biggestBlue) biggestBlue = color.blue();
 				}
-				if (row < rows - 1)
+				if (row < rows - 1 && (col < signBeginningX || row + 1 < signBeginningY))
 				{
 					pixel = image.pixel(col, row + 1);
 					color.setRgb(pixel);
@@ -901,6 +1004,10 @@ bool DrawingOperations::checkChanges()
 					sumRed += color.red();
 					sumGreen += color.green();
 					sumBlue += color.blue();
+
+					if (color.red() > biggestRed) biggestRed = color.red();
+					if (color.green() > biggestGreen) biggestGreen = color.green();
+					if (color.blue() > biggestBlue) biggestBlue = color.blue();
 				}
 
 				mediumRed = sumRed / adjacentPixels;
@@ -927,8 +1034,65 @@ bool DrawingOperations::checkChanges()
 				//	std::cout << "Piksel: " << col << " " << row << " wartosci: " << red << " " << green << " " << blue <<
 				//				" srednie wartosci to: " << mediumRed << " " << mediumGreen << " " << mediumBlue << std::endl;
 
+					// zrobic sprawdzenie drogiej szansy :D
+					// polega na tym ze wartosc odczytana piksela nie moze byc duzo rozniaca sie od najwyzszej z wartosci sasiadow
+					// powiedzmy ze kazda z barw do 15 wieksza moze byc ale nie wiecej
+
+
+					// ______________
+/*
+					if (row - 1 >= 0)
+					{
+						pixel = image.pixel(col, row-1);
+						color.setRgb(pixel);
+
+						red = color.red();
+						green = color.green();
+						blue = color.blue();
+						std::cout << "Piksel na gorze: " << red << " " << green << " " << blue << std::endl;
+					}
+
+					if (col - 1 >= 0)
+					{
+						pixel = image.pixel(col-1, row);
+						color.setRgb(pixel);
+
+						red = color.red();
+						green = color.green();
+						blue = color.blue();
+						std::cout << "Piksel po lewej: " << red << " " << green << " " << blue << std::endl;
+					}
+
+					if (col + 1 < columns && (col + 1 < signBeginningX || row < signBeginningY))
+					{
+						pixel = image.pixel(col+1, row);
+						color.setRgb(pixel);
+
+						red = color.red();
+						green = color.green();
+						blue = color.blue();
+						std::cout << "Piksel po prawej: " << red << " " << green << " " << blue << std::endl;
+					}
+
+					if (row + 1 < rows && (col < signBeginningX || row + 1 < signBeginningY))
+					{
+						pixel = image.pixel(col, row+1);
+						color.setRgb(pixel);
+
+						red = color.red();
+						green = color.green();
+						blue = color.blue();
+						std::cout << "Piksel na dole: " << red << " " << green << " " << blue << std::endl;
+					}
+*/
+
+
 					pixelResults[col][row] = false;
 					lookForSimilarPixels(col, row);
+
+					// ______________
+
+
 				}
 		}
 	}
@@ -988,16 +1152,16 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 
 			painter.drawRect(xPos, yPos, 3, heightActual);
 
-			painter.setBrush(Qt::green);
-			painter.setPen(Qt::green);
+			painter.setBrush(Qt::yellow);
+			painter.setPen(Qt::yellow);
 			yPos = 425 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
 		}
 		else if (heightActual < heightSecured)
 		{
-			painter.setBrush(Qt::green);
-			painter.setPen(Qt::green);
+			painter.setBrush(Qt::yellow);
+			painter.setPen(Qt::yellow);
 			yPos = 425 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
@@ -1010,8 +1174,8 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		}
 		else // obie wysokosci takie same czyli w ogole nie ma zmiany w histogramie
 		{
-			painter.setBrush(Qt::yellow);
-			painter.setPen(Qt::yellow);
+			painter.setBrush(Qt::green);
+			painter.setPen(Qt::green);
 			yPos = 425 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
@@ -1020,19 +1184,190 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 	return;
 }
 
-void DrawingOperations::checkImageSecurity(std::vector<int> sCRGBs, std::vector<int> savedGreyTones)
+unsigned char DrawingOperations::readPixelDigit(int col, int row)
 {
-	std::vector<int> rgbs;
+	QRgb pixel;
+	QColor color;
 
-	if (sCRGBs.size() == 12 && savedGreyTones.size() == 153)				// sprawdza wielkosci wektorow
+	int red, green, blue;
+	unsigned char digit;
+
+	pixel = image.pixel(col, row);
+	color.setRgb(pixel);
+
+	red = color.red();
+	green = color.green();
+	blue = color.blue();
+
+	std::cout << "\nKolor rgb piksela: " << red << " " << green << " " << blue << std::endl;
+
+	if (red <= 0 + digitColorRange &&
+		green <= 0 + digitColorRange &&
+		blue <= 0 + digitColorRange)
 	{
-		checkPixel(0, 0, sCRGBs[0], sCRGBs[1], sCRGBs[2]);
-		checkPixel(image.width() - 1, 0, sCRGBs[3], sCRGBs[4], sCRGBs[5]);
-		checkPixel(0, image.height() - 1, sCRGBs[6], sCRGBs[7], sCRGBs[8]);
-		checkPixel(image.width() - 1, image.height() - 1, sCRGBs[9], sCRGBs[10], sCRGBs[11]);
+		// 0 0 0 czyli czarny - 0
+		digit = 0;
+	}
+	else if (red >= 28 - digitColorRange && red <= 28 + digitColorRange &&
+		green >= 28 - digitColorRange && green <= 28 + digitColorRange &&
+		blue >= 28 - digitColorRange && blue <= 28 + digitColorRange)
+	{
+		// 50 50 50 czyli jakis taki szary numero uno - 1
+		digit = 1;
+	}
+	else if (red >= 56 - digitColorRange && red <= 56 + digitColorRange &&
+			green >= 56 - digitColorRange && green <= 56 + digitColorRange &&
+			blue >= 56 - digitColorRange && blue <= 56 + digitColorRange)
+	{
+		// 100 100 100 czyli jakis taki szary numero due - 2
+		digit = 2;
+	}
+	else if (red >= 84 - digitColorRange && red <= 84 + digitColorRange &&
+			green >= 84 - digitColorRange && green <= 84 + digitColorRange &&
+			blue >= 84 - digitColorRange && blue <= 84 + digitColorRange)
+	{
+		// 50 100 150 czyli fiolecik jakis - 3
+		digit = 3;
+	}
+	else if (red >= 112 - digitColorRange && red <= 112 + digitColorRange &&
+			green >= 112 - digitColorRange && green <= 112 + digitColorRange &&
+			blue >= 112 - digitColorRange && blue <= 112 + digitColorRange)
+	{
+		// 150 150 150 czyli odcien szarosci numero tre - 4
+		digit = 4;
+	}
+	else if (red >= 140 - digitColorRange && red <= 140 + digitColorRange &&
+			green >= 140 - digitColorRange && green <= 140 + digitColorRange &&
+			blue >= 140 - digitColorRange && blue <= 140 + digitColorRange)
+	{
+		// 200 200 200 czyli odcien szarosci numero quattro - 5
+		digit = 5;
+	}
+	else if (red >= 168 - digitColorRange && red <= 168 + digitColorRange &&
+			green >= 168 - digitColorRange && green <= 168 + digitColorRange &&
+			blue >= 168 - digitColorRange && blue <= 168 + digitColorRange)
+	{
+		// 255 255 0 czyli zolty - 6
+		digit = 6;
+	}
+	else if (red >= 196 - digitColorRange && red <= 196 + digitColorRange &&
+			green >= 196 - digitColorRange && green <= 196 + digitColorRange &&
+			blue >= 196 - digitColorRange && blue <= 196 + digitColorRange)
+	{
+		// 255 0 255 czyli ciemny rozowy - 7
+		digit = 7;
+	}
+	else if (red >= 224 - digitColorRange && red <= 224 + digitColorRange &&
+			green >= 224 - digitColorRange && green <= 224 + digitColorRange &&
+			blue >= 224 - digitColorRange && blue <= 224 + digitColorRange)
+	{
+		// 0 255 255 czyli cyan lekki niebieski - 8
+		digit = 8;
+	}
+	else if (red >= 255 - digitColorRange &&
+			green >= 255 - digitColorRange &&
+			blue >= 255 - digitColorRange)
+	{
+		// 255 255 255 czyli bialy - 9
+		digit = 9;
+	}
+	else
+	{
+		// piksel wykracza barwa poza nasz zakres !!!
+		digit = 10;
+	}
+	return digit;
+}
 
+int DrawingOperations::convertDigitsToInt(int* digits)
+{
+	int number = 0;
+
+	for (int step = 0; step < 7; step++)
+	{
+		number *= 10;
+		number += digits[step];
+	}
+
+	return number;
+}
+
+void DrawingOperations::checkImageSecurity(std::vector<int> savedGreyTones)
+{
+	std::vector<int> readGreyTones; // ilosci pikseli w odcieni szarosci odczytane z obrazka ( z zabezpieczenia w postaci bloku )
+	bool rotation; // bool ze udalo sie wykryc rotacje i zapisywana jest ona w jakiejs zmiennej ???
+	int infoBeginningX, infoBeginningY;
+	short rotationResult;
+	int readDigit;
+	int digits[7];
+	int temp;
+
+	// TODO tutaj pozniej bedzie sprawdzanie obrotu i wtedy bedzie wiadomo jak sprawdzac znak i zaleznosci pikselowe
+
+	rotation = 1;	// TODO funkcja wykrywajaca jaki jest obrot
+	// zaleznie od wyniku to poczatek
+	signBeginningX = columns - signLength;
+	signBeginningY = rows - signHeight;
+	rotationResult = 0;
+
+
+/*
+	if (savedGreyTones.size() == 153)				// sprawdza wielkosc wektora
+	{
 		checkHistogramGrey(savedGreyTones);
 	}
+	else */if (rotation)
+	{
+		// TODO zrobic wykrywanie obrotu i czytanie w tym miejscu jakies funkcje !!! :D
+
+		// zaleznie od rotation
+		infoBeginningX = signBeginningX+1;
+		infoBeginningY = signBeginningY+1;
+
+
+
+		for (int actualRow = infoBeginningY, toneIndex = 0; toneIndex < 153; actualRow++)
+		{
+			//std::cout << "\nSzereg: " << actualRow << " toneIndex: " << toneIndex << std::endl;
+			for (int step = 0; step < 5 && toneIndex < 153; step++, toneIndex++)
+			{
+				for (int numberPart = 0; numberPart < 7; numberPart++)
+				{
+					readDigit = readPixelDigit(infoBeginningX + step * 7 + numberPart, actualRow);
+
+					if (readDigit == 10)
+					{
+						//std::cout << "\nBlad czytania wartosci piksela znaku - nieznany kolor !!!\n";
+						// blad jest w znaku piksel ma wartosc niewazna !!!
+					}
+					else
+					{
+						//std::cout << "\nWczytalem piksel dajacy wartosc: " << readDigit << std::endl;
+						digits[numberPart] = readDigit;
+					}
+				}
+				// Funkcja dajaca liczbe na podstawie 7 cyfr danych
+				temp = convertDigitsToInt(digits);
+				readGreyTones.push_back(temp);
+
+				std::cout << "\n Wektor teraz ma wielkosc " << readGreyTones.size() << " dodalem: " << temp;
+			}
+
+		}
+		checkHistogramGrey(readGreyTones);
+	}
+	/*else if (1)
+	{
+
+	}
+	else if (1)
+	{
+
+	}
+	else if (1)
+	{
+
+	}*/
 	else
 	{
 		histogramGComparison = QImage(histogramBase);

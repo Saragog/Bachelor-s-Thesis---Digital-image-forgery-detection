@@ -38,7 +38,9 @@ src/WindowSecureCheck.d: ../src/WindowSecureCheck.cpp \
  /usr/include/qt4/QtGui/QPushButton /usr/include/qt4/QtGui/qpushbutton.h \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/qicon.h \
  /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h \
- /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h
+ /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h \
+ /usr/include/qt4/QtCore/QTimer /usr/include/qt4/QtCore/qtimer.h \
+ /usr/include/qt4/QtCore/qbasictimer.h
 
 ../src/WindowSecureCheck.h:
 
@@ -171,3 +173,9 @@ src/WindowSecureCheck.d: ../src/WindowSecureCheck.cpp \
 /usr/include/qt4/QtGui/QImage:
 
 /usr/include/qt4/QtGui/qimage.h:
+
+/usr/include/qt4/QtCore/QTimer:
+
+/usr/include/qt4/QtCore/qtimer.h:
+
+/usr/include/qt4/QtCore/qbasictimer.h:

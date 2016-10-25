@@ -75,12 +75,13 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/QScrollArea /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
- ../src/WindowSecureCheck.h ../src/WindowSecureImage.h \
- ../src/WindowAllExivData.h ../src/ExivOperations.h \
- /usr/local/include/exiv2/exiv2.hpp /usr/local/include/exiv2/basicio.hpp \
- /usr/local/include/exiv2/types.hpp /usr/local/include/exiv2/config.h \
- /usr/local/include/exiv2/exv_conf.h /usr/local/include/exiv2/version.hpp \
- /usr/local/include/exiv2/futils.hpp \
+ ../src/WindowSecureCheck.h /usr/include/qt4/QtCore/QTimer \
+ /usr/include/qt4/QtCore/qtimer.h /usr/include/qt4/QtCore/qbasictimer.h \
+ ../src/WindowSecureImage.h ../src/WindowAllExivData.h \
+ ../src/ExivOperations.h /usr/local/include/exiv2/exiv2.hpp \
+ /usr/local/include/exiv2/basicio.hpp /usr/local/include/exiv2/types.hpp \
+ /usr/local/include/exiv2/config.h /usr/local/include/exiv2/exv_conf.h \
+ /usr/local/include/exiv2/version.hpp /usr/local/include/exiv2/futils.hpp \
  /usr/local/include/exiv2/bmpimage.hpp /usr/local/include/exiv2/exif.hpp \
  /usr/local/include/exiv2/metadatum.hpp \
  /usr/local/include/exiv2/value.hpp /usr/local/include/exiv2/tags.hpp \
@@ -364,6 +365,12 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
 /usr/include/qt4/QtGui/qgridlayout.h:
 
 ../src/WindowSecureCheck.h:
+
+/usr/include/qt4/QtCore/QTimer:
+
+/usr/include/qt4/QtCore/qtimer.h:
+
+/usr/include/qt4/QtCore/qbasictimer.h:
 
 ../src/WindowSecureImage.h:
 

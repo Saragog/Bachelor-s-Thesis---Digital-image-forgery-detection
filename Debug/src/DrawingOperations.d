@@ -37,7 +37,9 @@ src/DrawingOperations.d: ../src/DrawingOperations.cpp \
  /usr/include/qt4/QtGui/qpen.h /usr/include/qt4/QtGui/qbrush.h \
  /usr/include/qt4/QtCore/qpair.h /usr/include/qt4/QtGui/qfontinfo.h \
  /usr/include/qt4/QtGui/qfont.h /usr/include/qt4/QtGui/qfontmetrics.h \
- /usr/include/qt4/QtCore/QFile /usr/include/qt4/QtCore/qfile.h
+ /usr/include/qt4/QtGui/QImageWriter \
+ /usr/include/qt4/QtGui/qimagewriter.h /usr/include/qt4/QtCore/QFile \
+ /usr/include/qt4/QtCore/qfile.h
 
 ../src/DrawingOperations.h:
 
@@ -166,6 +168,10 @@ src/DrawingOperations.d: ../src/DrawingOperations.cpp \
 /usr/include/qt4/QtGui/qfont.h:
 
 /usr/include/qt4/QtGui/qfontmetrics.h:
+
+/usr/include/qt4/QtGui/QImageWriter:
+
+/usr/include/qt4/QtGui/qimagewriter.h:
 
 /usr/include/qt4/QtCore/QFile:
 

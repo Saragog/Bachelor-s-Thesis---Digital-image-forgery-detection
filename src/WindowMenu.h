@@ -46,7 +46,6 @@ public:
 	QSignalMapper* mapperSecureCheck;
 	QSignalMapper* mapperTextEdited;
 
-	// TODO
 	QImage defaultImage;
 	QLabel* imageLabel;
 
