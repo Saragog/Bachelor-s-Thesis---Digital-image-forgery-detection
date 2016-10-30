@@ -29,6 +29,10 @@ private:
 	QLabel* exifYDimensionLabel;
 	QLabel* exifDateTimeLabel;
 
+	QLabel* imageRotationLabel;
+	QLabel* imageHistogramSourceLabel;
+	QLabel* imageWrgPxlCntrLabel;
+
 	QPixmap pixmapImage;
 	QPixmap pixmapCheckedImage;
 	QLabel* histogramCLabel;
@@ -48,7 +52,7 @@ public:
 	WindowSecureCheck(QWidget* main);
 	virtual ~WindowSecureCheck();
 	void setImage(QString path);
-	void setExifRaport(std::vector<std::pair<bool, std::string> > raport);
+	void setRaport(std::vector<std::pair<bool, std::string> > raport);
 	void setHistogramC(QImage histogram);
 	void setCheckedImage(QImage image);
 

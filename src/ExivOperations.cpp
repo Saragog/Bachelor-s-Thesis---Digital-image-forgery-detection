@@ -78,6 +78,8 @@ std::string ExivOperations::convertIntToStr(int number)
 {
 	std::string result = "";
 
+	if (number == 0) return "0";
+
 	while (number > 0)
 	{
 		result = (char)((number % 10) + '0') + result;
@@ -215,20 +217,11 @@ void ExivOperations::prepareSecurityExifData()
 
 	securityInfoToSave += dateTime;
 
-	/*
-    std::vector<int> cornerPixelsRGBs = controller->getCorners();
-
-    for (int step = 0; step < 12; step++)
-    {
-    	securityInfoToSave += " ";
-    	securityInfoToSave += convertIntToStr(cornerPixelsRGBs.at(step));
-    }
-	*/
-
     int* histogramGrey = controller->getHistGTones();
 
     for (int tone = 0; tone < 153; tone++)
     {
+    	std::cout << "Zapisuje ilosc pikseli nalezacych do tonu: " << histogramGrey[tone] << std::endl;
         securityInfoToSave += " ";
         securityInfoToSave += convertIntToStr(histogramGrey[tone]);
     }
@@ -394,7 +387,7 @@ bool ExivOperations::checkDateTime(std::string word)
 	if (date == word)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Data zmiany sie zgadza";
+		partialRaport.second = "Data ostatniej zmiany zgodna z data zapisu";
 		raportExif.push_back(partialRaport);
 		cout << "\nData zmiany sie zgaaadza :D \n";
 		return true;
@@ -402,14 +395,14 @@ bool ExivOperations::checkDateTime(std::string word)
 	else
 	{
 		partialRaport.first = false;
-		partialRaport.second = "Data zmiany sie nie zgadza";
+		partialRaport.second = "Data ostatniej zmiany nie jest zgodna z data zapisu";
 		raportExif.push_back(partialRaport);
-		cout << "\nData zmiany ostatniej sie nie zgadza ... \n";
+		cout << "\nData ostatniej zmiany nie jest zgodna z data zapisu\n";
 	}
 	return false;
 }
 
-bool ExivOperations::checkExifSecurity()
+void ExivOperations::checkExifSecurity()
 {
 	std::string word;
 	curIndexSTag = 0;
@@ -429,7 +422,6 @@ bool ExivOperations::checkExifSecurity()
 		partialRaport.second = "Nie wykryto pola zabezpieczajacego w wybranym obrazie";
 
 		raportExif.push_back(partialRaport);
-		return false;
 	}
 
 	word = readSecurityExifWord();
@@ -448,7 +440,6 @@ bool ExivOperations::checkExifSecurity()
 		partialRaport.second = "Nie wykryto zabezpieczen";
 
 		raportExif.push_back(partialRaport);
-		return false;
 	}
 	else
 	{
@@ -468,8 +459,7 @@ bool ExivOperations::checkExifSecurity()
 		curIndexSTag += 1;
 		checkDateTime(word);
 	}
-
-	return true;
+	return;
 }
 
 /*

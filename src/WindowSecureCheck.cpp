@@ -29,6 +29,15 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 	exifDateTimeLabel = new QLabel(this);
 	exifDateTimeLabel->setGeometry(620, 680, 600, 50);
 
+	imageRotationLabel = new QLabel(this);
+	imageRotationLabel->setGeometry(620, 730, 600, 50);
+
+	imageHistogramSourceLabel = new QLabel(this);
+	imageHistogramSourceLabel->setGeometry(620, 780, 600, 50);
+
+	imageWrgPxlCntrLabel = new QLabel(this);
+	imageWrgPxlCntrLabel->setGeometry(620, 830, 600, 50);
+
 	histogramCLabel = new QLabel(this);
 	histogramCLabel->setGeometry(620, 10, 600, 450);
 
@@ -65,16 +74,19 @@ void WindowSecureCheck::setImage(QString path)
 	return;
 }
 
-void WindowSecureCheck::setExifRaport(std::vector<std::pair<bool, std::string> > raport)
+void WindowSecureCheck::setRaport(std::vector<std::pair<bool, std::string> > raport)
 {
 	exifProtectionLabel->setText(QString::fromStdString(raport.at(0).second));
-	if (raport.size() > 1)
-	{
-		exifSoftwareLabel->setText(QString::fromStdString(raport.at(1).second));
-		exifXDimensionLabel->setText(QString::fromStdString(raport.at(2).second));
-		exifYDimensionLabel->setText(QString::fromStdString(raport.at(3).second));
-		exifDateTimeLabel->setText(QString::fromStdString(raport.at(4).second));
-	}
+	exifSoftwareLabel->setText(QString::fromStdString(raport.at(1).second));
+	exifXDimensionLabel->setText(QString::fromStdString(raport.at(2).second));
+	exifYDimensionLabel->setText(QString::fromStdString(raport.at(3).second));
+	exifDateTimeLabel->setText(QString::fromStdString(raport.at(4).second));
+
+	imageRotationLabel->setText(QString::fromStdString(raport.at(5).second));
+	imageHistogramSourceLabel->setText(QString::fromStdString(raport.at(6).second));
+	imageWrgPxlCntrLabel->setText(QString::fromStdString(raport.at(7).second));
+
+	return;
 }
 
 void WindowSecureCheck::setHistogramC(QImage histogram)

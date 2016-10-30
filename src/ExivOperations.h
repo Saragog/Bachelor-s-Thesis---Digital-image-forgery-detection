@@ -43,7 +43,7 @@ public:
 	bool isImageFile(std::string path);
 
 	std::string readSecurityExifWord();
-	bool checkExifSecurity(); 	// narazie po prostu sprawdza potem jakis raport bedzie tworzony w stringu
+	void checkExifSecurity(); 	// narazie po prostu sprawdza potem jakis raport bedzie tworzony w stringu
 								// to jest glowna funkcja ktora odpytuje te mniejsze
 	bool checkSoftware();
 	bool checkIfProtected(std::string word);

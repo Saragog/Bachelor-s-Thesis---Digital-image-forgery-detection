@@ -129,7 +129,7 @@ void WindowMain::showSecureImage(QString fileName)
 
 void WindowMain::showSecureCheck(QString fileName)
 {
-	std::vector<std::pair<bool, std::string> > exifRaport;
+	std::vector<std::pair<bool, std::string> > exifRaport, imageRaport, concatRaport;
 	std::vector<int> savedGreyTones;
 	QImage histogramComparison;
 	QImage checkedImage;
@@ -146,10 +146,18 @@ void WindowMain::showSecureCheck(QString fileName)
 			drawingOperations->checkImageSecurity(savedGreyTones);
 
 			exifRaport = exivOperations->getRaportExif();
+			imageRaport = drawingOperations->getRaportImage();
+
+			concatRaport = exifRaport;
+			for (unsigned int x = 0; x < imageRaport.size(); x++)
+			{
+				concatRaport.push_back(imageRaport.at(x));
+			}
+
 			histogramComparison = drawingOperations->getHistogramComparison();
 			checkedImage = drawingOperations->getCheckedImage();
 
-			secureCheck->setExifRaport(exifRaport);
+			secureCheck->setRaport(concatRaport);
 			secureCheck->setHistogramC(histogramComparison);
 			secureCheck->setCheckedImage(checkedImage);
 
@@ -160,27 +168,36 @@ void WindowMain::showSecureCheck(QString fileName)
 		}
 		else
 		{
-			if (exivOperations->checkExifSecurity())
+			exivOperations->checkExifSecurity();
+			//if (exivOperations->checkExifSecurity())
 			{
 				savedGreyTones = exivOperations->getSavedGreyTones();
 
 				drawingOperations->checkImageSecurity(savedGreyTones);
 
 				exifRaport = exivOperations->getRaportExif();
+				imageRaport = drawingOperations->getRaportImage();
+
+				concatRaport = exifRaport;
+				for (unsigned int x = 0; x < imageRaport.size(); x++)
+				{
+					concatRaport.push_back(imageRaport.at(x));
+				}
+
 				histogramComparison = drawingOperations->getHistogramComparison();
 				checkedImage = drawingOperations->getCheckedImage();
 
-				secureCheck->setExifRaport(exifRaport);
+				secureCheck->setRaport(concatRaport);
 				secureCheck->setHistogramC(histogramComparison);
 				secureCheck->setCheckedImage(checkedImage);
 
 				stackedWidget->setCurrentIndex(3);
 			}
-			else
-			{
-				message.setText("W wybranym pliku nie wykryto zabezpieczen !!!");
-				message.exec();
-			}
+//			else
+//			{
+//				message.setText("W wybranym pliku nie wykryto zabezpieczen !!!");
+//				message.exec();
+//			}
 		}
 	}
 	else

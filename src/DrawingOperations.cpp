@@ -10,9 +10,7 @@
 #include <QColor>
 #include <QPainter>
 
-// ___
 #include <QImageWriter>
-// ___
 
 #include <QFile>
 
@@ -25,11 +23,8 @@ DrawingOperations::DrawingOperations()
     actualFileName = "";
 
     accDif = 3;
-
     signLength = 37;
     signHeight = 33;
-
-    // ______
     digitColorRange = 10;
 }
 
@@ -202,8 +197,6 @@ void DrawingOperations::secureImage()
 	{
 		for (int row = col % 3; row < rows; row+=3)
 		{
-			if ((col + row) % 3 != 0) continue;
-
 			if (col > columns - 40 && row > rows - 40) continue;
 
 			sumRed = 0;
@@ -252,62 +245,6 @@ void DrawingOperations::secureImage()
 			mediumGreen = sumGreen / adjacentPixels;
 			mediumBlue = sumBlue / adjacentPixels;
 
-			// _____________________
-
-/*			int red, green, blue;
-
-			if (col >= 1300 && col < 1400 && row >= 1100 && row < 1200)
-			{
-				std::cout << "\nDla piksela o pozycji: " << col << " " << row << std::endl;
-				std::cout << "Srednia wynosi: " << mediumRed << " " <<mediumGreen << " " << mediumBlue << std::endl;
-
-				if (row - 1 >= 0)
-				{
-					pixel = image.pixel(col, row-1);
-					color.setRgb(pixel);
-
-					red = color.red();
-					green = color.green();
-					blue = color.blue();
-					std::cout << "Piksel na gorze: " << red << " " << green << " " << blue << std::endl;
-				}
-
-				if (col - 1 >= 0)
-				{
-					pixel = image.pixel(col-1, row);
-					color.setRgb(pixel);
-
-					red = color.red();
-					green = color.green();
-					blue = color.blue();
-					std::cout << "Piksel po lewej: " << red << " " << green << " " << blue << std::endl;
-				}
-
-				if (col + 1 < columns)
-				{
-					pixel = image.pixel(col+1, row);
-					color.setRgb(pixel);
-
-					red = color.red();
-					green = color.green();
-					blue = color.blue();
-					std::cout << "Piksel po prawej: " << red << " " << green << " " << blue << std::endl;
-				}
-
-				if (row + 1 < rows)
-				{
-					pixel = image.pixel(col, row+1);
-					color.setRgb(pixel);
-
-					red = color.red();
-					green = color.green();
-					blue = color.blue();
-					std::cout << "Piksel na dole: " << red << " " << green << " " << blue << std::endl;
-				}
-			}
-*/
-			// _____________________
-
 			securedImage.setPixel(col, row, qRgb(mediumRed, mediumGreen, mediumBlue));
 		}
 	}
@@ -325,38 +262,26 @@ QImage DrawingOperations::getHistogramRGB() const
 	return histogramRGB;
 }
 
-bool DrawingOperations::saveImage(QString path)
+bool DrawingOperations::saveImage(QString path) // funkcja zapisuje obraz do pliku o podanej sciezce
 {
-	// ____
-	// ____
-
 	try
 	{
 		QFile file(path);
 		file.open(QIODevice::WriteOnly);
 
-		secureImage();
+		secureImage(); // funkcja do zabezpieczenia obrazu
 
-		drawSign(); // Funkcja do tworzenia znaczka zabezpieczajacego przed utrata danych exif
+		drawSign(); // funkcja do tworzenia znaczka zabezpieczajacego przed utrata danych exif
 
-		prepareHistogramsData();
+		prepareHistogramsData(); // funkcja przygotowuje dane do tworzenia histogramow
 
-		securedImage.save(&file, "JPG", 100);
+		securedImage.save(&file, "JPG", 100); // zapis obrazu
 
 		file.close();
-
-		// ___
-
-		QFile f2("/home/andrzej/workspace/Inzynierka/Zdjecia_Edytowane/x.jpg");
-		QImageWriter writer(&f2, "JPG");
-		writer.setCompression(0);
-		writer.setQuality(100);
-		writer.write(securedImage);
-
 	}
 	catch (std::exception& e)
 	{
-		return false;
+		return false; // jesli nie udalo sie zapisac obrazu ( np za malo pamieci )
 	}
 
 	return true;
@@ -394,16 +319,10 @@ void DrawingOperations::drawSign()
 			if (tone < 153) actualTone = greyTones[tone];
 			else actualTone = 0;
 
-			std::cout << "\nDla tone: " << tone + 1<< " CalyGreyTone = " << actualTone;
-
 			for (int part = 0, divisor = 1000000; part < 7; part++, divisor/=10)
 			{
-				//std::cout << "\nZamalowuje 1 piksel znaczka: " << signBeginningX+1 + step * 7 + part << " " << y;
-
 				digit = actualTone / divisor;
 				actualTone = actualTone - digit * divisor;
-				std::cout << std::endl << digit;
-				//std::cout << std::endl << actualTone;
 
 				switch (digit)
 				{
@@ -503,25 +422,6 @@ int* DrawingOperations::getHistGTones()
 	return greyTones;
 }
 
-bool DrawingOperations::checkPixel(unsigned int col, unsigned int row, int r, int g, int b) const
-{
-	QColor color;
-	QRgb pixel;
-	pixel = image.pixel(col, row);
-	color.setRgb(pixel);
-
-	if (r >= color.red() - accDif && r <= color.red() + accDif &&
-		g >= color.green() - accDif && g <= color.green() + accDif &&
-		b >= color.blue() - accDif && b <= color.blue() + accDif
-	)
-	{
-		std::cout << "\nPiksel " << col << " " << row << " pasuje :D \n";
-		return true;
-	}
-	std::cout << "\nPiksel " << col << " " << row << " nie pasuje ... \n";
-	return false;
-}
-
 void DrawingOperations::drawChange(int col, int row)
 {
 	QRgb pixel;
@@ -531,7 +431,10 @@ void DrawingOperations::drawChange(int col, int row)
 	{
 		for (int r = row - 2; r < row + 3; r++)
 		{
-			if (c >= signBeginningX && r >= signBeginningY) continue;
+			if (rotation == ROTATION0 && c >= signBeginningX && r >= signBeginningY) continue;
+			if (rotation == ROTATION90 && c <= signBeginningX && r >= signBeginningY) continue;
+			if (rotation == ROTATION180 && c <= signBeginningX && r <= signBeginningY) continue;
+			if (rotation == ROTATION270 && c >= signBeginningX && r <= signBeginningY) continue;
 
 			if (c >= 0 && c < columns && r >= 0 && r < rows && pixelsChanged[c][r])
 			{
@@ -579,6 +482,8 @@ void DrawingOperations::lookForSimilarPixels(int col, int row)
 
 void DrawingOperations::checkAdjacentPixels(int col, int row)
 {
+	// TODO Przetestowac dzialanie tego :D
+
 	QRgb pixel;
 	QColor colorActual;
 	int red, green, blue;
@@ -592,11 +497,41 @@ void DrawingOperations::checkAdjacentPixels(int col, int row)
 
 	pixelResults[col][row] = false;
 
-	checkAdjacentUp(col, row, red, green, blue);
-	checkAdjacentLeft(col, row, red, green, blue);
-
-	if (col < signBeginningX || row < signBeginningY) checkAdjacentRight(col, row, red, green, blue);
-	if (col < signBeginningX || row < signBeginningY) checkAdjacentDown(col, row, red, green, blue);
+	switch (rotation)
+	{
+		case ROTATION0:
+		{
+			checkAdjacentUp(col, row, red, green, blue);
+			checkAdjacentLeft(col, row, red, green, blue);
+			if (col < signBeginningX || row < signBeginningY) checkAdjacentRight(col, row, red, green, blue);
+			if (col < signBeginningX || row < signBeginningY) checkAdjacentDown(col, row, red, green, blue);
+			break;
+		}
+		case ROTATION90:
+		{
+			checkAdjacentUp(col, row, red, green, blue);
+			if (col > signBeginningX || row < signBeginningY) checkAdjacentLeft(col, row, red, green, blue);
+			checkAdjacentRight(col, row, red, green, blue);
+			if (col > signBeginningX || row < signBeginningY) checkAdjacentDown(col, row, red, green, blue);
+			break;
+		}
+		case ROTATION180:
+		{
+			if (col > signBeginningX || row > signBeginningY) checkAdjacentUp(col, row, red, green, blue);
+			if (col > signBeginningX || row > signBeginningY) checkAdjacentLeft(col, row, red, green, blue);
+			checkAdjacentRight(col, row, red, green, blue);
+			checkAdjacentDown(col, row, red, green, blue);
+			break;
+		}
+		case ROTATION270:
+		{
+			if (col < signBeginningX || row > signBeginningY) checkAdjacentUp(col, row, red, green, blue);
+			checkAdjacentLeft(col, row, red, green, blue);
+			if (col < signBeginningX || row > signBeginningY) checkAdjacentRight(col, row, red, green, blue);
+			checkAdjacentDown(col, row, red, green, blue);
+			break;
+		}
+	}
 
 	return;
 }
@@ -614,28 +549,31 @@ void DrawingOperations::checkAdjacentUp(int col, int row, int red, int green, in
 		checked.setRgb(pixel);
 
 		for (int actualRow = row-1, actualCol = col; actualRow >= 0 &&
-				pixelResults[actualCol][actualRow-1] &&
+				pixelResults[actualCol][actualRow] &&
 				red == checked.red() &&
 				green == checked.green() &&
 				blue == checked.blue(); actualRow--
 				)
 		{
 			// sprawdza na lewo i prawo
-			pixelResults[actualCol][actualRow-1] = false;
-			drawChange(actualCol, actualRow-1);
+			pixelResults[actualCol][actualRow] = false;
+			drawChange(actualCol, actualRow);
 
-			pixel = image.pixel(actualCol-1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol-1 >= 0)
+			{
+				pixel = image.pixel(actualCol-1, actualRow);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow, innerCol = actualCol-1; innerCol-1 >= 0 &&
-					pixelResults[col-1][row] &&
+			for (int innerCol = actualCol-1; innerCol >= 0 &&
+					pixelResults[innerCol][actualRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerCol--
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[innerCol][actualRow] = false;
+				drawChange(innerCol, actualRow);
 
 				if (innerCol-1 >= 0)
 				{
@@ -644,18 +582,21 @@ void DrawingOperations::checkAdjacentUp(int col, int row, int red, int green, in
 				}
 			}
 
-			pixel = image.pixel(actualCol+1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol+1 < columns)
+			{
+				pixel = image.pixel(actualCol+1, actualRow);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow, innerCol = actualCol+1; innerCol < columns &&
-					pixelResults[col+1][row] &&
+			for (int innerCol = actualCol+1; innerCol < columns &&
+					pixelResults[innerCol][actualRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerCol++
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[innerCol][actualRow] = false;
+				drawChange(innerCol, actualRow);
 
 				if (innerCol+1 < columns)
 				{
@@ -664,8 +605,11 @@ void DrawingOperations::checkAdjacentUp(int col, int row, int red, int green, in
 				}
 			}
 
-			pixel = image.pixel(actualCol, actualRow-1);
-			checked.setRgb(pixel);
+			if (actualRow-1 >= 0)
+			{
+				pixel = image.pixel(actualCol, actualRow-1);
+				checked.setRgb(pixel);
+			}
 		}
 	}
 
@@ -691,52 +635,61 @@ void DrawingOperations::checkAdjacentLeft(int col, int row, int red, int green, 
 				blue == checked.blue(); actualCol--
 				)
 		{
+			pixelResults[actualCol][actualRow] = false;
+			drawChange(actualCol, actualRow);
+
 			// sprawdza na gore i dol
-			pixelResults[actualCol-1][actualRow] = false;
-			drawChange(actualCol-1, actualRow);
+			if (actualRow-1 >= 0)
+			{
+				pixel = image.pixel(actualCol, actualRow-1);
+				checked.setRgb(pixel);
+			}
 
-			pixel = image.pixel(actualCol, actualRow-1);
-			checked.setRgb(pixel);
-
-			for (int innerRow = actualRow-1, innerCol = actualCol; innerRow-1 >= 0 &&
-					pixelResults[col][row-1] &&
+			for (int innerRow = actualRow-1; innerRow >= 0 &&
+					pixelResults[actualCol][innerRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerRow--
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[actualCol][innerRow] = false;
+				drawChange(actualCol, innerRow);
 
 				if (innerRow-1 >= 0)
 				{
-					pixel = image.pixel(innerCol, innerRow-1);
+					pixel = image.pixel(actualCol, innerRow-1);
 					checked.setRgb(pixel);
 				}
 			}
 
-			pixel = image.pixel(actualCol, actualRow+1);
-			checked.setRgb(pixel);
+			if (actualRow+1 < rows)
+			{
+				pixel = image.pixel(actualCol, actualRow+1);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow+1, innerCol = actualCol; innerRow < rows &&
-					pixelResults[col][row+1] &&
+			for (int innerRow = actualRow+1; innerRow < rows &&
+					pixelResults[actualCol][innerRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerRow++
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[actualCol][innerRow] = false;
+				drawChange(actualCol, innerRow);
 
 				if (innerRow+1 < rows)
 				{
-					pixel = image.pixel(innerCol, innerRow+1);
+					pixel = image.pixel(actualCol, innerRow+1);
 					checked.setRgb(pixel);
 				}
 			}
 
-			pixel = image.pixel(actualCol-1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol-1 >= 0)
+			{
+				pixel = image.pixel(actualCol-1, actualRow);
+				checked.setRgb(pixel);
+			}
 		}
 	}
 
@@ -755,7 +708,7 @@ void DrawingOperations::checkAdjacentRight(int col, int row, int red, int green,
 		pixel = image.pixel(col+1, row);
 		checked.setRgb(pixel);
 
-		for (int actualRow = row, actualCol = col+1; actualCol >= 0 &&
+		for (int actualRow = row, actualCol = col+1; actualCol < columns &&
 				pixelResults[actualCol][actualRow] &&
 				red == checked.red() &&
 				green == checked.green() &&
@@ -763,51 +716,60 @@ void DrawingOperations::checkAdjacentRight(int col, int row, int red, int green,
 				)
 		{
 			// sprawdza na gore i dol
-			pixelResults[actualCol+1][actualRow] = false;
-			drawChange(actualCol+1, actualRow);
+			pixelResults[actualCol][actualRow] = false;
+			drawChange(actualCol, actualRow);
 
-			pixel = image.pixel(actualCol, actualRow-1);
-			checked.setRgb(pixel);
+			if (actualRow-1 >= 0)
+			{
+				pixel = image.pixel(actualCol, actualRow-1);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow-1, innerCol = actualCol; innerRow-1 >= 0 &&
-					pixelResults[col][row-1] &&
+			for (int innerRow = actualRow-1; innerRow >= 0 &&
+					pixelResults[actualCol][innerRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerRow--
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[actualCol][innerRow] = false;
+				drawChange(actualCol, innerRow);
 
 				if (innerRow-1 >= 0)
 				{
-					pixel = image.pixel(innerCol, innerRow-1);
+					pixel = image.pixel(actualCol, innerRow-1);
 					checked.setRgb(pixel);
 				}
 			}
 
-			pixel = image.pixel(actualCol, actualRow+1);
-			checked.setRgb(pixel);
+			if (actualRow+1 < rows)
+			{
+				pixel = image.pixel(actualCol, actualRow+1);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow+1, innerCol = actualCol; innerRow+1 < rows &&
-					pixelResults[col][row+1] &&
+			for (int innerRow = actualRow+1; innerRow < rows &&
+					pixelResults[actualCol][innerRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerRow++
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[actualCol][innerRow] = false;
+				drawChange(actualCol, innerRow);
 
 				if (innerRow+1 < rows)
 				{
-					pixel = image.pixel(innerCol, innerRow+1);
+					pixel = image.pixel(actualCol, innerRow+1);
 					checked.setRgb(pixel);
 				}
 			}
 
-			pixel = image.pixel(actualCol+1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol+1 < columns)
+			{
+				pixel = image.pixel(actualCol+1, actualRow);
+				checked.setRgb(pixel);
+			}
 		}
 	}
 
@@ -827,28 +789,31 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 		checked.setRgb(pixel);
 
 		for (int actualRow = row+1, actualCol = col; actualRow < rows &&
-				pixelResults[actualCol][actualRow+1] &&
+				pixelResults[actualCol][actualRow] &&
 				red == checked.red() &&
 				green == checked.green() &&
 				blue == checked.blue(); actualRow++
 				)
 		{
 			// sprawdza na lewo i prawo
-			pixelResults[actualCol][actualRow+1] = false;
-			drawChange(actualCol, actualRow+1);
+			pixelResults[actualCol][actualRow] = false;
+			drawChange(actualCol, actualRow);
 
-			pixel = image.pixel(actualCol-1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol-1 >= 0)
+			{
+				pixel = image.pixel(actualCol-1, actualRow);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow, innerCol = actualCol-1; innerCol-1 >= 0 &&
-					pixelResults[col-1][row] &&
+			for (int innerCol = actualCol-1; innerCol >= 0 &&
+					pixelResults[innerCol][actualRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerCol--
 					)
 			{
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[innerCol][actualRow] = false;
+				drawChange(innerCol, actualRow);
 
 				if (innerCol-1 >= 0)
 				{
@@ -857,19 +822,22 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 				}
 			}
 
-			pixel = image.pixel(actualCol+1, actualRow);
-			checked.setRgb(pixel);
+			if (actualCol+1 < columns)
+			{
+				pixel = image.pixel(actualCol+1, actualRow);
+				checked.setRgb(pixel);
+			}
 
-			for (int innerRow = actualRow, innerCol = actualCol+1; innerCol+1 < columns &&
-					pixelResults[col+1][row] &&
+			for (int innerCol = actualCol+1; innerCol < columns &&
+					pixelResults[innerCol][actualRow] &&
 					red == checked.red() &&
 					green == checked.green() &&
 					blue == checked.blue(); innerCol++
 					)
 			{
 
-				pixelResults[innerCol][innerRow] = false;
-				drawChange(innerCol, innerRow);
+				pixelResults[innerCol][actualRow] = false;
+				drawChange(innerCol, actualRow);
 
 				if (innerCol+1 < columns)
 				{
@@ -878,8 +846,11 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 				}
 			}
 
-			pixel = image.pixel(actualCol, actualRow+1);
-			checked.setRgb(pixel);
+			if (actualRow+1 < rows)
+			{
+				pixel = image.pixel(actualCol, actualRow+1);
+				checked.setRgb(pixel);
+			}
 		}
 	}
 
@@ -888,11 +859,6 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 
 bool DrawingOperations::checkChanges()
 {
-	signBeginningX = columns - signLength;
-	signBeginningY = rows - signHeight;
-
-	//std::cout << std::endl << signBeginningX << " " << signBeginningY << std::endl;
-
 	QRgb pixel;
 	QColor color;
 	int sumRed, sumGreen, sumBlue;
@@ -901,6 +867,9 @@ bool DrawingOperations::checkChanges()
 	int red, green, blue;
 
 	int biggestRed, biggestGreen, biggestBlue;
+	int col, row;
+
+	// ________________________________ INICJOWANIE TABLIC I OBRAZU DO POKAZANIA ZMIAN
 
 	checkedImage = QImage(image);
 
@@ -928,174 +897,238 @@ bool DrawingOperations::checkChanges()
 		}
 	}
 
-	for (int c = signBeginningX; c < columns; c++)	// zaznaczenie znaczka ze jest juz wykorzystane by nie sprawdzalo w srodku
+	// ____________________________ ZAZNACZANIE PRZESTRZENI ZNACZKA by nie bylo sprawdzane
+
+	if (rotation == ROTATION0 || rotation == ROTATION270) col = signBeginningX;
+	else col = 0;
+
+	for (; col < columns; col++)	// zaznaczenie znaczka ze jest juz wykorzystane by nie sprawdzalo w srodku
 	{
-		for (int r = signBeginningY; r < rows; r++)
+		if (rotation == 0 || rotation == 90) row = signBeginningY;
+		else row = 0;
+
+		for (; row < rows; row++)
 		{
-			pixelResults[c][r] = false;
+			pixelResults[col][row] = false;
 		}
 	}
 
-	for (int col = 0; col < columns; col++)//0; col < columns; col++)
-	{
-		for (int row = col % 3; row < rows; row+=3)
-		{
+	// ____________________________ USTALANIE PARAMETROW POCZATKOWYCH PETLI SPRAWDZAJACEJ
 
-			if ((col + row) % 3 != 0) continue;
+	if (rotation == ROTATION0 || rotation == ROTATION270) col = 0;
+	else col = columns-1;
+
+	while (1)
+	{
+		if (rotation == ROTATION0) row = (col % 3) - 3;						// ustawiane parametry tak by przy wejsciu w petle od razu byly przestawiane
+		if (rotation == ROTATION90) row = ((col - columns + 1) % 3) - 3;	// zrobilem tak aby uniknac powtarzania kodu i by moc wykorzystac operacje continue
+		if (rotation == ROTATION180) row = (rows - 1 - (columns - 1 - col) % 3) + 3;
+		if (rotation == ROTATION270) row = (rows - 1 - col % 3) + 3;
+
+		while (1)
+		{
+			if (rotation == ROTATION0 || rotation == ROTATION90) row += 3;
+			if (rotation == ROTATION180 || rotation == ROTATION270) row -=3;
+
+			if ((rotation == ROTATION0 || rotation == ROTATION90) && row >= rows) break;
+			if ((rotation == ROTATION180 || rotation == ROTATION270) && row <= -1) break;
 
 			biggestRed = 0;
 			biggestGreen = 0;
 			biggestBlue = 0;
 
-				if (!pixelResults[col][row])
+				if (pixelResults[col][row])
 				{
-					continue;
-				}
+					sumRed = 0;
+					sumGreen = 0;
+					sumBlue = 0;
+					adjacentPixels = 0;
 
-				sumRed = 0;
-				sumGreen = 0;
-				sumBlue = 0;
-				adjacentPixels = 0;
+					// sprawdzanie na lewo
+					if (col >= 1)
+					{
+						// TODO tutaj ify dla wchodzenia do znaczka na lewo
 
-				if (col >= 1)
-				{
-					pixel = image.pixel(col - 1, row);
+						if ((rotation == ROTATION90 && (col - 1 <= signBeginningX && row >= signBeginningY)) ||
+							 (rotation == ROTATION180 && (col - 1 <= signBeginningX && row <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col - 1, row);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na prawo
+					if (col < columns - 1)
+					{
+						if ((rotation == ROTATION0 && (col + 1 >= signBeginningX && row >= signBeginningY)) ||
+							  (rotation == ROTATION270 && (col + 1 >= signBeginningX && row <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col + 1, row);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na gorze
+					if (row >= 1)
+					{
+						if ((rotation == ROTATION180 && (col <= signBeginningX && row -1 <= signBeginningY)) ||
+								(rotation == ROTATION270 && (col >= signBeginningX && row - 1 <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col, row - 1);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na dole
+					if (row < rows - 1)
+					{
+						if ((rotation == ROTATION0 && (col >= signBeginningX && row + 1 >= signBeginningY)) ||
+								(rotation == ROTATION90 && (col <= signBeginningX && row + 1 >= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col, row + 1);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+
+
+					mediumRed = sumRed / adjacentPixels;						// wyliczanie srednich wartosci rgb sasiadow
+					mediumGreen = sumGreen / adjacentPixels;
+					mediumBlue = sumBlue / adjacentPixels;
+
+					pixel = image.pixel(col, row);
 					color.setRgb(pixel);
-					adjacentPixels++;
-					sumRed += color.red();
-					sumGreen += color.green();
-					sumBlue += color.blue();
 
-					if (color.red() > biggestRed) biggestRed = color.red();
-					if (color.green() > biggestGreen) biggestGreen = color.green();
-					if (color.blue() > biggestBlue) biggestBlue = color.blue();
-				}
-				if (col < columns - 1 && (col + 1 < signBeginningX || row < signBeginningY))
-				{
-					pixel = image.pixel(col + 1, row);
-					color.setRgb(pixel);
-					adjacentPixels++;
-					sumRed += color.red();
-					sumGreen += color.green();
-					sumBlue += color.blue();
+					red = color.red();
+					green = color.green();
+					blue = color.blue();
 
-					if (color.red() > biggestRed) biggestRed = color.red();
-					if (color.green() > biggestGreen) biggestGreen = color.green();
-					if (color.blue() > biggestBlue) biggestBlue = color.blue();
-				}
-				if (row >= 1)
-				{
-					pixel = image.pixel(col, row - 1);
-					color.setRgb(pixel);
-					adjacentPixels++;
-					sumRed += color.red();
-					sumGreen += color.green();
-					sumBlue += color.blue();
+					if (red >= mediumRed - accDif && red <= mediumRed + accDif &&  //sprawdzanie poprawnosci z mozliwoscia odchylenia rowna accDif
+						green >= mediumGreen - accDif && green <= mediumGreen + accDif &&
+						blue >= mediumBlue - accDif && blue <= mediumBlue + accDif
+						)
+					{
+						// TODO nie wiem moze tutaj jakies zliczanie bedzie ile pikseli jest ok a ile nie czy cos ???
+						//	std::cout << "\nPiksel jest ok !!!\n";
+					}
+					else
+					{
+						// TODO w takim razie tutaj powinno byc zliczanie pikseli dla ktorych sie nie udalo sprawdzenie
 
-					if (color.red() > biggestRed) biggestRed = color.red();
-					if (color.green() > biggestGreen) biggestGreen = color.green();
-					if (color.blue() > biggestBlue) biggestBlue = color.blue();
-				}
-				if (row < rows - 1 && (col < signBeginningX || row + 1 < signBeginningY))
-				{
-					pixel = image.pixel(col, row + 1);
-					color.setRgb(pixel);
-					adjacentPixels++;
-					sumRed += color.red();
-					sumGreen += color.green();
-					sumBlue += color.blue();
+						//std::cout << "\nPiksel sie nie zgadza !!!\n";
+						//std::cout << "Piksel: " << col << " " << row << " wartosci: " << red << " " << green << " " << blue <<
+						//			" srednie wartosci to: " << mediumRed << " " << mediumGreen << " " << mediumBlue << std::endl;
 
-					if (color.red() > biggestRed) biggestRed = color.red();
-					if (color.green() > biggestGreen) biggestGreen = color.green();
-					if (color.blue() > biggestBlue) biggestBlue = color.blue();
-				}
+						// ______________
+	//
+	//					if (row - 1 >= 0)
+	//					{
+	//						pixel = image.pixel(col, row-1);
+	//						color.setRgb(pixel);
+	//
+	//						red = color.red();
+	//						green = color.green();
+	//						blue = color.blue();
+	//						std::cout << "Piksel na gorze: " << red << " " << green << " " << blue << std::endl;
+	//					}
 
-				mediumRed = sumRed / adjacentPixels;
-				mediumGreen = sumGreen / adjacentPixels;
-				mediumBlue = sumBlue / adjacentPixels;
+	//					if (col - 1 >= 0)
+	//					{
+	//						pixel = image.pixel(col-1, row);
+	//						color.setRgb(pixel);
 
-				pixel = image.pixel(col, row);
-				color.setRgb(pixel);
+	//						red = color.red();
+	//						green = color.green();
+	//						blue = color.blue();
+	//						std::cout << "Piksel po lewej: " << red << " " << green << " " << blue << std::endl;
+	//					}
 
-				red = color.red();
-				green = color.green();
-				blue = color.blue();
+	//					if (col + 1 < columns && (col + 1 < signBeginningX || row < signBeginningY))
+	//					{
+	//						pixel = image.pixel(col+1, row);
+	//						color.setRgb(pixel);
 
-				if (red >= mediumRed - accDif && red <= mediumRed + accDif &&
-					green >= mediumGreen - accDif && green <= mediumGreen + accDif &&
-					blue >= mediumBlue - accDif && blue <= mediumBlue + accDif
-					)
-				{
-				//	std::cout << "\nPiksel jest ok !!!\n";
+	//						red = color.red();
+	//						green = color.green();
+	//						blue = color.blue();
+	//						std::cout << "Piksel po prawej: " << red << " " << green << " " << blue << std::endl;
+	//					}
+
+	//					if (row + 1 < rows && (col < signBeginningX || row + 1 < signBeginningY))
+	//					{
+	//						pixel = image.pixel(col, row+1);
+	//						color.setRgb(pixel);
+
+	//						red = color.red();
+	//						green = color.green();
+	//						blue = color.blue();
+	//						std::cout << "Piksel na dole: " << red << " " << green << " " << blue << std::endl;
+	//					}
+
+
+						pixelResults[col][row] = false;
+						lookForSimilarPixels(col, row);
+					}
+
+					if (rotation == ROTATION0 || rotation == ROTATION90) row += 3;
+					if (rotation == ROTATION180 || rotation == ROTATION270) row -=3;
+
+					if ((rotation == ROTATION0 || rotation == ROTATION90) && row >= rows) break;
+					if ((rotation == ROTATION180 || rotation == ROTATION270) && row <= -1) break;
 				}
 				else
 				{
-				//	std::cout << "\nPiksel sie nie zgadza !!!\n";
-				//	std::cout << "Piksel: " << col << " " << row << " wartosci: " << red << " " << green << " " << blue <<
-				//				" srednie wartosci to: " << mediumRed << " " << mediumGreen << " " << mediumBlue << std::endl;
+					if (rotation == ROTATION0 || rotation == ROTATION90) row += 3;
+					if (rotation == ROTATION180 || rotation == ROTATION270) row -=3;
 
-					// zrobic sprawdzenie drogiej szansy :D
-					// polega na tym ze wartosc odczytana piksela nie moze byc duzo rozniaca sie od najwyzszej z wartosci sasiadow
-					// powiedzmy ze kazda z barw do 15 wieksza moze byc ale nie wiecej
-
-
-					// ______________
-/*
-					if (row - 1 >= 0)
-					{
-						pixel = image.pixel(col, row-1);
-						color.setRgb(pixel);
-
-						red = color.red();
-						green = color.green();
-						blue = color.blue();
-						std::cout << "Piksel na gorze: " << red << " " << green << " " << blue << std::endl;
-					}
-
-					if (col - 1 >= 0)
-					{
-						pixel = image.pixel(col-1, row);
-						color.setRgb(pixel);
-
-						red = color.red();
-						green = color.green();
-						blue = color.blue();
-						std::cout << "Piksel po lewej: " << red << " " << green << " " << blue << std::endl;
-					}
-
-					if (col + 1 < columns && (col + 1 < signBeginningX || row < signBeginningY))
-					{
-						pixel = image.pixel(col+1, row);
-						color.setRgb(pixel);
-
-						red = color.red();
-						green = color.green();
-						blue = color.blue();
-						std::cout << "Piksel po prawej: " << red << " " << green << " " << blue << std::endl;
-					}
-
-					if (row + 1 < rows && (col < signBeginningX || row + 1 < signBeginningY))
-					{
-						pixel = image.pixel(col, row+1);
-						color.setRgb(pixel);
-
-						red = color.red();
-						green = color.green();
-						blue = color.blue();
-						std::cout << "Piksel na dole: " << red << " " << green << " " << blue << std::endl;
-					}
-*/
-
-
-					pixelResults[col][row] = false;
-					lookForSimilarPixels(col, row);
-
-					// ______________
-
-
+					if ((rotation == ROTATION0 || rotation == ROTATION90) && row >= rows) break;
+					if ((rotation == ROTATION180 || rotation == ROTATION270) && row <= -1) break;
 				}
 		}
+
+		if (rotation == ROTATION0 || rotation == ROTATION270) col++;
+		else col--;
+
+		if ((rotation == ROTATION0 || rotation == ROTATION270) && col == columns) break;
+		if ((rotation == ROTATION90 || rotation == ROTATION180) && col == -1) break;
 	}
+
 
 	for (int col = 0; col < columns; col++)
 	{
@@ -1114,7 +1147,7 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 	int greatestNumber;
 	int xPos, yPos;
 
-	histogramGComparison = QImage(histogramBase);
+	//histogramGComparison = QImage(histogramBase);
 
 	QPainter painter(&histogramGComparison);
 
@@ -1292,85 +1325,280 @@ int DrawingOperations::convertDigitsToInt(int* digits)
 	return number;
 }
 
-void DrawingOperations::checkImageSecurity(std::vector<int> savedGreyTones)
+std::vector<int> DrawingOperations::readFromSign()
 {
 	std::vector<int> readGreyTones; // ilosci pikseli w odcieni szarosci odczytane z obrazka ( z zabezpieczenia w postaci bloku )
-	bool rotation; // bool ze udalo sie wykryc rotacje i zapisywana jest ona w jakiejs zmiennej ???
-	int infoBeginningX, infoBeginningY;
-	short rotationResult;
 	int readDigit;
 	int digits[7];
 	int temp;
 
-	// TODO tutaj pozniej bedzie sprawdzanie obrotu i wtedy bedzie wiadomo jak sprawdzac znak i zaleznosci pikselowe
+	int wrgPxlCntr = 0; // wrong pixel counter - ile pikseli ma niewlasciwa wartosc w znaczku
 
-	rotation = 1;	// TODO funkcja wykrywajaca jaki jest obrot
-	// zaleznie od wyniku to poczatek
-	signBeginningX = columns - signLength;
-	signBeginningY = rows - signHeight;
-	rotationResult = 0;
+	int actualRow, toneIndex;
 
+										// TODO everything ... zrobic ify i while zamiast forow czy cos takiego i powinno byc ok
+										// rozrysowac sobie najlepiej ;D
+										// poprawic to z kosciolkiem tam jest w chodzeniu zdaje sie w lewo tam cos nie tak jest
+										// zrobic by jakis raporcik sie robil i w nim np jaki obrot ( ew ze sie nie udalo )
+										// do tego zliczanie miejsc gdzie sie wykrylo falszerstwo i to bedzie pokazywane
 
-/*
-	if (savedGreyTones.size() == 153)				// sprawdza wielkosc wektora
+	toneIndex = 0;
+
+	switch (rotation)
 	{
-		checkHistogramGrey(savedGreyTones);
-	}
-	else */if (rotation)
-	{
-		// TODO zrobic wykrywanie obrotu i czytanie w tym miejscu jakies funkcje !!! :D
-
-		// zaleznie od rotation
-		infoBeginningX = signBeginningX+1;
-		infoBeginningY = signBeginningY+1;
-
-
-
-		for (int actualRow = infoBeginningY, toneIndex = 0; toneIndex < 153; actualRow++)
+		case ROTATION0:
 		{
-			//std::cout << "\nSzereg: " << actualRow << " toneIndex: " << toneIndex << std::endl;
-			for (int step = 0; step < 5 && toneIndex < 153; step++, toneIndex++)
-			{
-				for (int numberPart = 0; numberPart < 7; numberPart++)
-				{
-					readDigit = readPixelDigit(infoBeginningX + step * 7 + numberPart, actualRow);
+			infoBeginningX = signBeginningX+1;
+			infoBeginningY = signBeginningY+1;
+			actualRow = infoBeginningY;
+			break;
+		}
+		case ROTATION90:
+		{
+			infoBeginningX = signBeginningX-1;
+			infoBeginningY = signBeginningY+1;
+			actualRow = infoBeginningX;
+			break;
+		}
+		case ROTATION180:
+		{
+			infoBeginningX = signBeginningX-1;
+			infoBeginningY = signBeginningY-1;
+			actualRow = infoBeginningY;
+			break;
+		}
+		case ROTATION270:
+		{
+			infoBeginningX = signBeginningX+1;
+			infoBeginningY = signBeginningY-1;
+			actualRow = infoBeginningX;
+			break;
+		}
+	}
 
-					if (readDigit == 10)
+	while (toneIndex < 153)
+	{
+		//std::cout << "\nSzereg: " << actualRow << " toneIndex: " << toneIndex << std::endl;
+		for (int step = 0; step < 5 && toneIndex < 153; step++, toneIndex++)
+		{
+			for (int numberPart = 0; numberPart < 7; numberPart++)
+			{
+				switch (rotation)
+				{
+					case ROTATION0:
 					{
-						//std::cout << "\nBlad czytania wartosci piksela znaku - nieznany kolor !!!\n";
-						// blad jest w znaku piksel ma wartosc niewazna !!!
+						readDigit = readPixelDigit(infoBeginningX + step * 7 + numberPart, actualRow);
+						break;
 					}
-					else
+					case ROTATION90:
 					{
-						//std::cout << "\nWczytalem piksel dajacy wartosc: " << readDigit << std::endl;
-						digits[numberPart] = readDigit;
+						readDigit = readPixelDigit(actualRow, infoBeginningY + step * 7 + numberPart);
+						break;
+					}
+					case ROTATION180:
+					{
+						readDigit = readPixelDigit(infoBeginningX - step * 7 - numberPart, actualRow);
+						break;
+					}
+					case ROTATION270:
+					{
+						readDigit = readPixelDigit(actualRow, infoBeginningY - step * 7 - numberPart);
+						break;
 					}
 				}
-				// Funkcja dajaca liczbe na podstawie 7 cyfr danych
-				temp = convertDigitsToInt(digits);
-				readGreyTones.push_back(temp);
 
-				std::cout << "\n Wektor teraz ma wielkosc " << readGreyTones.size() << " dodalem: " << temp;
+				if (readDigit == 10)
+				{
+					//std::cout << "\nBlad czytania wartosci piksela znaku - nieznany kolor !!!\n";
+					// blad jest w znaku piksel ma wartosc niewazna !!!
+					digits[numberPart] = 0;
+					wrgPxlCntr++;
+				}
+				else
+				{
+					//std::cout << "\nWczytalem piksel dajacy wartosc: " << readDigit << std::endl;
+					digits[numberPart] = readDigit;
+				}
 			}
+			// Funkcja dajaca liczbe na podstawie 7 cyfr danych
+			temp = convertDigitsToInt(digits);
+			readGreyTones.push_back(temp);
 
+			std::cout << "\n Wektor teraz ma wielkosc " << readGreyTones.size() << " dodalem: " << temp;
 		}
-		checkHistogramGrey(readGreyTones);
-	}
-	/*else if (1)
-	{
 
+		switch (rotation)
+		{
+			case ROTATION0:
+			{
+				actualRow++;
+				break;
+			}
+			case ROTATION90:
+			{
+				actualRow--;
+				break;
+			}
+			case ROTATION180:
+			{
+				actualRow--;
+				break;
+			}
+			case ROTATION270:
+			{
+				actualRow++;
+				break;
+			}
+		}
 	}
-	else if (1)
-	{
 
+	if (wrgPxlCntr)
+	{
+		partialRaport.first = true;
+		partialRaport.second = "Informacje o histogramie zapisane na znaczku odczytane prawidlowo";
+		raportImage.push_back(partialRaport);
 	}
-	else if (1)
-	{
-
-	}*/
 	else
 	{
-		histogramGComparison = QImage(histogramBase);
+		partialRaport.first = false;
+		partialRaport.second = "Informacje o histogramie zapisane na znaczku odczytane z bledami - ilosc bledow: " + wrgPxlCntr;
+		raportImage.push_back(partialRaport);
+	}
+
+	return readGreyTones;
+}
+
+bool DrawingOperations::checkRotation0()
+{
+	signBeginningX = columns - signLength;
+	signBeginningY = rows - signHeight;
+
+	if (readPixelDigit(columns-1, rows-1) == 9 &&
+		readPixelDigit(columns-2, rows-1) == 9 &&
+		readPixelDigit(columns-1, rows-2) == 9)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool DrawingOperations::checkRotation90()
+{
+	signBeginningX = signHeight - 1;
+	signBeginningY = rows - signLength;
+
+	if (readPixelDigit(0, rows-2) == 9 &&
+		readPixelDigit(0, rows-1) == 9 &&
+		readPixelDigit(1, rows-1) == 9)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool DrawingOperations::checkRotation180()
+{
+	signBeginningX = signLength - 1;
+	signBeginningY = signHeight - 1;
+
+	if (readPixelDigit(0, 1) == 9 &&
+		readPixelDigit(0, 0) == 9 &&
+		readPixelDigit(0, 1) == 9)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool DrawingOperations::checkRotation270()
+{
+	signBeginningX = columns - signHeight;
+	signBeginningY = signLength - 1;
+
+	if (readPixelDigit(columns-2, 0) == 9 &&
+		readPixelDigit(columns-1, 0) == 9 &&
+		readPixelDigit(columns-1, 1) == 9)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void DrawingOperations::detectRotation()
+{
+	if (checkRotation0())
+	{
+		std::cout << "\nObrot o 0 stopni !!!\n";
+		partialRaport.first = true;
+		partialRaport.second = "Wykryto brak rotacji";
+		raportImage.push_back(partialRaport);
+		rotation = ROTATION0;
+	}
+	else if (checkRotation90())
+	{
+		std::cout << "\nObrot o 90 stopni !!!\n";
+		partialRaport.first = true;
+		partialRaport.second = "Wykryto rotacje 90 stopni";
+		raportImage.push_back(partialRaport);
+		rotation = ROTATION90;
+	}
+	else if (checkRotation180())
+	{
+		std::cout << "\nObrot o 180 stopni !!!\n";
+		partialRaport.first = true;
+		partialRaport.second = "Wykryto rotacje 180 stopni";
+		raportImage.push_back(partialRaport);
+		rotation = ROTATION180;
+	}
+	else if (checkRotation270())
+	{
+		std::cout << "\nObrot o 270 stopni !!!\n";
+		partialRaport.first = true;
+		partialRaport.second = "Wykryto rotacje 270 stopni";
+		raportImage.push_back(partialRaport);
+		rotation = ROTATION270;
+	}
+	else
+	{
+		// TODO zastanowic sie tutaj jak bedzie gdy nie wykryjemy obrotu.
+		// Moze potraktowac to tak jakby obrotu nie bylo i najwyzej wszystko bedzie zamazane
+		std::cout << "\nNie potrafilem znalezc obrotu !!!\n";
+		partialRaport.first = false;
+		partialRaport.second = "Nie bylem w stanie okreslic rotacji";
+		raportImage.push_back(partialRaport);
+		rotation = ROTATION0;
+	}
+
+	return;
+}
+
+void DrawingOperations::checkImageSecurity(std::vector<int> savedGreyTones)
+{
+	histogramGComparison = QImage(histogramBase);
+
+	detectRotation();
+
+	if (savedGreyTones.size() == 153)				// sprawdza wielkosc wektora
+	{
+		partialRaport.first = true;
+		partialRaport.second = "Histogram stworzony na podstawie danych zapisanych w polu exif";
+		raportImage.push_back(partialRaport);
+
+		partialRaport.first = false;
+		partialRaport.second = "Nie bylo potrzeby sprawdzania poprawnosci znaczka";
+		raportImage.push_back(partialRaport);
+		checkHistogramGrey(savedGreyTones);
+	}
+	else
+	{
+		partialRaport.first = false;
+		partialRaport.second = "Histogram stworzony na podstawie danych zapisanych na znaczku";
+		raportImage.push_back(partialRaport);
+		checkHistogramGrey(readFromSign());
 	}
 
 	checkChanges();
@@ -1386,4 +1614,9 @@ QImage DrawingOperations::getHistogramComparison() const
 QImage DrawingOperations::getCheckedImage() const
 {
 	return checkedImage;
+}
+
+std::vector<std::pair<bool, std::string> > DrawingOperations::getRaportImage() const
+{
+	return raportImage;
 }

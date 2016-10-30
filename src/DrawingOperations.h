@@ -8,6 +8,11 @@
 #ifndef DRAWINGOPERATIONS_H_
 #define DRAWINGOPERATIONS_H_
 
+#define ROTATION0 0
+#define ROTATION90 1
+#define ROTATION180 2
+#define ROTATION270 3
+
 #include <QImage>
 
 
@@ -19,6 +24,7 @@ private:
 	int redTones[256]; 		// odcienie kolorow rgb do narysowania na histogram rgb
 	int greenTones[256];
 	int blueTones[256];
+
 	int accDif; 			// acceptable difference - maksymalne akceptowane odchylenie wartosci kolorow rgb piksela
 
 	bool** pixelResults;	// weryfikacja pikselow obrazu ktore piksele sa falszywe
@@ -29,14 +35,18 @@ private:
 							// istnieje po to aby 2 razy tych samych pikseli nie kolorowac
 							// false wskazuje ze nie mozna zamalowac - bo juz jest zamalowany ten piksel
 
-	// TODO prace nad znaczkiem:
-	int signLength;
-	int signHeight;
-	int digitColorRange;
+	int signLength; 		// dlugosc znaczka (os X)
+	int signHeight;			// szerokosc / wysokosc znaczka (os Y)
+	int digitColorRange;	// akceptowalne wychylenie koloru piksela w znaczku (do okreslenia wartosci zapisanej w pikselu)
 
-	int signBeginningX, signBeginningY;
+	int signBeginningX, signBeginningY;		// parametry poczatku znaczka na obrazie (odpowiednio os X i os Y)
 
-	int columns, rows;
+	int infoBeginningX, infoBeginningY;
+
+	int columns, rows;						// ilosc kolumn i szeregow w obrazie
+
+	unsigned char rotation;	// przechowuje informacje o sprawdzeniu obrotu obrazu
+							// mozliwe wartosci to makrodefinicje rozpoczynajace sie od ROTATION
 
 	QImage image;
 	QImage histogramBase;
@@ -47,6 +57,9 @@ private:
 	QImage checkedImage;
 	std::string actualFileName;
 
+	std::vector<std::pair<bool, std::string> > raportImage;
+	std::pair<bool, std::string> partialRaport;
+
 	void drawHistogramGrey(int greatestGreyNumber);
 	void drawHistogramRGB(int greatestRGBNumber);
 	void secureImage();
@@ -55,11 +68,17 @@ private:
 	void drawHistograms();
 
 	void drawSign();
+	std::vector<int> readFromSign();
 	int convertDigitsToInt(int* digits);
 
+	bool checkRotation0();
+	bool checkRotation90();
+	bool checkRotation180();
+	bool checkRotation270();
+
+	void detectRotation();
 
 	unsigned char readPixelDigit(int col, int row);
-	bool checkPixel(unsigned int row, unsigned int col, int r, int g, int b) const;
 
 	void drawChange(int col, int row); 									// podswietlac bedzie na czerwono zmiane w obrazie
 	void lookForSimilarPixels(int col, int row);						// funkcja sprawdza czy piksele wokol znalezionego niepasujacego piksela
@@ -87,6 +106,7 @@ public:
 	QImage getHistogramComparison() const;
 	QImage getCheckedImage() const;
 	void checkImageSecurity(std::vector<int> savedGreyTones);
+	std::vector<std::pair<bool, std::string> > getRaportImage() const;
 };
 
 #endif /* DRAWINGOPERATIONS_H_ */
