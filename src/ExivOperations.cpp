@@ -410,6 +410,8 @@ void ExivOperations::checkExifSecurity()
 
 	raportExif.clear();
 
+	checkSoftware();
+
 	try
 	{
 		securityTagContent = exifData["Exif.Photo.UserComment"].value().toString();
@@ -435,15 +437,20 @@ void ExivOperations::checkExifSecurity()
 
 	if (word == "")
 	{
+		partialRaport.first = false;
+		partialRaport.second = "Nie wiadomo jaka byla wartosc pola PixelXDimension przed zabezpieczeniem";
+		raportExif.push_back(partialRaport);
 
 		partialRaport.first = false;
-		partialRaport.second = "Nie wykryto zabezpieczen";
+		partialRaport.second = "Nie wiadomo jaka byla wartosc pola PixelYDimension przed zabezpieczeniem";
+		raportExif.push_back(partialRaport);
 
+		partialRaport.first = false;
+		partialRaport.second = "Nie wiadomo jaki byl czas zabezpieczenia";
 		raportExif.push_back(partialRaport);
 	}
 	else
 	{
-		checkSoftware();
 		word = readSecurityExifWord();
 		curIndexSTag += 1;
 		temp = convertStrToInt(word);

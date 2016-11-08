@@ -197,7 +197,7 @@ void DrawingOperations::secureImage()
 	{
 		for (int row = col % 3; row < rows; row+=3)
 		{
-			if (col > columns - 40 && row > rows - 40) continue;
+			if (col > columns - signLength && row > rows - signHeight) continue;
 
 			sumRed = 0;
 			sumGreen = 0;
@@ -213,9 +213,27 @@ void DrawingOperations::secureImage()
 				sumGreen += color.green();
 				sumBlue += color.blue();
 			}
+			if (col >= 2)
+			{
+				pixel = image.pixel(col - 2, row);
+				color.setRgb(pixel);
+				adjacentPixels++;
+				sumRed += color.red();
+				sumGreen += color.green();
+				sumBlue += color.blue();
+			}
 			if (col < columns - 1 && ( col + 1 < columns - signLength || row < rows - signLength))
 			{
 				pixel = image.pixel(col + 1, row);
+				color.setRgb(pixel);
+				adjacentPixels++;
+				sumRed += color.red();
+				sumGreen += color.green();
+				sumBlue += color.blue();
+			}
+			if (col < columns - 2 && ( col + 2 < columns - signLength || row < rows - signLength))
+			{
+				pixel = image.pixel(col + 2, row);
 				color.setRgb(pixel);
 				adjacentPixels++;
 				sumRed += color.red();
@@ -231,9 +249,27 @@ void DrawingOperations::secureImage()
 				sumGreen += color.green();
 				sumBlue += color.blue();
 			}
-			if (row < rows - 1 && ( col + 1 < columns - signHeight || row < rows - signHeight))
+			if (row >= 2)
+			{
+				pixel = image.pixel(col, row - 2);
+				color.setRgb(pixel);
+				adjacentPixels++;
+				sumRed += color.red();
+				sumGreen += color.green();
+				sumBlue += color.blue();
+			}
+			if (row < rows - 1 && ( row + 1 < rows - signHeight || col < columns - signLength))
 			{
 				pixel = image.pixel(col, row + 1);
+				color.setRgb(pixel);
+				adjacentPixels++;
+				sumRed += color.red();
+				sumGreen += color.green();
+				sumBlue += color.blue();
+			}
+			if (row < rows - 2 && ( row + 2 < rows - signHeight || col < columns - signLength))
+			{
+				pixel = image.pixel(col, row + 2);
 				color.setRgb(pixel);
 				adjacentPixels++;
 				sumRed += color.red();
@@ -246,6 +282,7 @@ void DrawingOperations::secureImage()
 			mediumBlue = sumBlue / adjacentPixels;
 
 			securedImage.setPixel(col, row, qRgb(mediumRed, mediumGreen, mediumBlue));
+			//securedImage.setPixel(col, row, qRgb(0, 0, 0));
 		}
 	}
 
@@ -859,6 +896,9 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 
 bool DrawingOperations::checkChanges()
 {
+	//std::cout << "\nRows: " << rows;
+	//std::cout << "Columns: " << columns << std::endl;
+
 	QRgb pixel;
 	QColor color;
 	int sumRed, sumGreen, sumBlue;
@@ -899,18 +939,16 @@ bool DrawingOperations::checkChanges()
 
 	// ____________________________ ZAZNACZANIE PRZESTRZENI ZNACZKA by nie bylo sprawdzane
 
-	if (rotation == ROTATION0 || rotation == ROTATION270) col = signBeginningX;
-	else col = 0;
-
-	for (; col < columns; col++)	// zaznaczenie znaczka ze jest juz wykorzystane by nie sprawdzalo w srodku
+	for (col = signBeginningX; col < columns && col >= 0;) // zaznaczenie znaczka ze jest juz wykorzystane by nie sprawdzalo w srodku
 	{
-		if (rotation == 0 || rotation == 90) row = signBeginningY;
-		else row = 0;
-
-		for (; row < rows; row++)
+		for (row = signBeginningY; row < rows && row >= 0;)
 		{
 			pixelResults[col][row] = false;
+			if (rotation == ROTATION0 || rotation == ROTATION90) row++;
+			else row--;
 		}
+		if (rotation == ROTATION0 || rotation == ROTATION270) col++;
+		else col--;
 	}
 
 	// ____________________________ USTALANIE PARAMETROW POCZATKOWYCH PETLI SPRAWDZAJACEJ
@@ -921,7 +959,7 @@ bool DrawingOperations::checkChanges()
 	while (1)
 	{
 		if (rotation == ROTATION0) row = (col % 3) - 3;						// ustawiane parametry tak by przy wejsciu w petle od razu byly przestawiane
-		if (rotation == ROTATION90) row = ((col - columns + 1) % 3) - 3;	// zrobilem tak aby uniknac powtarzania kodu i by moc wykorzystac operacje continue
+		if (rotation == ROTATION90) row = ((columns - col - 1) % 3) - 3;	// zrobilem tak aby uniknac powtarzania kodu i by moc wykorzystac operacje continue
 		if (rotation == ROTATION180) row = (rows - 1 - (columns - 1 - col) % 3) + 3;
 		if (rotation == ROTATION270) row = (rows - 1 - col % 3) + 3;
 
@@ -944,7 +982,7 @@ bool DrawingOperations::checkChanges()
 					sumBlue = 0;
 					adjacentPixels = 0;
 
-					// sprawdzanie na lewo
+					// sprawdzanie na lewo o 1
 					if (col >= 1)
 					{
 						// TODO tutaj ify dla wchodzenia do znaczka na lewo
@@ -966,7 +1004,29 @@ bool DrawingOperations::checkChanges()
 						if (color.green() > biggestGreen) biggestGreen = color.green();
 						if (color.blue() > biggestBlue) biggestBlue = color.blue();
 					}
-					// sprawdzanie na prawo
+					// sprawdzanie na lewo o 2
+					if (col >= 2)
+					{
+						// TODO tutaj ify dla wchodzenia do znaczka na lewo
+
+						if ((rotation == ROTATION90 && (col - 2 <= signBeginningX && row >= signBeginningY)) ||
+							 (rotation == ROTATION180 && (col - 2 <= signBeginningX && row <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col - 2, row);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na prawo o 1
 					if (col < columns - 1)
 					{
 						if ((rotation == ROTATION0 && (col + 1 >= signBeginningX && row >= signBeginningY)) ||
@@ -986,7 +1046,27 @@ bool DrawingOperations::checkChanges()
 						if (color.green() > biggestGreen) biggestGreen = color.green();
 						if (color.blue() > biggestBlue) biggestBlue = color.blue();
 					}
-					// sprawdzanie na gorze
+					// sprawdzanie na prawo o 2
+					if (col < columns - 2)
+					{
+						if ((rotation == ROTATION0 && (col + 2 >= signBeginningX && row >= signBeginningY)) ||
+							  (rotation == ROTATION270 && (col + 2 >= signBeginningX && row <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col + 2, row);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na gorze o 1
 					if (row >= 1)
 					{
 						if ((rotation == ROTATION180 && (col <= signBeginningX && row -1 <= signBeginningY)) ||
@@ -1006,7 +1086,27 @@ bool DrawingOperations::checkChanges()
 						if (color.green() > biggestGreen) biggestGreen = color.green();
 						if (color.blue() > biggestBlue) biggestBlue = color.blue();
 					}
-					// sprawdzanie na dole
+					// sprawdzanie na gorze o 2
+					if (row >= 2)
+					{
+						if ((rotation == ROTATION180 && (col <= signBeginningX && row -2 <= signBeginningY)) ||
+								(rotation == ROTATION270 && (col >= signBeginningX && row - 2 <= signBeginningY)))
+						{
+							continue;
+						}
+
+						pixel = image.pixel(col, row - 2);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
+					// sprawdzanie na dole o 1
 					if (row < rows - 1)
 					{
 						if ((rotation == ROTATION0 && (col >= signBeginningX && row + 1 >= signBeginningY)) ||
@@ -1026,7 +1126,26 @@ bool DrawingOperations::checkChanges()
 						if (color.green() > biggestGreen) biggestGreen = color.green();
 						if (color.blue() > biggestBlue) biggestBlue = color.blue();
 					}
+					// sprawdzanie na dole o 2
+					if (row < rows - 2)
+					{
+						if ((rotation == ROTATION0 && (col >= signBeginningX && row + 2 >= signBeginningY)) ||
+								(rotation == ROTATION90 && (col <= signBeginningX && row + 2 >= signBeginningY)))
+						{
+							continue;
+						}
 
+						pixel = image.pixel(col, row + 2);
+						color.setRgb(pixel);
+						adjacentPixels++;
+						sumRed += color.red();
+						sumGreen += color.green();
+						sumBlue += color.blue();
+
+						if (color.red() > biggestRed) biggestRed = color.red();
+						if (color.green() > biggestGreen) biggestGreen = color.green();
+						if (color.blue() > biggestBlue) biggestBlue = color.blue();
+					}
 
 					mediumRed = sumRed / adjacentPixels;						// wyliczanie srednich wartosci rgb sasiadow
 					mediumGreen = sumGreen / adjacentPixels;
@@ -1105,20 +1224,6 @@ bool DrawingOperations::checkChanges()
 						pixelResults[col][row] = false;
 						lookForSimilarPixels(col, row);
 					}
-
-					if (rotation == ROTATION0 || rotation == ROTATION90) row += 3;
-					if (rotation == ROTATION180 || rotation == ROTATION270) row -=3;
-
-					if ((rotation == ROTATION0 || rotation == ROTATION90) && row >= rows) break;
-					if ((rotation == ROTATION180 || rotation == ROTATION270) && row <= -1) break;
-				}
-				else
-				{
-					if (rotation == ROTATION0 || rotation == ROTATION90) row += 3;
-					if (rotation == ROTATION180 || rotation == ROTATION270) row -=3;
-
-					if ((rotation == ROTATION0 || rotation == ROTATION90) && row >= rows) break;
-					if ((rotation == ROTATION180 || rotation == ROTATION270) && row <= -1) break;
 				}
 		}
 
@@ -1232,7 +1337,7 @@ unsigned char DrawingOperations::readPixelDigit(int col, int row)
 	green = color.green();
 	blue = color.blue();
 
-	std::cout << "\nKolor rgb piksela: " << red << " " << green << " " << blue << std::endl;
+	//std::cout << "\nKolor rgb piksela: " << red << " " << green << " " << blue << std::endl;
 
 	if (red <= 0 + digitColorRange &&
 		green <= 0 + digitColorRange &&
@@ -1245,56 +1350,56 @@ unsigned char DrawingOperations::readPixelDigit(int col, int row)
 		green >= 28 - digitColorRange && green <= 28 + digitColorRange &&
 		blue >= 28 - digitColorRange && blue <= 28 + digitColorRange)
 	{
-		// 50 50 50 czyli jakis taki szary numero uno - 1
+		// 28 28 28 odcien szarosci - 1
 		digit = 1;
 	}
 	else if (red >= 56 - digitColorRange && red <= 56 + digitColorRange &&
 			green >= 56 - digitColorRange && green <= 56 + digitColorRange &&
 			blue >= 56 - digitColorRange && blue <= 56 + digitColorRange)
 	{
-		// 100 100 100 czyli jakis taki szary numero due - 2
+		// 56 56 56 odcien szarosci - 2
 		digit = 2;
 	}
 	else if (red >= 84 - digitColorRange && red <= 84 + digitColorRange &&
 			green >= 84 - digitColorRange && green <= 84 + digitColorRange &&
 			blue >= 84 - digitColorRange && blue <= 84 + digitColorRange)
 	{
-		// 50 100 150 czyli fiolecik jakis - 3
+		// 84 84 84 odcien szarosci - 3
 		digit = 3;
 	}
 	else if (red >= 112 - digitColorRange && red <= 112 + digitColorRange &&
 			green >= 112 - digitColorRange && green <= 112 + digitColorRange &&
 			blue >= 112 - digitColorRange && blue <= 112 + digitColorRange)
 	{
-		// 150 150 150 czyli odcien szarosci numero tre - 4
+		// 112 112 112 odcien szarosci - 4
 		digit = 4;
 	}
 	else if (red >= 140 - digitColorRange && red <= 140 + digitColorRange &&
 			green >= 140 - digitColorRange && green <= 140 + digitColorRange &&
 			blue >= 140 - digitColorRange && blue <= 140 + digitColorRange)
 	{
-		// 200 200 200 czyli odcien szarosci numero quattro - 5
+		// 140 140 140 odcien szarosci - 5
 		digit = 5;
 	}
 	else if (red >= 168 - digitColorRange && red <= 168 + digitColorRange &&
 			green >= 168 - digitColorRange && green <= 168 + digitColorRange &&
 			blue >= 168 - digitColorRange && blue <= 168 + digitColorRange)
 	{
-		// 255 255 0 czyli zolty - 6
+		// 168 168 168 odcien szarosci - 6
 		digit = 6;
 	}
 	else if (red >= 196 - digitColorRange && red <= 196 + digitColorRange &&
 			green >= 196 - digitColorRange && green <= 196 + digitColorRange &&
 			blue >= 196 - digitColorRange && blue <= 196 + digitColorRange)
 	{
-		// 255 0 255 czyli ciemny rozowy - 7
+		// 196 196 196 odcien szarosci - 7
 		digit = 7;
 	}
 	else if (red >= 224 - digitColorRange && red <= 224 + digitColorRange &&
 			green >= 224 - digitColorRange && green <= 224 + digitColorRange &&
 			blue >= 224 - digitColorRange && blue <= 224 + digitColorRange)
 	{
-		// 0 255 255 czyli cyan lekki niebieski - 8
+		// 224 224 224 odcien szarosci - 8
 		digit = 8;
 	}
 	else if (red >= 255 - digitColorRange &&

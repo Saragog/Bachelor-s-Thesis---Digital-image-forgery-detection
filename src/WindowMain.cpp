@@ -169,30 +169,29 @@ void WindowMain::showSecureCheck(QString fileName)
 		else
 		{
 			exivOperations->checkExifSecurity();
-			//if (exivOperations->checkExifSecurity())
+
+			savedGreyTones = exivOperations->getSavedGreyTones();
+
+			drawingOperations->checkImageSecurity(savedGreyTones);
+
+			exifRaport = exivOperations->getRaportExif();
+			imageRaport = drawingOperations->getRaportImage();
+
+			concatRaport = exifRaport;
+			for (unsigned int x = 0; x < imageRaport.size(); x++)
 			{
-				savedGreyTones = exivOperations->getSavedGreyTones();
-
-				drawingOperations->checkImageSecurity(savedGreyTones);
-
-				exifRaport = exivOperations->getRaportExif();
-				imageRaport = drawingOperations->getRaportImage();
-
-				concatRaport = exifRaport;
-				for (unsigned int x = 0; x < imageRaport.size(); x++)
-				{
-					concatRaport.push_back(imageRaport.at(x));
-				}
-
-				histogramComparison = drawingOperations->getHistogramComparison();
-				checkedImage = drawingOperations->getCheckedImage();
-
-				secureCheck->setRaport(concatRaport);
-				secureCheck->setHistogramC(histogramComparison);
-				secureCheck->setCheckedImage(checkedImage);
-
-				stackedWidget->setCurrentIndex(3);
+				concatRaport.push_back(imageRaport.at(x));
 			}
+
+			histogramComparison = drawingOperations->getHistogramComparison();
+			checkedImage = drawingOperations->getCheckedImage();
+
+			secureCheck->setRaport(concatRaport);
+			secureCheck->setHistogramC(histogramComparison);
+			secureCheck->setCheckedImage(checkedImage);
+
+			stackedWidget->setCurrentIndex(3);
+
 //			else
 //			{
 //				message.setText("W wybranym pliku nie wykryto zabezpieczen !!!");
