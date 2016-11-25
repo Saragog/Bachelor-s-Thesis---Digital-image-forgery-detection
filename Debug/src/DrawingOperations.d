@@ -26,20 +26,11 @@ src/DrawingOperations.d: ../src/DrawingOperations.cpp \
  /usr/include/qt4/QtCore/qplugin.h /usr/include/qt4/QtCore/qpointer.h \
  /usr/include/qt4/QtCore/qfactoryinterface.h \
  /usr/include/qt4/QtCore/qstringlist.h /usr/include/qt4/QtCore/qregexp.h \
- /usr/include/qt4/QtCore/qstringmatcher.h /usr/include/qt4/QtGui/QColor \
- /usr/include/qt4/QtGui/qcolor.h /usr/include/qt4/QtGui/QPainter \
- /usr/include/qt4/QtGui/qpainter.h /usr/include/qt4/QtGui/qpixmap.h \
- /usr/include/qt4/QtGui/qcolor.h /usr/include/qt4/QtCore/qsharedpointer.h \
- /usr/include/qt4/QtCore/qshareddata.h \
- /usr/include/qt4/QtCore/qsharedpointer_impl.h \
- /usr/include/qt4/QtGui/qtextoption.h /usr/include/qt4/QtCore/qmetatype.h \
- /usr/include/qt4/QtGui/qdrawutil.h /usr/include/qt4/QtCore/qmargins.h \
- /usr/include/qt4/QtGui/qpen.h /usr/include/qt4/QtGui/qbrush.h \
- /usr/include/qt4/QtCore/qpair.h /usr/include/qt4/QtGui/qfontinfo.h \
- /usr/include/qt4/QtGui/qfont.h /usr/include/qt4/QtGui/qfontmetrics.h \
+ /usr/include/qt4/QtCore/qstringmatcher.h \
  /usr/include/qt4/QtGui/QImageWriter \
  /usr/include/qt4/QtGui/qimagewriter.h /usr/include/qt4/QtCore/QFile \
- /usr/include/qt4/QtCore/qfile.h
+ /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtGui/QColor \
+ /usr/include/qt4/QtGui/qcolor.h
 
 ../src/DrawingOperations.h:
 
@@ -131,44 +122,6 @@ src/DrawingOperations.d: ../src/DrawingOperations.cpp \
 
 /usr/include/qt4/QtCore/qstringmatcher.h:
 
-/usr/include/qt4/QtGui/QColor:
-
-/usr/include/qt4/QtGui/qcolor.h:
-
-/usr/include/qt4/QtGui/QPainter:
-
-/usr/include/qt4/QtGui/qpainter.h:
-
-/usr/include/qt4/QtGui/qpixmap.h:
-
-/usr/include/qt4/QtGui/qcolor.h:
-
-/usr/include/qt4/QtCore/qsharedpointer.h:
-
-/usr/include/qt4/QtCore/qshareddata.h:
-
-/usr/include/qt4/QtCore/qsharedpointer_impl.h:
-
-/usr/include/qt4/QtGui/qtextoption.h:
-
-/usr/include/qt4/QtCore/qmetatype.h:
-
-/usr/include/qt4/QtGui/qdrawutil.h:
-
-/usr/include/qt4/QtCore/qmargins.h:
-
-/usr/include/qt4/QtGui/qpen.h:
-
-/usr/include/qt4/QtGui/qbrush.h:
-
-/usr/include/qt4/QtCore/qpair.h:
-
-/usr/include/qt4/QtGui/qfontinfo.h:
-
-/usr/include/qt4/QtGui/qfont.h:
-
-/usr/include/qt4/QtGui/qfontmetrics.h:
-
 /usr/include/qt4/QtGui/QImageWriter:
 
 /usr/include/qt4/QtGui/qimagewriter.h:
@@ -176,3 +129,7 @@ src/DrawingOperations.d: ../src/DrawingOperations.cpp \
 /usr/include/qt4/QtCore/QFile:
 
 /usr/include/qt4/QtCore/qfile.h:
+
+/usr/include/qt4/QtGui/QColor:
+
+/usr/include/qt4/QtGui/qcolor.h:

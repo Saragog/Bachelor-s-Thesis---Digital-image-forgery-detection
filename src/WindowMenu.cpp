@@ -12,11 +12,12 @@ WindowMenu::WindowMenu(WindowMain* main)
 {
 	mainWindow = main;
 
-	palette.setColor(QPalette::Background, Qt::cyan);	// TODO potem mozna zamienic to na rysunek background !!!
+	//palette.setColor(QPalette::Background, Qt::cyan);	// TODO potem mozna zamienic to na rysunek background !!!
 														// podobno mozna jakies style ustalic i wtedy porzadniej bedzie
 														// ale o tym trzeba poczytac !!!
-	this->setAutoFillBackground(true);
-	this->setPalette(palette);
+
+	//this->setAutoFillBackground(true);
+	//this->setPalette(palette);
 
 	mapperExivInfo = new QSignalMapper(this);
 	mapperSecureImage = new QSignalMapper(this);
@@ -29,11 +30,11 @@ WindowMenu::WindowMenu(WindowMain* main)
     label = new QLabel("Informacje Exiv i diagram", this);
     label->setGeometry(650, 100, 200, 100);
 
-    editableLine = new QLineEdit("Edit Me", this);
+    editableLine = new QLineEdit("Sciezka do badanego obrazu", this);
     editableLine->setGeometry(50, 600, 400, 20);
 
-    buttonChooseImage = new QPushButton("Choose Image", this);
-    buttonChooseImage->setGeometry(450, 580, 100, 60);
+    buttonChooseImage = new QPushButton("Wybierz obraz", this);
+    buttonChooseImage->setGeometry(450, 580, 200, 60);
 
     buttonExivInfo = new QPushButton("Pokaz informacje Exiv", this);
     buttonExivInfo->setGeometry(900, 200, 250, 80);

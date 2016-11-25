@@ -24,10 +24,10 @@ WindowExivData::WindowExivData (QWidget* main)
     label->setGeometry(20, 20, 400, 100);
 
     buttonReturn = new QPushButton("Powrot", this);
-    buttonReturn->setGeometry(50,800, 200, 60);
+    buttonReturn->setGeometry(50,850, 180, 60);
 
     buttonAll = new QPushButton("Pokaz wszystkie informacje exif", this);
-    buttonAll->setGeometry(250, 800, 350, 60);
+    buttonAll->setGeometry(250, 850, 330, 60);
 
     imageLabel = new QLabel(this);
     imageLabel->setGeometry(10, 10, 600, 450);
@@ -36,7 +36,7 @@ WindowExivData::WindowExivData (QWidget* main)
     histogramGreyLabel->setGeometry(620, 10, 600, 450);
 
     histogramRGBLabel = new QLabel(this);
-    histogramRGBLabel->setGeometry(620, 470, 900, 450);
+    histogramRGBLabel->setGeometry(620, 470, 600, 450);
 
     connect(buttonReturn, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
 
@@ -78,7 +78,7 @@ void WindowExivData::prepareWindow(std::vector<std::string> data)
     exivInfoScroll->viewport()->setPalette(scrollPalette);
 
     exivInfoScroll->setWidgetResizable(true);
-    exivInfoScroll->setGeometry(50, 450, 550, 350);
+    exivInfoScroll->setGeometry(10, 470, 600, 370);
 
 	for (unsigned int step = 0; step < data.size(); step++)
 	{
@@ -112,7 +112,6 @@ void WindowExivData::setHistogramRGB(QImage image)
 {
 	QPixmap pixmap;
 	pixmap = pixmap.fromImage(image);
-	//pixmap = pixmap.scaled( , 450);
 	histogramRGBLabel->setPixmap(pixmap);
 	return;
 }

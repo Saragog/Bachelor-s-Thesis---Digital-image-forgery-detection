@@ -23,7 +23,8 @@ private:
 	QWidget* mainWindow;
 	QLabel* label;
 
-	QLabel* exifProtectionLabel;
+	QLabel* exifProtectionTagLabel;
+	QLabel* exifIsProtectedLabel;
 	QLabel* exifSoftwareLabel;
 	QLabel* exifXDimensionLabel;
 	QLabel* exifYDimensionLabel;

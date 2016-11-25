@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctime>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -101,20 +103,6 @@ int ExivOperations::convertStrToInt(std::string word)
 	}
 	return number;
 }
-
-/*
-bool ExivOperations::hasExifTags(std::string path)
-{
-	image = Exiv2::ImageFactory::open(path);
-	image->readMetadata();
-
-	exifData = image->exifData();
-
-	if (exifData.empty()) return false;
-
-	return true;
-}
-*/
 
 bool ExivOperations::isImageFile(std::string path)
 {
@@ -221,7 +209,7 @@ void ExivOperations::prepareSecurityExifData()
 
     for (int tone = 0; tone < 153; tone++)
     {
-    	std::cout << "Zapisuje ilosc pikseli nalezacych do tonu: " << histogramGrey[tone] << std::endl;
+    	//std::cout << "Zapisuje ilosc pikseli nalezacych do tonu: " << histogramGrey[tone] << std::endl;
         securityInfoToSave += " ";
         securityInfoToSave += convertIntToStr(histogramGrey[tone]);
     }
@@ -264,7 +252,6 @@ bool ExivOperations::checkSoftware()
 		// Nie wykryto pola nazwy wykorzystanego programu !!!
 		partialRaport.first = false;
 		partialRaport.second = "Nie wykryto pola ostatnio wykorzystanego programu";
-
 		raportExif.push_back(partialRaport);
 		return false;
 	}
@@ -274,15 +261,13 @@ bool ExivOperations::checkSoftware()
 		partialRaport.first = true;
 		partialRaport.second = "Nazwa programu zgodna";
 		raportExif.push_back(partialRaport);
-		cout << "\nNazwa programu zgadza sie :D \n";
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		partialRaport.second = "Nazwa programu wykorzystanego nie jest zgodna";
+		partialRaport.second = "Nazwa programu wykorzystanego nie jest zgodna: " + programName;
 		raportExif.push_back(partialRaport);
-		cout << "\nNazwa programu sie nie zgadza ... \n";
 	}
 	return false;
 }
@@ -291,8 +276,9 @@ bool ExivOperations::checkIfProtected(std::string word)
 {
 	if (word == "SECURED")
 	{
+		isProtected = true;
 		partialRaport.first = true;
-		partialRaport.second = "Wykryto zabezpieczenie";
+		partialRaport.second = "Wykryto poczatek zabezpieczenia exif";
 		raportExif.push_back(partialRaport);
 		return true;
 	}
@@ -302,6 +288,7 @@ bool ExivOperations::checkIfProtected(std::string word)
 bool ExivOperations::checkPixelXDimension(int xdim)
 {
 	int exifXDim;
+	std::string s;
 	try
 	{
 		exifXDim = exifData["Exif.Photo.PixelXDimension"].value().toLong();
@@ -318,17 +305,19 @@ bool ExivOperations::checkPixelXDimension(int xdim)
 	if (exifXDim == xdim)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "XDimension sie zgadza";
+		partialRaport.second = "Zawartosc XDimension zgodna: " + convertIntToStr(exifXDim);
 		raportExif.push_back(partialRaport);
-		cout << "\nXDimension wa okeei :D \n";
 		return true;
 	}
 	else
 	{
-		partialRaport.first = true;
-		partialRaport.second = "XDimension nie jest zgodne";
+		partialRaport.first = false;
+		s = "Zawartosc XDimension niezgodna: o-" + convertIntToStr(exifXDim) + " a-" + convertIntToStr(xdim);
+		partialRaport.second = s;
+
+		std::cout << partialRaport.second;
+
 		raportExif.push_back(partialRaport);
-		cout << "\nXDimension sie nie zgadza ... \n";
 	}
 	return false;
 }
@@ -336,6 +325,7 @@ bool ExivOperations::checkPixelXDimension(int xdim)
 bool ExivOperations::checkPixelYDimension(int ydim)
 {
 	int exifYDim;
+	std::string s;
 
 	try
 	{
@@ -353,17 +343,16 @@ bool ExivOperations::checkPixelYDimension(int ydim)
 	if (exifYDim == ydim)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "YDimension sie zgadza";
+		partialRaport.second = "Zawartosc YDimension zgodna: " + convertIntToStr(exifYDim);
 		raportExif.push_back(partialRaport);
-		cout << "\nYDimension wa okeei :D \n";
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		partialRaport.second = "YDimension nie jest zgodne";
+		s = "Zawartosc YDimension niezgodna: o-" + convertIntToStr(exifYDim) + " a-" + convertIntToStr(ydim);
+		partialRaport.second = s;
 		raportExif.push_back(partialRaport);
-		cout << "\nYDimension sie nie zgadza ... \n";
 	}
 	return false;
 }
@@ -387,17 +376,15 @@ bool ExivOperations::checkDateTime(std::string word)
 	if (date == word)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Data ostatniej zmiany zgodna z data zapisu";
+		partialRaport.second = "Data ostatniej zmiany zgodna z data zapisu: " + date;
 		raportExif.push_back(partialRaport);
-		cout << "\nData zmiany sie zgaaadza :D \n";
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		partialRaport.second = "Data ostatniej zmiany nie jest zgodna z data zapisu";
+		partialRaport.second = "Data ostatniej zmiany nie jest zgodna z data zapisu: oryginalna-" + date + " aktualna-" + word;
 		raportExif.push_back(partialRaport);
-		cout << "\nData ostatniej zmiany nie jest zgodna z data zapisu\n";
 	}
 	return false;
 }
@@ -407,6 +394,7 @@ void ExivOperations::checkExifSecurity()
 	std::string word;
 	curIndexSTag = 0;
 	int temp;
+	isProtected = false;
 
 	raportExif.clear();
 
@@ -414,16 +402,19 @@ void ExivOperations::checkExifSecurity()
 
 	try
 	{
+		// Znaleziono pole komentarza zabezpieczajacego
 		securityTagContent = exifData["Exif.Photo.UserComment"].value().toString();
+		partialRaport.first = false;
+		partialRaport.second = "Wykryto pole zabezpieczajace exif w wybranym obrazie";
+		raportExif.push_back(partialRaport);
 	}
 	catch (std::exception& e)
 	{
-		cout << "\n\nZLAPALEEEM !!!\n\n";
 		// Nie znaleziono pola z komentarzem !!!
 		partialRaport.first = false;
-		partialRaport.second = "Nie wykryto pola zabezpieczajacego w wybranym obrazie";
-
+		partialRaport.second = "Nie wykryto pola zabezpieczajacego exif w wybranym obrazie";
 		raportExif.push_back(partialRaport);
+
 	}
 
 	word = readSecurityExifWord();
@@ -433,6 +424,14 @@ void ExivOperations::checkExifSecurity()
 	{
 		word = readSecurityExifWord();
 		curIndexSTag += 1;
+	}
+
+	if (!isProtected)
+	{
+		// nie znaleziono SECURED w polu komentarza zabezpieczajacego
+		partialRaport.first = false;
+		partialRaport.second = "Nie wykryto poczatku zabezpieczenia exif";
+		raportExif.push_back(partialRaport);
 	}
 
 	if (word == "")
@@ -468,19 +467,6 @@ void ExivOperations::checkExifSecurity()
 	}
 	return;
 }
-
-/*
-std::vector<int> ExivOperations::getSavedCornerRGBs()
-{
-	std::vector<int> rgbs;
-	for (int step = 0; step < 12; step++)
-	{
-		rgbs.push_back(convertStrToInt(readSecurityExifWord()));
-		curIndexSTag += 1;
-	}
-	return rgbs;
-}
-*/
 
 std::vector<int> ExivOperations::getSavedGreyTones()
 {

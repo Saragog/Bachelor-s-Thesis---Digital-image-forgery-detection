@@ -6,7 +6,9 @@
 CPP_SRCS += \
 ../src/DrawingOperations.cpp \
 ../src/ExivOperations.cpp \
+../src/HistogramOperations.cpp \
 ../src/Inzynierka.cpp \
+../src/SignOperations.cpp \
 ../src/WindowAllExivData.cpp \
 ../src/WindowExivData.cpp \
 ../src/WindowMain.cpp \
@@ -21,7 +23,9 @@ CPP_SRCS += \
 OBJS += \
 ./src/DrawingOperations.o \
 ./src/ExivOperations.o \
+./src/HistogramOperations.o \
 ./src/Inzynierka.o \
+./src/SignOperations.o \
 ./src/WindowAllExivData.o \
 ./src/WindowExivData.o \
 ./src/WindowMain.o \
@@ -36,7 +40,9 @@ OBJS += \
 CPP_DEPS += \
 ./src/DrawingOperations.d \
 ./src/ExivOperations.d \
+./src/HistogramOperations.d \
 ./src/Inzynierka.d \
+./src/SignOperations.d \
 ./src/WindowAllExivData.d \
 ./src/WindowExivData.d \
 ./src/WindowMain.d \

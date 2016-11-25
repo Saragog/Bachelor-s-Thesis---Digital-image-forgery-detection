@@ -15,13 +15,13 @@ WindowSecureImage::WindowSecureImage(QWidget* main)
 	label = new QLabel("Secure Image", this);
 	label->setGeometry(100, 100, 200, 100);
 
-	editableLine = new QLineEdit("Edit Me", this);
+	editableLine = new QLineEdit("Sciezka do zapisu", this);
 	editableLine->setGeometry(50, 600, 400, 20);
 
 	backButton = new QPushButton("Powrot", this);
 	backButton->setGeometry(50, 700, 100, 100);
 
-	chooseWhereToSaveButton = new QPushButton("Choose where to save", this);
+	chooseWhereToSaveButton = new QPushButton("Wskaz sciezke do zapisu", this);
 	chooseWhereToSaveButton->setGeometry(500, 600, 200, 100);
 
 	saveButton = new QPushButton("Zapisz", this);

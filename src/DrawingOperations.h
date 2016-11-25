@@ -14,7 +14,7 @@
 #define ROTATION270 3
 
 #include <QImage>
-
+#include <iostream>
 
 class DrawingOperations
 {
@@ -37,11 +37,11 @@ private:
 
 	int signLength; 		// dlugosc znaczka (os X)
 	int signHeight;			// szerokosc / wysokosc znaczka (os Y)
+	int sizeFirstPixelX;	// piksel poczatkowy zabezpieczenia dlugosci (X)
+	int sizeFirstPixelY;	// piksel poczatkowy zabezpieczenia wysokosci (Y)
 	int digitColorRange;	// akceptowalne wychylenie koloru piksela w znaczku (do okreslenia wartosci zapisanej w pikselu)
 
 	int signBeginningX, signBeginningY;		// parametry poczatku znaczka na obrazie (odpowiednio os X i os Y)
-
-	int infoBeginningX, infoBeginningY;
 
 	int columns, rows;						// ilosc kolumn i szeregow w obrazie
 
@@ -67,7 +67,10 @@ private:
 	void prepareHistogramsData();
 	void drawHistograms();
 
+	int* convertIntToBinary(int number);
 	void drawSign();
+	void drawOriginalSize(short mode); // mode 0 oznacza rysowanie XDimension | mode 1 oznacza rysowanie YDimension
+	void drawEdge();
 	std::vector<int> readFromSign();
 	int convertDigitsToInt(int* digits);
 
@@ -101,7 +104,6 @@ public:
 	DrawingOperations();
 	virtual ~DrawingOperations();
 	bool saveImage(QString path);
-	std::vector<int> getCornerRGBs() const;
 	int* getHistGTones();
 	QImage getHistogramComparison() const;
 	QImage getCheckedImage() const;

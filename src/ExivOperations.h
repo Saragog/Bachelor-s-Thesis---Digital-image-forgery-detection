@@ -30,6 +30,8 @@ private:
 	std::vector<std::pair<bool, std::string> > raportExif;
 	std::pair<bool, std::string> partialRaport;
 
+	bool isProtected;
+
 	void prepareSecurityExifData();
 	std::string convertIntToStr(int number);
 	int convertStrToInt(std::string word);
@@ -56,7 +58,6 @@ public:
 	bool readFromFile(std::string path);
 	std::vector<std::string> getBasicExifData() const;
 	std::vector<std::string> getAllExifData() const;
-	std::vector<int> getSavedCornerRGBs();
 	std::vector<int> getSavedGreyTones();
 	std::vector<std::pair<bool, std::string> > getRaportExif() const;
 };

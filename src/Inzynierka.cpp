@@ -25,11 +25,16 @@ int main(int argc, char *argv[])
 
 
     QApplication a(argc, argv);
+    a.setStyleSheet("QWidget {background-image: url(./ProgramImages/Background.jpg);"
+    		"				  background-repeat: no-repeat;}"
+    				"QPushButton {border: 3px solid #7f7f7f}"
+    				// TODO zrobic jakis wyglad i zrobic plik dla tego wygladu qss
+    				// i go tutaj podczepic
+
+
+    );
 
     WindowMain mainWindow;
-
-    std::cout << "\n";
-
     a.exec();
 
     // ___________________________________________________________
