@@ -35,13 +35,14 @@ private:
 							// istnieje po to aby 2 razy tych samych pikseli nie kolorowac
 							// false wskazuje ze nie mozna zamalowac - bo juz jest zamalowany ten piksel
 
-	int signLength; 		// dlugosc znaczka (os X)
+	int signLength; 		// dlugosc znaku (os X)
 	int signHeight;			// szerokosc / wysokosc znaczka (os Y)
 	int sizeFirstPixelX;	// piksel poczatkowy zabezpieczenia dlugosci (X)
 	int sizeFirstPixelY;	// piksel poczatkowy zabezpieczenia wysokosci (Y)
-	int digitColorRange;	// akceptowalne wychylenie koloru piksela w znaczku (do okreslenia wartosci zapisanej w pikselu)
+	int digitColorRange;	// akceptowalne wychylenie koloru piksela w znaku (do okreslenia wartosci zapisanej w pikselu)
+	int sizeSeparatorColorRange; // akceptowalne odchylenie koloru piksela separujacego bity wielkosci oryginalnej obrazu
 
-	int signBeginningX, signBeginningY;		// parametry poczatku znaczka na obrazie (odpowiednio os X i os Y)
+	int signBeginningX, signBeginningY;		// parametry poczatku znaku na obrazie (odpowiednio os X i os Y)
 
 	int columns, rows;						// ilosc kolumn i szeregow w obrazie
 
@@ -67,11 +68,15 @@ private:
 	void prepareHistogramsData();
 	void drawHistograms();
 
+	int convertBinaryToInt(int* binary);
 	int* convertIntToBinary(int number);
 	void drawSign();
 	void drawOriginalSize(short mode); // mode 0 oznacza rysowanie XDimension | mode 1 oznacza rysowanie YDimension
 	void drawEdge();
 	std::vector<int> readFromSign();
+	std::pair<int,int> readingSizeStep(int mode, int actualX, int actualY);
+	void readOriginalSize(int mode); // tryb 0 dla czytania oryginalnej wielkosci X tryb 1 dla oryginalnego Y
+	//void readOriginalSizeY();
 	int convertDigitsToInt(int* digits);
 
 	bool checkRotation0();
@@ -82,6 +87,8 @@ private:
 	void detectRotation();
 
 	unsigned char readPixelDigit(int col, int row);
+	unsigned char readSavedXDim();
+	unsigned char readSavedYDim();
 
 	void drawChange(int col, int row); 									// podswietlac bedzie na czerwono zmiane w obrazie
 	void lookForSimilarPixels(int col, int row);						// funkcja sprawdza czy piksele wokol znalezionego niepasujacego piksela
@@ -93,6 +100,7 @@ private:
 	void checkAdjacentRight(int col, int row, int red, int green, int blue);
 	void checkAdjacentDown(int col, int row, int red, int green, int blue);
 
+	bool isPixelSecurityPart(int col, int row);
 	bool checkChanges();
 	void checkHistogramGrey (std::vector<int> greyTones);
 

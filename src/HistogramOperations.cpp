@@ -21,6 +21,10 @@ void DrawingOperations::prepareHistogramsData()
 	{
 		for (int pixelR = 0; pixelR < rows; pixelR++)
 		{
+			if (pixelC >= signBeginningX && pixelR >= signBeginningY) continue; // piksel w obszarze znaku zabezpieczajacego
+			if (pixelC >= sizeFirstPixelX && pixelR >= rows - 2) continue; // piksel w obszarze zabezpieczenia wielkosci X
+			if (pixelC >= columns - 2 && pixelR >= sizeFirstPixelY) continue; // piksel w obszarze zabezpieczenia wielkosci Y
+
 			pixel = image.pixel(pixelC, pixelR);
 			color.setRgb(pixel);
 			red = color.red();
