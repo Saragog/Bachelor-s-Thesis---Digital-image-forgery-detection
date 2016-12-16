@@ -51,9 +51,11 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
  /usr/include/qt4/QtGui/qslider.h \
  /usr/include/qt4/QtGui/qabstractslider.h /usr/include/qt4/QtGui/qstyle.h \
  /usr/include/qt4/QtGui/qtabbar.h /usr/include/qt4/QtGui/qrubberband.h \
- /usr/include/qt4/QtCore/qabstractitemmodel.h ../src/WindowExivData.h \
- /usr/include/qt4/QtGui/QLabel /usr/include/qt4/QtGui/qlabel.h \
- /usr/include/qt4/QtGui/QPushButton /usr/include/qt4/QtGui/qpushbutton.h \
+ /usr/include/qt4/QtCore/qabstractitemmodel.h \
+ /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
+ ../src/WindowExivData.h /usr/include/qt4/QtGui/QLabel \
+ /usr/include/qt4/QtGui/qlabel.h /usr/include/qt4/QtGui/QPushButton \
+ /usr/include/qt4/QtGui/qpushbutton.h \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/QPalette \
  /usr/include/qt4/QtGui/qpalette.h /usr/include/qt4/QtGui/QScrollArea \
  /usr/include/qt4/QtGui/qscrollarea.h \
@@ -283,6 +285,10 @@ src/WindowMain.d: ../src/WindowMain.cpp ../src/WindowMain.h \
 /usr/include/qt4/QtGui/qrubberband.h:
 
 /usr/include/qt4/QtCore/qabstractitemmodel.h:
+
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:
 
 ../src/WindowExivData.h:
 

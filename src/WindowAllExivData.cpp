@@ -12,10 +12,6 @@ WindowAllExivData::WindowAllExivData (QWidget* main)
 {
 	mainWindow = main;
 
-	palette.setColor(QPalette::Background, Qt::cyan);
-	this->setAutoFillBackground(true);
-	this->setPalette(palette);
-
 	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
 
     this->setWindowTitle("JPGAnalizer");

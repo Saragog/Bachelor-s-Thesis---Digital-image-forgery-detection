@@ -27,9 +27,9 @@ WindowSecureImage::WindowSecureImage(QWidget* main)
 	saveButton = new QPushButton("Zapisz", this);
 	saveButton->setGeometry(800, 700, 100, 100);
 
-	palette.setColor(QPalette::Background, Qt::cyan);
-	this->setAutoFillBackground(true);
-	this->setPalette(palette);
+	//palette.setColor(QPalette::Background, Qt::cyan);
+	//this->setAutoFillBackground(true);
+	//this->setPalette(palette);
 
 	mapper = new QSignalMapper(this);
 

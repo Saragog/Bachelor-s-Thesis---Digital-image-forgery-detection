@@ -18,7 +18,7 @@ DrawingOperations::DrawingOperations()
     histogramBase = reader.read();
     actualFileName = "";
 
-    accDif = 5;
+    accDif = 3;
     signLength = 38;
     signHeight = 34;
     digitColorRange = 5;

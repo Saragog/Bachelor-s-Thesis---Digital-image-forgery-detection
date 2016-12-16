@@ -37,6 +37,8 @@ WindowMain::WindowMain()
 
 	this->setGeometry(100, 100, 1256, 924);
 
+	//this->setStyleSheet("background-image: url(./ProgramImages/Background.jpg);");
+
 	showMenu();
 
 	// ______________ UWAGA POTEM TO GDZIE INDZIEJ CZY COS | V | V | V |

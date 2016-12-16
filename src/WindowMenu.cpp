@@ -11,14 +11,6 @@
 WindowMenu::WindowMenu(WindowMain* main)
 {
 	mainWindow = main;
-
-	//palette.setColor(QPalette::Background, Qt::cyan);	// TODO potem mozna zamienic to na rysunek background !!!
-														// podobno mozna jakies style ustalic i wtedy porzadniej bedzie
-														// ale o tym trzeba poczytac !!!
-
-	//this->setAutoFillBackground(true);
-	//this->setPalette(palette);
-
 	mapperExivInfo = new QSignalMapper(this);
 	mapperSecureImage = new QSignalMapper(this);
 	mapperSecureCheck = new QSignalMapper(this);
@@ -26,9 +18,14 @@ WindowMenu::WindowMenu(WindowMain* main)
 
     this->setGeometry(100, 100, 500, 400);
     this->setWindowTitle("JPGAnalizer");
+    this->setObjectName("Okno_Menu");
 
     label = new QLabel("Informacje Exiv i diagram", this);
-    label->setGeometry(650, 100, 200, 100);
+    label->setGeometry(650, 40, 300, 50);
+    textFont = label->font();
+    textFont.setPointSize(14);
+    textFont.setBold(true);
+    label->setFont(textFont);
 
     editableLine = new QLineEdit("Sciezka do badanego obrazu", this);
     editableLine->setGeometry(50, 600, 400, 20);

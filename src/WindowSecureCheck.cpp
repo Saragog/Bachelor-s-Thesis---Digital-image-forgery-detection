@@ -52,10 +52,6 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 
 	timer = new QTimer(this);
 
-	palette.setColor(QPalette::Background, Qt::cyan);
-	this->setAutoFillBackground(true);
-	this->setPalette(palette);
-
 	currentImage = true;
 
 	connect(backButton, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));

@@ -14,6 +14,7 @@
 #include <QStackedWidget>
 #include <QBoxLayout>
 #include <QComboBox>
+#include <QFont>
 #include "WindowExivData.h"
 #include "WindowSecureCheck.h"
 #include "WindowSecureImage.h"
@@ -43,6 +44,7 @@ private:
 	QVBoxLayout *layout;
 	QComboBox *pageComboBox;
 	QLabel image;
+	QFont textFont;
 
 	QMessageBox message;
 
@@ -58,6 +60,7 @@ public:
 
 	bool checkImageFile(std::string path);
 	int* getHistGTones() const;
+	QFont* getTextFont();
 
 public slots:
 	void showMenu();

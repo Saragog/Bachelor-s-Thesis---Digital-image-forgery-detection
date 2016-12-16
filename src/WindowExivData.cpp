@@ -12,10 +12,6 @@ WindowExivData::WindowExivData (QWidget* main)
 {
 	mainWindow = main;
 
-	palette.setColor(QPalette::Background, Qt::cyan);
-	this->setAutoFillBackground(true);
-	this->setPalette(palette);
-
 	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
 
     this->setWindowTitle("JPGAnalizer");
@@ -72,6 +68,7 @@ void WindowExivData::prepareWindow(std::vector<std::string> data)
 
     infoWidget = new QWidget;
     infoWidget->setLayout(&infoLayout);
+    infoWidget->setAutoFillBackground(false);
     exivInfoScroll->setWidget(infoWidget);
 
     exivInfoScroll->viewport()->setAutoFillBackground(true);
@@ -83,8 +80,8 @@ void WindowExivData::prepareWindow(std::vector<std::string> data)
 	for (unsigned int step = 0; step < data.size(); step++)
 	{
 		infoLabel = new QLabel(QString::fromStdString(data.at(step)));
+		// background-color: rgba(255, 255, 255, 0);"
 		infoLabel->setGeometry(100, 200 + 100*step, 100, 50);
-
 		infoLayout.addWidget(infoLabel);
 	}
 }

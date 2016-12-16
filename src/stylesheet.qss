@@ -1,0 +1,5 @@
+QWidget::Okno_Menu
+{
+    	background-image: url(./ProgramImages/Background.jpg);
+    	background-repeat: no-repeat;
+}
