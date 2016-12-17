@@ -31,6 +31,10 @@ WindowMain::WindowMain()
 	pageComboBox->addItem(tr("WidokSecureCheck"));
 	pageComboBox->addItem(tr("WidokWszystkieInformacjeExif"));
 
+	textFont = QFont();
+    textFont.setPointSize(14);
+    textFont.setBold(true);
+
 	connect(pageComboBox, SIGNAL(activated(int)), stackedWidget, SLOT(setCurrentIndex(int)));
 
 	this->setCentralWidget(stackedWidget);
@@ -242,7 +246,10 @@ void WindowMain::saveImage(QString path)
 
 int* WindowMain::getHistGTones() const
 {
-	//std::vector<int> greyHistValues = drawingOperations->getHistogramGrey();
-
 	return drawingOperations->getHistGTones();
+}
+
+QFont WindowMain::getTextFont() const
+{
+	return textFont;
 }

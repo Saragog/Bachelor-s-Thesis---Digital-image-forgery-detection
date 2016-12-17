@@ -19,7 +19,6 @@
 #include <QPixmap>
 #include <QImage>
 #include <QMessageBox>
-#include <QFont>
 
 #include "WindowMain.h"
 
@@ -46,7 +45,6 @@ public:
 	QSignalMapper* mapperSecureImage;
 	QSignalMapper* mapperSecureCheck;
 	QSignalMapper* mapperTextEdited;
-	QFont textFont;
 	QImage defaultImage;
 	QLabel* imageLabel;
 

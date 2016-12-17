@@ -55,7 +55,6 @@ src/WindowMenu.d: ../src/WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/QPixmap /usr/include/qt4/QtGui/qpixmap.h \
  /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h \
  /usr/include/qt4/QtGui/QMessageBox /usr/include/qt4/QtGui/qmessagebox.h \
- /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
  ../src/WindowMain.h /usr/include/qt4/QtGui/QMainWindow \
  /usr/include/qt4/QtGui/qmainwindow.h /usr/include/qt4/QtGui/qtabwidget.h \
  /usr/include/qt4/QtCore/QObject /usr/include/qt4/QtCore/qobject.h \
@@ -72,8 +71,10 @@ src/WindowMenu.d: ../src/WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/qslider.h \
  /usr/include/qt4/QtGui/qabstractslider.h /usr/include/qt4/QtGui/qstyle.h \
  /usr/include/qt4/QtGui/qtabbar.h /usr/include/qt4/QtGui/qrubberband.h \
- /usr/include/qt4/QtCore/qabstractitemmodel.h ../src/WindowExivData.h \
- /usr/include/qt4/QtGui/QScrollArea /usr/include/qt4/QtGui/qscrollarea.h \
+ /usr/include/qt4/QtCore/qabstractitemmodel.h \
+ /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
+ ../src/WindowExivData.h /usr/include/qt4/QtGui/QScrollArea \
+ /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
  ../src/WindowSecureCheck.h /usr/include/qt4/QtCore/QTimer \
@@ -299,10 +300,6 @@ src/WindowMenu.d: ../src/WindowMenu.cpp ../src/WindowMenu.h \
 
 /usr/include/qt4/QtGui/qmessagebox.h:
 
-/usr/include/qt4/QtGui/QFont:
-
-/usr/include/qt4/QtGui/qfont.h:
-
 ../src/WindowMain.h:
 
 /usr/include/qt4/QtGui/QMainWindow:
@@ -356,6 +353,10 @@ src/WindowMenu.d: ../src/WindowMenu.cpp ../src/WindowMenu.h \
 /usr/include/qt4/QtGui/qrubberband.h:
 
 /usr/include/qt4/QtCore/qabstractitemmodel.h:
+
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:
 
 ../src/WindowExivData.h:
 

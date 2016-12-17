@@ -60,7 +60,7 @@ public:
 
 	bool checkImageFile(std::string path);
 	int* getHistGTones() const;
-	QFont* getTextFont();
+	QFont getTextFont() const;
 
 public slots:
 	void showMenu();

@@ -14,33 +14,6 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 	label = new QLabel("Window Secure Check", this);
 	label->setGeometry(100, 100, 200, 100);
 
-	exifProtectionTagLabel = new QLabel(this);
-	exifProtectionTagLabel->setGeometry(620, 480, 850, 40);
-
-	exifIsProtectedLabel = new QLabel(this);
-	exifIsProtectedLabel->setGeometry(620, 520, 850, 40);
-
-	exifSoftwareLabel = new QLabel(this);
-	exifSoftwareLabel->setGeometry(620, 560, 850, 40);
-
-	exifXDimensionLabel = new QLabel(this);
-	exifXDimensionLabel->setGeometry(620, 600, 850, 40);
-
-	exifYDimensionLabel = new QLabel(this);
-	exifYDimensionLabel->setGeometry(620, 640, 850, 40);
-
-	exifDateTimeLabel = new QLabel(this);
-	exifDateTimeLabel->setGeometry(620, 680, 850, 40);
-
-	imageRotationLabel = new QLabel(this);
-	imageRotationLabel->setGeometry(620, 720, 850, 40);
-
-	imageHistogramSourceLabel = new QLabel(this);
-	imageHistogramSourceLabel->setGeometry(620, 760, 850, 40);
-
-	imageWrgPxlCntrLabel = new QLabel(this);
-	imageWrgPxlCntrLabel->setGeometry(620, 800, 850, 40);
-
 	histogramCLabel = new QLabel(this);
 	histogramCLabel->setGeometry(620, 10, 650, 450);
 
@@ -53,6 +26,14 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 	timer = new QTimer(this);
 
 	currentImage = true;
+
+	raportPalette.setColor(QPalette::Background, Qt::lightGray);
+    raportScroll = new QScrollArea(this);
+    raportWidget = new QWidget;
+    raportWidget->setLayout(&raportLayout);
+
+    raportScroll->setWidgetResizable(true);
+    raportScroll->setGeometry(300, 470, 900, 450);
 
 	connect(backButton, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
 	connect(backButton, SIGNAL(clicked()), this, SLOT(stopTimer()));
@@ -73,18 +54,32 @@ void WindowSecureCheck::setImage(QString path)
 	return;
 }
 
+void WindowSecureCheck::clearRaport()
+{
+	QLayoutItem* temp;
+	while ((temp = raportLayout.takeAt(0)) != 0)
+	{
+		delete temp;
+	}
+	return;
+}
+
 void WindowSecureCheck::setRaport(std::vector<std::pair<bool, std::string> > raport)
 {
-	exifProtectionTagLabel->setText(QString::fromStdString(raport.at(0).second));
-	exifIsProtectedLabel->setText(QString::fromStdString(raport.at(1).second));
-	exifSoftwareLabel->setText(QString::fromStdString(raport.at(2).second));
-	exifXDimensionLabel->setText(QString::fromStdString(raport.at(3).second));
-	exifYDimensionLabel->setText(QString::fromStdString(raport.at(4).second));
-	exifDateTimeLabel->setText(QString::fromStdString(raport.at(5).second));
+	clearRaport();
 
-	imageRotationLabel->setText(QString::fromStdString(raport.at(6).second));
-	imageHistogramSourceLabel->setText(QString::fromStdString(raport.at(7).second));
-	imageWrgPxlCntrLabel->setText(QString::fromStdString(raport.at(8).second));
+    raportScroll->setWidget(raportWidget);
+    raportScroll->viewport()->setAutoFillBackground(true);
+    raportScroll->viewport()->setPalette(raportPalette);
+
+	for (unsigned int step = 0; step < raport.size(); step++)
+	{
+		// TODO zrobic pojawianie sie znakow ze sie udalo lub nie obok - znaki sa gotowe do zrobienia tego
+		raportLabel = new QLabel(QString::fromStdString(raport.at(step).second));
+		raportLabel->setGeometry(300, 470 + 50*step, 900, 50);
+
+		raportLayout.addWidget(raportLabel);
+	}
 
 	return;
 }

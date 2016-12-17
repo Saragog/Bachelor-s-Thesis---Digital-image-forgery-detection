@@ -288,6 +288,7 @@ void DrawingOperations::readOriginalSize(int mode)
 	bool bitSet;
 	bool separatorFound;
 	std::pair<int,int> newPosition;
+	std::ostringstream ostring;
 
 	for (int bit = 0; bit < 15; bit++) readBinaryNumber[bit] = 0;
 
@@ -401,9 +402,10 @@ void DrawingOperations::readOriginalSize(int mode)
 		}
 	}
 	value = convertBinaryToInt(readBinaryNumber);
+	ostring << value;
 	partialRaport.first = true;
-	if (mode == 0) partialRaport.second = "Oryginalna wielkosc obrazu X wczytana z powodzeniem: " + value;
-	else partialRaport.second = "Oryginalna wielkosc obrazu Y wczytana z powodzeniem: " + value;
+	if (mode == 0) partialRaport.second = "Oryginalna wielkosc obrazu X wczytana z powodzeniem: " + ostring.str();
+	else partialRaport.second = "Oryginalna wielkosc obrazu Y wczytana z powodzeniem: " + ostring.str();
 	std::cout << "Value = " << value;
 	raportImage.push_back(partialRaport);
 

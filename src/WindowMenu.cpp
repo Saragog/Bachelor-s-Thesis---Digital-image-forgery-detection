@@ -22,10 +22,7 @@ WindowMenu::WindowMenu(WindowMain* main)
 
     label = new QLabel("Informacje Exiv i diagram", this);
     label->setGeometry(650, 40, 300, 50);
-    textFont = label->font();
-    textFont.setPointSize(14);
-    textFont.setBold(true);
-    label->setFont(textFont);
+    label->setFont(mainWindow->getTextFont());
 
     editableLine = new QLineEdit("Sciezka do badanego obrazu", this);
     editableLine->setGeometry(50, 600, 400, 20);

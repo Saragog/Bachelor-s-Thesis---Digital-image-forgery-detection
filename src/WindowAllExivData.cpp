@@ -11,9 +11,6 @@
 WindowAllExivData::WindowAllExivData (QWidget* main)
 {
 	mainWindow = main;
-
-	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
-
     this->setWindowTitle("JPGAnalizer");
 
     label = new QLabel("Wszystkie Informacje Exif znalezione w pliku", this);
@@ -21,6 +18,14 @@ WindowAllExivData::WindowAllExivData (QWidget* main)
 
     buttonReturn = new QPushButton("Powrot", this);
     buttonReturn->setGeometry(50,800, 200, 60);
+
+	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
+    exivInfoScroll = new QScrollArea(this);
+    infoWidget = new QWidget;
+    infoWidget->setLayout(&infoLayout);
+
+    exivInfoScroll->setWidgetResizable(true);
+    exivInfoScroll->setGeometry(150, 100, 900, 670);
 
     connect(buttonReturn, SIGNAL(clicked()), mainWindow, SLOT(showExivDataAgain()));
 }
@@ -48,17 +53,9 @@ void WindowAllExivData::prepareWindow(std::vector<std::string> data)
 {
 	clearInfo();
 
-    exivInfoScroll = new QScrollArea(this);
-
-    infoWidget = new QWidget;
-    infoWidget->setLayout(&infoLayout);
     exivInfoScroll->setWidget(infoWidget);
-
     exivInfoScroll->viewport()->setAutoFillBackground(true);
     exivInfoScroll->viewport()->setPalette(scrollPalette);
-
-    exivInfoScroll->setWidgetResizable(true);
-    exivInfoScroll->setGeometry(150, 100, 900, 670);
 
 	for (unsigned int step = 0; step < data.size(); step++)
 	{

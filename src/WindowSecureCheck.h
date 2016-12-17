@@ -12,6 +12,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QPalette>
+#include <QScrollArea>
+#include <QGridLayout>
 #include <QImage>
 #include <QTimer>
 
@@ -22,17 +24,6 @@ class WindowSecureCheck : public QWidget
 private:
 	QWidget* mainWindow;
 	QLabel* label;
-
-	QLabel* exifProtectionTagLabel;
-	QLabel* exifIsProtectedLabel;
-	QLabel* exifSoftwareLabel;
-	QLabel* exifXDimensionLabel;
-	QLabel* exifYDimensionLabel;
-	QLabel* exifDateTimeLabel;
-
-	QLabel* imageRotationLabel;
-	QLabel* imageHistogramSourceLabel;
-	QLabel* imageWrgPxlCntrLabel;
 
 	QPixmap pixmapImage;
 	QPixmap pixmapCheckedImage;
@@ -48,6 +39,16 @@ private:
 						// potrzebne do przestawiania obrazkow za pomoca timera
 						// true oznacza ze pokazywany jest zwykly obraz
 						// false oznacza ze pokazywany jest obraz wynikajacy ze sprawdzenia obrazu
+
+	QPalette raportPalette;
+	QScrollArea* raportScroll;
+
+	QLabel* raportLabel;
+	QGridLayout raportLayout;
+	QWidget* raportWidget;
+
+	void clearRaport();
+
 public:
 
 	WindowSecureCheck(QWidget* main);

@@ -35,11 +35,9 @@ int main(int argc, char *argv[])
     		"		}"
     		"QLabel"
     		"		{"
-    		//"			background: transparent;"
     		"			background-color: rgb(230, 230, 230);"
     		"			padding: 2px;"
     		"			border: 3px solid #000000;"
-    		//"			font-size: 40;"
 			"		}"
     		"QScrollArea"
     		"		{"
@@ -55,16 +53,6 @@ int main(int argc, char *argv[])
     		"		{"
     		"			border: 3px solid #888888;"
     		"		}"
-    		/*
-    		"QLineEdit"
-    		"		{"
-    		"			border: 3px solid #7f7f7f;"
-    		"		}"
-    		"QScrollArea"
-    		"		{"
-    		//"			border: 2px solid #666666;"
-    		//"			background: transparent;"
-    		"		}"*/
     );
 
     WindowMain mainWindow;

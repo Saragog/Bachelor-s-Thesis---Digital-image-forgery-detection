@@ -27,7 +27,6 @@ public:
 
 	QPushButton* buttonReturn;
 
-	QPalette palette;
 	QPalette scrollPalette;
 	QScrollArea* exivInfoScroll;
 
