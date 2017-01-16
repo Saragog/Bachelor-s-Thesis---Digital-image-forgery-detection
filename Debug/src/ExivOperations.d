@@ -80,25 +80,25 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
  /usr/include/qt4/QtGui/qslider.h \
  /usr/include/qt4/QtGui/qabstractslider.h /usr/include/qt4/QtGui/qstyle.h \
  /usr/include/qt4/QtGui/qtabbar.h /usr/include/qt4/QtGui/qrubberband.h \
- /usr/include/qt4/QtCore/qabstractitemmodel.h \
- /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
- ../src/WindowExivData.h /usr/include/qt4/QtGui/QLabel \
- /usr/include/qt4/QtGui/qlabel.h /usr/include/qt4/QtGui/QPushButton \
- /usr/include/qt4/QtGui/qpushbutton.h \
+ /usr/include/qt4/QtCore/qabstractitemmodel.h ../src/WindowExivData.h \
+ /usr/include/qt4/QtGui/QLabel /usr/include/qt4/QtGui/qlabel.h \
+ /usr/include/qt4/QtGui/QPushButton /usr/include/qt4/QtGui/qpushbutton.h \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/QPalette \
  /usr/include/qt4/QtGui/qpalette.h /usr/include/qt4/QtGui/QScrollArea \
  /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
+ /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
  ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QImage \
  /usr/include/qt4/QtGui/qimage.h /usr/include/qt4/QtCore/QTimer \
  /usr/include/qt4/QtCore/qtimer.h /usr/include/qt4/QtCore/qbasictimer.h \
- ../src/WindowSecureImage.h /usr/include/qt4/QtGui/QLineEdit \
- /usr/include/qt4/QtGui/qlineedit.h /usr/include/qt4/QtGui/qtextcursor.h \
- /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
- /usr/include/qt4/QtGui/qtextoption.h \
+ /usr/include/qt4/QtGui/QSpinBox /usr/include/qt4/QtGui/qspinbox.h \
  /usr/include/qt4/QtCore/QSignalMapper \
- /usr/include/qt4/QtCore/qsignalmapper.h ../src/WindowAllExivData.h \
+ /usr/include/qt4/QtCore/qsignalmapper.h ../src/WindowSecureImage.h \
+ /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
+ /usr/include/qt4/QtGui/qtextcursor.h \
+ /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
+ /usr/include/qt4/QtGui/qtextoption.h ../src/WindowAllExivData.h \
  ../src/DrawingOperations.h /usr/include/qt4/QtGui/QFileDialog \
  /usr/include/qt4/QtGui/qfiledialog.h /usr/include/qt4/QtCore/qdir.h \
  /usr/include/qt4/QtCore/qfileinfo.h /usr/include/qt4/QtCore/qfile.h \
@@ -358,10 +358,6 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 
 /usr/include/qt4/QtCore/qabstractitemmodel.h:
 
-/usr/include/qt4/QtGui/QFont:
-
-/usr/include/qt4/QtGui/qfont.h:
-
 ../src/WindowExivData.h:
 
 /usr/include/qt4/QtGui/QLabel:
@@ -388,6 +384,10 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 
 /usr/include/qt4/QtGui/qgridlayout.h:
 
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:
+
 ../src/WindowSecureCheck.h:
 
 /usr/include/qt4/QtGui/QImage:
@@ -399,6 +399,14 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 /usr/include/qt4/QtCore/qtimer.h:
 
 /usr/include/qt4/QtCore/qbasictimer.h:
+
+/usr/include/qt4/QtGui/QSpinBox:
+
+/usr/include/qt4/QtGui/qspinbox.h:
+
+/usr/include/qt4/QtCore/QSignalMapper:
+
+/usr/include/qt4/QtCore/qsignalmapper.h:
 
 ../src/WindowSecureImage.h:
 
@@ -413,10 +421,6 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 /usr/include/qt4/QtGui/qpen.h:
 
 /usr/include/qt4/QtGui/qtextoption.h:
-
-/usr/include/qt4/QtCore/QSignalMapper:
-
-/usr/include/qt4/QtCore/qsignalmapper.h:
 
 ../src/WindowAllExivData.h:
 

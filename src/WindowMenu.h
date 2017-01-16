@@ -19,6 +19,7 @@
 #include <QPixmap>
 #include <QImage>
 #include <QMessageBox>
+#include <QFont>
 
 #include "WindowMain.h"
 
@@ -27,11 +28,6 @@ class WindowMenu : public QWidget
 	Q_OBJECT
 
 private:
-
-	//void validateImage();
-
-	void setDefaultImage();
-public:
 
 	WindowMain* mainWindow;
 	QLabel* label;
@@ -47,7 +43,10 @@ public:
 	QSignalMapper* mapperTextEdited;
 	QImage defaultImage;
 	QLabel* imageLabel;
+	QFont textFont;
+	void setDefaultImage();
 
+public:
 	WindowMenu(WindowMain* main);
 	virtual ~WindowMenu();
 

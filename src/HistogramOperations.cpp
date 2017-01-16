@@ -21,9 +21,7 @@ void DrawingOperations::prepareHistogramsData()
 	{
 		for (int pixelR = 0; pixelR < rows; pixelR++)
 		{
-			if (pixelC >= signBeginningX && pixelR >= signBeginningY) continue; // piksel w obszarze znaku zabezpieczajacego
-			if (pixelC >= sizeFirstPixelX && pixelR >= rows - 2) continue; // piksel w obszarze zabezpieczenia wielkosci X
-			if (pixelC >= columns - 2 && pixelR >= sizeFirstPixelY) continue; // piksel w obszarze zabezpieczenia wielkosci Y
+			if (isPixelSecurityPart(pixelC, pixelR)) continue;
 
 			pixel = image.pixel(pixelC, pixelR);
 			color.setRgb(pixel);
@@ -43,6 +41,7 @@ void DrawingOperations::prepareHistogramsData()
 			else greyTones[tone]++;
 		}
 	}
+
 	return;
 }
 
@@ -87,16 +86,30 @@ void DrawingOperations::drawHistograms()
 void DrawingOperations::drawHistogramGrey(int greatestGreyNumber)
 {
 	QPainter painter(&histogramGrey);
-	painter.setBrush(Qt::black);
-	painter.setPen(Qt::black);
+
+	// PISANIE PO HISTOGRAMIE
+    QFont f=painter.font();
+    f.setPointSize(10);
+    f.setBold(true);
+    painter.setFont(f);
+
+    painter.drawText( QPoint(7,75), QString::number(greatestGreyNumber));
+    painter.drawText( QPoint(40, 400), "0");
+    painter.drawText( QPoint(50, 415), "0");
+    painter.drawText(QPoint(500, 415), "153");
+    painter.drawText(QPoint(10, 20), "Liczebnosc grupy");
+    painter.drawText(QPoint(300, 430), "Numer grupy");
+
+	painter.setBrush(QColor(150, 150, 150));
+	painter.setPen(QColor(150, 150, 150));
 
 	int xPos, yPos, height;
 
 	for (int tone = 0; tone < 153; tone++)
 	{
 		xPos = 50 + tone * 3;
-		height = ((float)greyTones[tone] / greatestGreyNumber) * 400;
-		yPos = 425 - height;
+		height = ((float)greyTones[tone] / greatestGreyNumber) * 325;
+		yPos = 400 - height;
 		painter.drawRect(xPos , yPos, 3, height);
 	}
 	return;
@@ -105,8 +118,19 @@ void DrawingOperations::drawHistogramGrey(int greatestGreyNumber)
 void DrawingOperations::drawHistogramRGB(int greatestRGBNumber)
 {
 	QPainter painter(&histogramRGB);
-	painter.setBrush(Qt::black);
-	painter.setPen(Qt::black);
+
+	// PISANIE PO HISTOGRAMIE
+    QFont f=painter.font();
+    f.setPointSize(10);
+    f.setBold(true);
+    painter.setFont(f);
+
+    painter.drawText( QPoint(7,75), QString::number(greatestRGBNumber));
+    painter.drawText( QPoint(40, 400), "0");
+    painter.drawText( QPoint(50, 415), "0");
+    painter.drawText(QPoint(545, 415), "255");
+    painter.drawText(QPoint(10, 20), "Liczebnosc grupy");
+    painter.drawText(QPoint(300, 430), "Numer grupy");
 
 	int xPos, yPos, height;
 
@@ -114,23 +138,23 @@ void DrawingOperations::drawHistogramRGB(int greatestRGBNumber)
 	{
 		painter.setBrush(Qt::red);
 		painter.setPen(Qt::red);
-		xPos = 24 + tone * 2;
-		height = ((float)redTones[tone] / greatestRGBNumber) * 400;
-		yPos = 425 - height;
+		xPos = 50 + tone * 2;
+		height = ((float)redTones[tone] / greatestRGBNumber) * 325;
+		yPos = 400 - height;
 		painter.drawRect(xPos , yPos, 2, 2);
 
 		painter.setBrush(Qt::green);
 		painter.setPen(Qt::green);
-		xPos = 24 + tone * 2;
-		height = ((float)greenTones[tone] / greatestRGBNumber) * 400;
-		yPos = 425 - height;
+		xPos = 50 + tone * 2;
+		height = ((float)greenTones[tone] / greatestRGBNumber) * 325;
+		yPos = 400 - height;
 		painter.drawRect(xPos , yPos, 2, 2);
 
 		painter.setBrush(Qt::blue);
 		painter.setPen(Qt::blue);
-		xPos = 24 + tone * 2;
-		height = ((float)blueTones[tone] / greatestRGBNumber) * 400;
-		yPos = 425 - height;
+		xPos = 50 + tone * 2;
+		height = ((float)blueTones[tone] / greatestRGBNumber) * 325;
+		yPos = 400 - height;
 		painter.drawRect(xPos , yPos, 2, 2);
 	}
 	return;
@@ -148,6 +172,8 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 
 	// szukanie najwiekszej wartosci sposrod aktualnych i zapisanych
 
+	// TODO !!! zmienic nazwe funkcji na rysowanie roznicy histogramow bo z tej nazwy nie wiadomo o co chodzi
+
 	for (int tone = 0; tone < 153; tone++)
 	{
 		if (greatestNumber < savedGreyTones[tone])
@@ -160,6 +186,19 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		}
 	}
 
+	// PISANIE PO HISTOGRAMIE
+    QFont f=painter.font();
+    f.setPointSize(10);
+    f.setBold(true);
+    painter.setFont(f);
+
+    painter.drawText( QPoint(7,75), QString::number(greatestNumber));
+    painter.drawText( QPoint(40, 400), "0");
+    painter.drawText( QPoint(50, 415), "0");
+    painter.drawText(QPoint(500, 415), "153");
+    painter.drawText(QPoint(10, 20), "Liczebnosc grupy");
+    painter.drawText(QPoint(300, 430), "Numer grupy");
+
 	// wyliczanie polozenia, kolejnosci rysowania i wysokosci prostokatow
 
 	for (int tone = 0; tone < 153; tone++)
@@ -169,20 +208,20 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		painter.setBrush(Qt::green);
 		painter.setPen(Qt::green);
 
-		heightSecured = ((float)savedGreyTones[tone] / greatestNumber ) * 400;
-		heightActual = ((float)greyTones[tone] / greatestNumber ) * 400;
+		heightSecured = ((float)savedGreyTones[tone] / greatestNumber ) * 325;
+		heightActual = ((float)greyTones[tone] / greatestNumber ) * 325;
 
 		if (heightActual > heightSecured)
 		{
 			painter.setBrush(Qt::red);
 			painter.setPen(Qt::red);
-			yPos = 425 - heightActual;
+			yPos = 400 - heightActual;
 
 			painter.drawRect(xPos, yPos, 3, heightActual);
 
 			painter.setBrush(Qt::yellow);
 			painter.setPen(Qt::yellow);
-			yPos = 425 - heightSecured;
+			yPos = 400 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
 		}
@@ -190,13 +229,13 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		{
 			painter.setBrush(Qt::yellow);
 			painter.setPen(Qt::yellow);
-			yPos = 425 - heightSecured;
+			yPos = 400 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
 
 			painter.setBrush(Qt::red);
 			painter.setPen(Qt::red);
-			yPos = 425 - heightActual;
+			yPos = 400 - heightActual;
 
 			painter.drawRect(xPos, yPos, 3, heightActual);
 		}
@@ -204,7 +243,7 @@ void DrawingOperations::checkHistogramGrey(std::vector<int> savedGreyTones)
 		{
 			painter.setBrush(Qt::green);
 			painter.setPen(Qt::green);
-			yPos = 425 - heightSecured;
+			yPos = 400 - heightSecured;
 
 			painter.drawRect(xPos, yPos, 3, heightSecured);
 		}

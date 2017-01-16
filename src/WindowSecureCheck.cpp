@@ -6,24 +6,41 @@
  */
 
 #include "WindowSecureCheck.h"
+#include <QImageReader>
 
 WindowSecureCheck::WindowSecureCheck(QWidget* main)
 {
 	this->mainWindow = main;
+    this->setWindowTitle("JPGAnalizer - Secure Check");
 
-	label = new QLabel("Window Secure Check", this);
-	label->setGeometry(100, 100, 200, 100);
+    mapperAccDif = new QSignalMapper(this);
 
 	histogramCLabel = new QLabel(this);
-	histogramCLabel->setGeometry(620, 10, 650, 450);
+	histogramCLabel->setGeometry(620, 10, 600, 450);
 
 	imageLabel = new QLabel(this);
-	imageLabel->setGeometry(10, 10, 600, 450);
+	imageLabel->setGeometry(10, 10, 606, 456);
+
+	textFont = QFont();
+	textFont.setPointSize(14);
+	textFont.setBold(true);
 
 	backButton = new QPushButton("Powrot", this);
-	backButton->setGeometry(100, 500, 100, 100);
+	backButton->setGeometry(30, 750, 250, 120);
+	backButton->setFont(textFont);
+
+	accLabel = new QLabel("Dokladnosc sprawdzenia:", this);
+	accLabel->setGeometry(20, 480, 250, 50);
+	accLabel->setFont(textFont);
+
+	adjustButton = new QPushButton("Sprawdz dla danej\ndokladnosci", this);
+	adjustButton->setGeometry(30, 600, 250, 120);
+	adjustButton->setFont(textFont);
 
 	timer = new QTimer(this);
+
+	positiveResult = QPixmap("./ProgramImages/tick.png");
+	negativeResult = QPixmap("./ProgramImages/x.png");
 
 	currentImage = true;
 
@@ -34,6 +51,19 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 
     raportScroll->setWidgetResizable(true);
     raportScroll->setGeometry(300, 470, 900, 450);
+
+    spinBox = new QSpinBox(this);
+    spinBox->setMinimum(0);
+    spinBox->setMaximum(20);
+    spinBox->setGeometry(20, 540, 250, 40);
+
+    connect(adjustButton, SIGNAL(clicked()), this, SLOT(setMapperAccDif()));
+
+    connect(adjustButton, SIGNAL(clicked()), mapperAccDif, SLOT(map()));
+
+    mapperAccDif->setMapping(adjustButton, spinBox->value());
+
+    connect(mapperAccDif, SIGNAL(mapped(int)), mainWindow, SLOT(adjustToNewAccDif(int)));
 
 	connect(backButton, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
 	connect(backButton, SIGNAL(clicked()), this, SLOT(stopTimer()));
@@ -46,10 +76,10 @@ WindowSecureCheck::~WindowSecureCheck()
 
 void WindowSecureCheck::setImage(QString path)
 {
-	fileName = path.toStdString();
-
 	pixmapImage = QPixmap(path);
 	pixmapImage = pixmapImage.scaled(600, 450);
+
+	spinBox->setValue(3);
 
 	return;
 }
@@ -75,10 +105,19 @@ void WindowSecureCheck::setRaport(std::vector<std::pair<bool, std::string> > rap
 	for (unsigned int step = 0; step < raport.size(); step++)
 	{
 		// TODO zrobic pojawianie sie znakow ze sie udalo lub nie obok - znaki sa gotowe do zrobienia tego
-		raportLabel = new QLabel(QString::fromStdString(raport.at(step).second));
-		raportLabel->setGeometry(300, 470 + 50*step, 900, 50);
 
-		raportLayout.addWidget(raportLabel);
+		QLabel* n = new QLabel(this);
+
+		if (raport.at(step).first) n->setPixmap(positiveResult);
+		else n->setPixmap(negativeResult);
+
+		//n->setGeometry(300, 470 + 50*step, 50, 50);
+		raportLayout.addWidget(n, step, 0);
+
+		raportLabel = new QLabel(QString::fromStdString(raport.at(step).second));
+		//raportLabel->setGeometry(370, 470 + 50*step, 700, 50);
+
+		raportLayout.addWidget(raportLabel, step, 1, 1, 13);
 	}
 
 	return;
@@ -101,6 +140,12 @@ void WindowSecureCheck::setCheckedImage(QImage image)
 	currentImage = true;
 	timer->start(1000);
 
+	return;
+}
+
+void WindowSecureCheck::setMapperAccDif()
+{
+	mapperAccDif->setMapping(adjustButton, spinBox->value());
 	return;
 }
 

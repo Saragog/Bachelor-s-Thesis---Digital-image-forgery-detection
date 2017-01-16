@@ -143,13 +143,32 @@ void ExivOperations::prepareSecurityExifData()
 {
 	bool isPixelXDimSet, isPixelYDimSet;
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::unsignedLong);
-
+    unsigned int actualX, actualY;
     std::string temp;
     std::string dateTime = "";
     std::string securityInfoToSave = "SECURED ";
-
+    std::pair<int, int> actualSize;
     isPixelXDimSet = true;
     isPixelYDimSet = true;
+
+    try
+    {
+    	// Pobieranie aktualnej wielkosci obrazu
+
+        actualSize = controller->getActualSize();
+        actualX = actualSize.first;
+        actualY = actualSize.second;
+
+        std::cout << "actualX: " << actualX << std::endl;
+        std::cout << "actualY: " << actualY << std::endl;
+
+    	exifData["Exif.Photo.PixelXDimension"] = actualX;
+    	exifData["Exif.Photo.PixelYDimension"] = actualY;
+    }
+    catch (std::exception &e)
+    {
+    	// Blad w trakcie zapisywania aktualnej wielkosci obrazu
+    }
 
 	try
 	{
@@ -305,18 +324,15 @@ bool ExivOperations::checkPixelXDimension(int xdim)
 	if (exifXDim == xdim)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Zawartosc XDimension zgodna: " + convertIntToStr(exifXDim);
+		partialRaport.second = "Zawartosc XDimension zgodna z zawartoscia komentarza: " + convertIntToStr(exifXDim);
 		raportExif.push_back(partialRaport);
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		s = "Zawartosc XDimension niezgodna: o-" + convertIntToStr(exifXDim) + " a-" + convertIntToStr(xdim);
+		s = "Zawartosc XDimension niezgodna: w komentarzu-" + convertIntToStr(xdim) + " w polu exif-" + convertIntToStr(exifXDim);
 		partialRaport.second = s;
-
-		std::cout << partialRaport.second;
-
 		raportExif.push_back(partialRaport);
 	}
 	return false;
@@ -343,14 +359,14 @@ bool ExivOperations::checkPixelYDimension(int ydim)
 	if (exifYDim == ydim)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Zawartosc YDimension zgodna: " + convertIntToStr(exifYDim);
+		partialRaport.second = "Zawartosc YDimension zgodna z zawartoscia komentarza: " + convertIntToStr(exifYDim);
 		raportExif.push_back(partialRaport);
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		s = "Zawartosc YDimension niezgodna: o-" + convertIntToStr(exifYDim) + " a-" + convertIntToStr(ydim);
+		s = "Zawartosc YDimension niezgodna: w komentarzu-" + convertIntToStr(ydim) + " w polu exif-" + convertIntToStr(exifYDim);
 		partialRaport.second = s;
 		raportExif.push_back(partialRaport);
 	}
@@ -376,14 +392,14 @@ bool ExivOperations::checkDateTime(std::string word)
 	if (date == word)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Data ostatniej zmiany zgodna z data zapisu: " + date;
+		partialRaport.second = "Zawartosc pola exif zgodna z zawartoscia komentarza: " + date;
 		raportExif.push_back(partialRaport);
 		return true;
 	}
 	else
 	{
 		partialRaport.first = false;
-		partialRaport.second = "Data ostatniej zmiany nie jest zgodna z data zapisu: oryginalna-" + date + " aktualna-" + word;
+		partialRaport.second = "Data ostatniej zmiany nie jest zgodna z data zapisu: w komentarzu-" + word + " w polu exif-" + date;
 		raportExif.push_back(partialRaport);
 	}
 	return false;
@@ -404,7 +420,7 @@ void ExivOperations::checkExifSecurity()
 	{
 		// Znaleziono pole komentarza zabezpieczajacego
 		securityTagContent = exifData["Exif.Photo.UserComment"].value().toString();
-		partialRaport.first = false;
+		partialRaport.first = true;
 		partialRaport.second = "Wykryto pole zabezpieczajace exif w wybranym obrazie";
 		raportExif.push_back(partialRaport);
 	}

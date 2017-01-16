@@ -42,7 +42,8 @@ src/WindowAllExivData.d: ../src/WindowAllExivData.cpp \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
  /usr/include/qt4/QtGui/qlayout.h /usr/include/qt4/QtGui/qlayoutitem.h \
- /usr/include/qt4/QtGui/qboxlayout.h /usr/include/qt4/QtGui/qgridlayout.h
+ /usr/include/qt4/QtGui/qboxlayout.h /usr/include/qt4/QtGui/qgridlayout.h \
+ /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h
 
 ../src/WindowAllExivData.h:
 
@@ -189,3 +190,7 @@ src/WindowAllExivData.d: ../src/WindowAllExivData.cpp \
 /usr/include/qt4/QtGui/qboxlayout.h:
 
 /usr/include/qt4/QtGui/qgridlayout.h:
+
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:

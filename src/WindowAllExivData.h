@@ -14,6 +14,7 @@
 #include <QPalette>
 #include <QScrollArea>
 #include <QGridLayout>
+#include <QFont>
 
 class WindowAllExivData : public QWidget
 {
@@ -33,6 +34,7 @@ public:
 	QLabel* infoLabel;
 	QGridLayout infoLayout;
 	QWidget* infoWidget;
+	QFont textFont;
 
 	WindowAllExivData(QWidget* main);
 	virtual ~WindowAllExivData();

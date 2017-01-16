@@ -14,28 +14,30 @@ WindowExivData::WindowExivData (QWidget* main)
 
 	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
 
-    this->setWindowTitle("JPGAnalizer");
+    this->setWindowTitle("JPGAnalizer - Exif Data");
 
-    label = new QLabel("Informacje EXIF i histogramy obrazu", this);
-    label->setGeometry(20, 20, 400, 100);
+    textFont = QFont();
+    textFont.setPointSize(14);
+    textFont.setBold(true);
 
     buttonReturn = new QPushButton("Powrot", this);
     buttonReturn->setGeometry(50,850, 180, 60);
+    buttonReturn->setFont(textFont);
 
     buttonAll = new QPushButton("Pokaz wszystkie informacje exif", this);
     buttonAll->setGeometry(250, 850, 330, 60);
+    buttonAll->setFont(textFont);
 
     imageLabel = new QLabel(this);
-    imageLabel->setGeometry(10, 10, 600, 450);
+    imageLabel->setGeometry(10, 10, 606, 456);
 
     histogramGreyLabel = new QLabel(this);
-    histogramGreyLabel->setGeometry(620, 10, 600, 450);
+    histogramGreyLabel->setGeometry(620, 10, 606, 456);
 
     histogramRGBLabel = new QLabel(this);
-    histogramRGBLabel->setGeometry(620, 470, 600, 450);
+    histogramRGBLabel->setGeometry(620, 470, 606, 456);
 
     connect(buttonReturn, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
-
     connect (buttonAll, SIGNAL(clicked()), mainWindow, SLOT(showAllExivData()));
 }
 
@@ -48,6 +50,7 @@ WindowExivData::~WindowExivData()
 	delete imageLabel;
 	delete histogramGreyLabel;
 	delete histogramRGBLabel;
+	delete exivInfoScroll;
 }
 
 void WindowExivData::clearInfo()
@@ -80,10 +83,10 @@ void WindowExivData::prepareWindow(std::vector<std::string> data)
 	for (unsigned int step = 0; step < data.size(); step++)
 	{
 		infoLabel = new QLabel(QString::fromStdString(data.at(step)));
-		// background-color: rgba(255, 255, 255, 0);"
 		infoLabel->setGeometry(100, 200 + 100*step, 100, 50);
 		infoLayout.addWidget(infoLabel);
 	}
+	return;
 }
 
 void WindowExivData::setImage(QString path)
@@ -100,7 +103,6 @@ void WindowExivData::setHistogramGrey(QImage image)
 {
 	QPixmap pixmap;
 	pixmap = pixmap.fromImage(image);
-	//pixmap = pixmap.scaled(559, 450);
 	histogramGreyLabel->setPixmap(pixmap);
 	return;
 }

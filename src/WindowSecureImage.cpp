@@ -11,25 +11,30 @@
 WindowSecureImage::WindowSecureImage(QWidget* main)
 {
 	mainWindow = main;
+    this->setWindowTitle("JPGAnalizer - Zabezpieczanie Obrazu");
 
-	label = new QLabel("Secure Image", this);
-	label->setGeometry(100, 100, 200, 100);
+	label = new QLabel("Zabezpieczanie obrazu JPG", this);
+	textFont = label->font();
+	textFont.setPointSize(14);
+	textFont.setBold(true);
+	label->setAlignment(Qt::AlignCenter);
+	label->setFont(textFont);
+	label->setGeometry(500, 50, 300, 50);
 
 	editableLine = new QLineEdit("Sciezka do zapisu", this);
-	editableLine->setGeometry(50, 600, 400, 20);
+	editableLine->setGeometry(100, 300, 550, 20);
 
 	backButton = new QPushButton("Powrot", this);
-	backButton->setGeometry(50, 700, 100, 100);
+	backButton->setFont(textFont);
+	backButton->setGeometry(150, 600, 350, 120);
 
 	chooseWhereToSaveButton = new QPushButton("Wskaz sciezke do zapisu", this);
-	chooseWhereToSaveButton->setGeometry(500, 600, 200, 100);
+	chooseWhereToSaveButton->setFont(textFont);
+	chooseWhereToSaveButton->setGeometry(700, 260, 250, 80);
 
 	saveButton = new QPushButton("Zapisz", this);
-	saveButton->setGeometry(800, 700, 100, 100);
-
-	//palette.setColor(QPalette::Background, Qt::cyan);
-	//this->setAutoFillBackground(true);
-	//this->setPalette(palette);
+	saveButton->setFont(textFont);
+	saveButton->setGeometry(700, 600, 350, 120);
 
 	mapper = new QSignalMapper(this);
 

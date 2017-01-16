@@ -45,10 +45,11 @@ src/WindowSecureImage.d: ../src/WindowSecureImage.cpp \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/qicon.h \
  /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h \
  /usr/include/qt4/QtCore/QSignalMapper \
- /usr/include/qt4/QtCore/qsignalmapper.h \
- /usr/include/qt4/QtGui/QFileDialog /usr/include/qt4/QtGui/qfiledialog.h \
- /usr/include/qt4/QtCore/qdir.h /usr/include/qt4/QtCore/qfileinfo.h \
- /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtGui/qdialog.h
+ /usr/include/qt4/QtCore/qsignalmapper.h /usr/include/qt4/QtGui/QFont \
+ /usr/include/qt4/QtGui/qfont.h /usr/include/qt4/QtGui/QFileDialog \
+ /usr/include/qt4/QtGui/qfiledialog.h /usr/include/qt4/QtCore/qdir.h \
+ /usr/include/qt4/QtCore/qfileinfo.h /usr/include/qt4/QtCore/qfile.h \
+ /usr/include/qt4/QtGui/qdialog.h
 
 ../src/WindowSecureImage.h:
 
@@ -201,6 +202,10 @@ src/WindowSecureImage.d: ../src/WindowSecureImage.cpp \
 /usr/include/qt4/QtCore/QSignalMapper:
 
 /usr/include/qt4/QtCore/qsignalmapper.h:
+
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:
 
 /usr/include/qt4/QtGui/QFileDialog:
 

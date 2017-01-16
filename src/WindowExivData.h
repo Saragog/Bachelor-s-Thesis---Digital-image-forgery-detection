@@ -14,6 +14,7 @@
 #include <QPalette>
 #include <QScrollArea>
 #include <QGridLayout>
+#include <QFont>
 
 class WindowExivData : public QWidget
 {
@@ -40,6 +41,7 @@ public:
 	QLabel* imageLabel;
 	QLabel* histogramGreyLabel;
 	QLabel* histogramRGBLabel;
+	QFont textFont;
 
 	WindowExivData(QWidget* main);
 	virtual ~WindowExivData();

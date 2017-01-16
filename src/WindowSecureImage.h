@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QPalette>
 #include <QSignalMapper>
+#include <QFont>
 
 class WindowSecureImage : public QWidget
 {
@@ -30,6 +31,7 @@ public:
 	QPalette palette;
 	std::string fileName;
 	QSignalMapper* mapper;
+	QFont textFont;
 
 	WindowSecureImage(QWidget* main);
 	virtual ~WindowSecureImage();

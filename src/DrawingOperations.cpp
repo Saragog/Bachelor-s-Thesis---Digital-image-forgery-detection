@@ -2,166 +2,188 @@
  * DrawingOperations.cpp
  *
  *  Created on: 11 wrz 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Comment:This file is a part of Digital forgery detection program that was
+ *  		an engineering thesis of the author.
+ *  		This file is an implementation of DrawingOperations class which is a part of the model.
+ *  		This class is used for calculation and drawing operations.
  */
 
 #include "DrawingOperations.h"
 #include <QImageReader>
-
 #include <QImageWriter>
 #include <QFile>
 #include <QColor>
 
+#include <iostream>
+
+// Constructor of DrawingOperations class
 DrawingOperations::DrawingOperations()
 {
     QImageReader reader(QString::fromAscii("./ProgramImages/blank.jpg"));
     histogramBase = reader.read();
     actualFileName = "";
 
-    accDif = 3;
-    signLength = 38;
-    signHeight = 34;
-    digitColorRange = 5;
-    sizeSeparatorColorRange = 20;
+    // TODO przerobic te trzeba na const bo nie sa zmieniane nigdzie
+    // starting values of important variables
+    signLength = 38;				// length of security sign
+    signHeight = 34;				// height of security sign
+    digitColorRange = 5;			// acceptable deviation of read RGB when reading grey histogram values
+    sizeSeparatorColorRange = 25;	// acceptable difference of RGB when reading original size from image
 }
 
+// Destructor of DrawingOperations class
 DrawingOperations::~DrawingOperations()
 {
 }
 
+// Function setImage prepares object of DrawingOperations class to work on an image from a file of given path.
 void DrawingOperations::setImage(std::string fileName)
 {
-	if (actualFileName != fileName)
+	if (actualFileName != fileName) // checks if chosen file is not the same file that was used before
+									// if yes then there is no need to prepare object
+									// everything should be already set
 	{
+		// reading image from given file
 		actualFileName = fileName;
 		QImageReader reader(QString::fromAscii(fileName.c_str()));
 		image = reader.read();
 
+		// reading size of image
 		columns = image.width();
 		rows = image.height();
 
+		rotation = ROTATION0;
+		accDif = 3;					// domyslna wartosc akceptowalnego odchylenia RGB piksela od sredniej z sasiadow
+									// starting value of acceptable difference - is used in image validation
+									// acceptable difference for RGB deviation of pixel from average of its neighbours
+
+		// setting default values for validation of security sign
+		signBeginningX = columns - signLength;
+		signBeginningY = rows - signHeight;
+		sizeFirstPixelX = columns - 7 - 6 * 15;
+		sizeFirstPixelY = rows -7 - 6 * 15;
+
+		// preparation of histograms based on given image
 		prepareHistogramsData();
 		drawHistograms();
 	}
 	return;
 }
 
-void DrawingOperations::secureImage()
+// Function readPixelRGB reads RGB values of a pixel positioned in given column and row
+int* DrawingOperations::readPixelRGB(int col, int row)
 {
-
+	static int result[3];
 	QRgb pixel;
 	QColor color;
+	// reading pixel
+	pixel = image.pixel(col, row);
+	color.setRgb(pixel);
+	// reading RGB of a pixel
+	result[0] = color.red();
+	result[1] = color.green();
+	result[2] = color.blue();
+	return result;
+}
+
+// Function secureImage
+void DrawingOperations::secureImage()
+{
+	int* pixelRGB;
 	int columns, rows;
 	int sumRed, sumGreen, sumBlue;
 	int mediumRed, mediumGreen, mediumBlue;
 	int adjacentPixels;
 	securedImage = image;
 
+	// while securing image rotation has to be set to 0
+	rotation = ROTATION0;
+	// setting size of image and beginning of security sign
 	columns = image.width();
 	rows = image.height();
-
-	rotation = ROTATION0;
 	signBeginningX = columns - signLength;
 	signBeginningY = rows - signHeight;
 
+	// main loop that makes pixels dependant on their neighbours
+	// columns
 	for (int col = 0; col < columns; col++)
 	{
+		// rows | every third pixel is to be changed
 		for (int row = col % 3; row < rows; row+=3)
 		{
-			//if (col > columns - signLength && row > rows - signHeight) continue;
-			//if (col >= sizeFirstPixelX && row >= rows - 2) continue;
-			//if (col >= columns - 2 && row >= sizeFirstPixelY) continue;
-			if (isPixelSecurityPart(col, row)) continue;
+			if (isPixelSecurityPart(col, row)) continue; // checks if actual pixel is a part of security sign or
+														 // original size security
 			sumRed = 0;
 			sumGreen = 0;
 			sumBlue = 0;
 			adjacentPixels = 0;
 
-			if (col >= 1)
+			// checking if actual pixel has neighbours
+			// adding RGBs of neighbours and counting how many neighbours there are
+			if (col >= 1) 									// first to the left
 			{
-				pixel = image.pixel(col - 1, row);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col-1, row);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1];	sumBlue += pixelRGB[2];
 			}
-			if (col >= 2)
+			if (col >= 2)									// second to the left
 			{
-				pixel = image.pixel(col - 2, row);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col-2, row);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (col < columns - 1 && !isPixelSecurityPart(col+1,row))//( col + 1 < columns - signLength || row < rows - signLength) && (col + 1 < columns - 2 || row < sizeFirstPixelY))
+			if (col < columns - 1 && !isPixelSecurityPart(col+1, row)) // first to the right
 			{
-				pixel = image.pixel(col + 1, row);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col+1, row);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (col < columns - 2 && !isPixelSecurityPart(col+2,row))//( col + 2 < columns - signLength || row < rows - signLength) && (col + 2 < columns - 2 || row < sizeFirstPixelY))
+			if (col < columns - 2 && !isPixelSecurityPart(col+2, row)) // second to the right
 			{
-				pixel = image.pixel(col + 2, row);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col+2, row);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (row >= 1)
+			if (row >= 1)									// first up
 			{
-				pixel = image.pixel(col, row - 1);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col, row-1);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (row >= 2)
+			if (row >= 2)									// second up
 			{
-				pixel = image.pixel(col, row - 2);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col, row - 2);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (row < rows - 1 && !isPixelSecurityPart(col,row+1))//( row + 1 < rows - signHeight || col < columns - signLength) && (row + 1 < rows - 2 || col < sizeFirstPixelX))
+			if (row < rows - 1 && !isPixelSecurityPart(col, row+1)) // first down
 			{
-				pixel = image.pixel(col, row + 1);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col, row + 1);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-			if (row < rows - 2 && !isPixelSecurityPart(col,row+2))//( row + 2 < rows - signHeight || col < columns - signLength) && (row + 2 < rows - 2 || col < sizeFirstPixelX))
+			if (row < rows - 2 && !isPixelSecurityPart(col, row+2))	// second down
 			{
-				pixel = image.pixel(col, row + 2);
-				color.setRgb(pixel);
+				pixelRGB = readPixelRGB(col, row + 2);
 				adjacentPixels++;
-				sumRed += color.red();
-				sumGreen += color.green();
-				sumBlue += color.blue();
+				sumRed += pixelRGB[0]; sumGreen += pixelRGB[1]; sumBlue += pixelRGB[2];
 			}
-
+			// now we can get new RGB of pixel
 			mediumRed = sumRed / adjacentPixels;
 			mediumGreen = sumGreen / adjacentPixels;
 			mediumBlue = sumBlue / adjacentPixels;
-
+			// setting pixel RGB to computed values
 			securedImage.setPixel(col, row, qRgb(mediumRed, mediumGreen, mediumBlue));
 		}
 	}
-
 	return;
 }
 
-bool DrawingOperations::saveImage(QString path) // funkcja zapisuje obraz do pliku o podanej sciezce
+// Function saveImage is used to prepare security image and save it under given path
+// If saving is successfull then returns true else false
+bool DrawingOperations::saveImage(QString path)
 {
 	try
 	{
@@ -173,7 +195,7 @@ bool DrawingOperations::saveImage(QString path) // funkcja zapisuje obraz do pli
 
 		secureImage(); // funkcja do zabezpieczenia obrazu
 
-		drawSign(); // funkcja do tworzenia znaczka zabezpieczajacego przed utrata danych exif
+		drawSign(); // funkcja do tworzenia znaku zabezpieczajacego przed utrata danych exif
 
 		prepareHistogramsData(); // funkcja przygotowuje dane do tworzenia histogramow
 
@@ -183,67 +205,58 @@ bool DrawingOperations::saveImage(QString path) // funkcja zapisuje obraz do pli
 	}
 	catch (std::exception& e)
 	{
-		return false; // jesli nie udalo sie zapisac obrazu ( np za malo pamieci )
+		// program encountered a problem saving image
+		return false;
 	}
-
 	return true;
 }
 
+// Function drawChange is used to draw 5x5 pixels squares in image that is a result of validation
+// Draws square around pixel of given column and row
 void DrawingOperations::drawChange(int col, int row)
 {
 	QRgb pixel;
 	QColor color;
-
 	for (int c = col - 2; c < col + 3; c++)
 	{
 		for (int r = row - 2; r < row + 3; r++)
 		{
-			if (isPixelSecurityPart(c, r)) continue;
-
+			if (isPixelSecurityPart(c, r)) continue; // checks if pixel was already painted
+			// if not then it can be painted
 			if (c >= 0 && c < columns && r >= 0 && r < rows && pixelsChanged[c][r])
 			{
 				pixel = image.pixel(c, r);
 				color.setRgb(pixel);
-
+				// setting pixel RGB to red
 				checkedImage.setPixel(c, r, qRgb(255, 0, 0));
 				pixelsChanged[c][r] = false;
 			}
 		}
 	}
-
 	return;
 }
 
+// If a change is detected then lookForSimilarPixels function is used to check if neighbouring pixels have neighbours that have the same RGB as them
+// Thanks to this function it is possible to find added objects of the same colour and mark them
 void DrawingOperations::lookForSimilarPixels(int col, int row)
 {
-	drawChange(col, row);
+	drawChange(col, row); // marking square around pixel considered as changed
 
-	if (row - 1 >= 0 && pixelResults[col][row-1])
-	{
-		// sprawdzanie otoczenia piksela gornego
-		checkAdjacentPixels(col, row-1);
-	}
-	if (col - 1 >= 0 && pixelResults[col-1][row])
-	{
-		// sprawdzanie otoczenia piksela lewego
-		checkAdjacentPixels(col-1, row);
-	}
-	if (col + 1 < columns && pixelResults[col+1][row])
-	{
-		// sprawdzanie otoczenia piksela prawego
-		checkAdjacentPixels(col+1, row);
-	}
-	if (row + 1 < rows && pixelResults[col][row+1])
-	{
-		// sprawdzanie otoczenia piksela dolnego
-		checkAdjacentPixels(col, row+1);
-	}
+	// checking around upper pixel
+	if (row - 1 >= 0 && pixelResults[col][row-1]) checkAdjacentPixels(col, row-1);
 
+	// checking around left pixel
+	if (col - 1 >= 0 && pixelResults[col-1][row]) checkAdjacentPixels(col-1, row);
+
+	// checking around right pixel
+	if (col + 1 < columns && pixelResults[col+1][row]) checkAdjacentPixels(col+1, row);
+
+	// checking around lower pixel
+	if (row + 1 < rows && pixelResults[col][row+1]) checkAdjacentPixels(col, row+1);
 	return;
 }
 
-// _________________________________________
-
+// Depending on detected rotation function checkAdjacentPixels uses TODO ...
 void DrawingOperations::checkAdjacentPixels(int col, int row)
 {
 	QRgb pixel = image.pixel(col, row);
@@ -615,48 +628,32 @@ void DrawingOperations::checkAdjacentDown(int col, int row, int red, int green, 
 	return;
 }
 
+// Function isPixelSecurityPart depending on rotation says if given pixel belongs to security sign or
+// original size security
+// returns true if it is and false otherwise
 bool DrawingOperations::isPixelSecurityPart(int col, int row)
 {
-	if (rotation == ROTATION0)
-	{
-		if ((col >= signBeginningX && row >= signBeginningY) ||
+	// depending on rotation
+	if (rotation == ROTATION0 && ((col >= signBeginningX && row >= signBeginningY) || // rotation 0 degrees
 			(col >= sizeFirstPixelX && row >= rows-2) ||
-			(col >= columns-2 && row >= sizeFirstPixelY))
-		{
-			return true;
-		}
-	}
-	else if (rotation == ROTATION90)
-	{
-		if ((col <= signBeginningX && row >= signBeginningY) ||
+			(col >= columns-2 && row >= sizeFirstPixelY))) return true;
+
+	else if (rotation == ROTATION90 && ((col <= signBeginningX && row >= signBeginningY) || // rotation 90 degrees
 			(col <= sizeFirstPixelY && row >= rows-2) ||
-			(col <= 1 && row >= sizeFirstPixelX))
-		{
-			return true;
-		}
-	}
-	else if (rotation == ROTATION180)
-	{
-		if ((col <= signBeginningX && row <= signBeginningY) ||
+			(col <= 1 && row >= sizeFirstPixelX))) return true;
+
+	else if (rotation == ROTATION180 && ((col <= signBeginningX && row <= signBeginningY) || // rotation 180 degrees
 			(col <= sizeFirstPixelX && row <= 1) ||
-			(col <= 1 && row <= sizeFirstPixelY))
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if ((col >= signBeginningX && row <= signBeginningY) ||
+			(col <= 1 && row <= sizeFirstPixelY))) return true;
+
+	else if (rotation == ROTATION270 && ((col >= signBeginningX && row <= signBeginningY) || // rotation 270 degrees
 			(col >= sizeFirstPixelY && row <= 1) ||
-			(col >= columns-2 && row <= sizeFirstPixelX))
-		{
-			return true;
-		}
-	}
+			(col >= columns-2 && row <= sizeFirstPixelX))) return true;
 
 	return false;
 }
 
+// TODO napisac duzo komentarzy podzielic to cos na wiecej funkcji bo to slabo wyglada
 bool DrawingOperations::checkChanges()
 {
 	QRgb pixel;
@@ -1051,7 +1048,7 @@ void DrawingOperations::checkImageSecurity(std::vector<int> savedGreyTones)
 		raportImage.push_back(partialRaport);
 
 		partialRaport.first = true;
-		partialRaport.second = "Nie bylo potrzeby sprawdzania poprawnosci znaczka";
+		partialRaport.second = "Nie bylo potrzeby sprawdzania poprawnosci znaku zabezpieczajacego";
 		raportImage.push_back(partialRaport);
 		checkHistogramGrey(savedGreyTones);
 	}
@@ -1068,12 +1065,38 @@ void DrawingOperations::checkImageSecurity(std::vector<int> savedGreyTones)
 	return;
 }
 
+// Funkcja getCheckedImage zwraca obraz z zaznaczonymi na czerwono miejscami, które mogly ulec edycji
 QImage DrawingOperations::getCheckedImage() const
 {
 	return checkedImage;
 }
 
+// Funkcja getRaportImage zwraca raport wynikowy tworzony w trakcie badan na obrazie
 std::vector<std::pair<bool, std::string> > DrawingOperations::getRaportImage() const
 {
 	return raportImage;
+}
+
+// Funkcja getActualSize zwraca rozmiar obrazu
+std::pair<int, int> DrawingOperations::getActualSize() const
+{
+	std::pair<int, int> size;
+	size.first = columns;
+	size.second = rows;
+	return size;
+}
+
+// Funkcja isLargeEnough mowi czy obraz jest wystarczająco duży do wykonania na nim zabezpieczenia / sprawdzenia
+bool DrawingOperations::isLargeEnough() const
+{
+	if (columns >= 97 && rows >= 97) return true;
+	return false;
+}
+
+// Funkcja checkForNewAccDif przeprowadza badania na obrazie dla nowej wartosci mozliwego odchylenia
+QImage DrawingOperations::checkForNewAccDif(int newAccDif)
+{
+	accDif = newAccDif;
+	checkChanges();
+	return checkedImage;
 }

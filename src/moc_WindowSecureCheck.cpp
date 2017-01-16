@@ -22,7 +22,7 @@ static const uint qt_meta_data_WindowSecureCheck[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -30,13 +30,16 @@ static const uint qt_meta_data_WindowSecureCheck[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      19,   18,   18,   18, 0x08,
+      19,   18,   18,   18, 0x0a,
+      37,   18,   18,   18, 0x08,
+      51,   18,   18,   18, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_WindowSecureCheck[] = {
-    "WindowSecureCheck\0\0changeImage()\0"
+    "WindowSecureCheck\0\0setMapperAccDif()\0"
+    "changeImage()\0stopTimer()\0"
 };
 
 void WindowSecureCheck::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -45,8 +48,10 @@ void WindowSecureCheck::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         Q_ASSERT(staticMetaObject.cast(_o));
         WindowSecureCheck *_t = static_cast<WindowSecureCheck *>(_o);
         switch (_id) {
-        case 0: _t->changeImage(); break;
-        default: break;
+        case 0: _t->setMapperAccDif(); break;
+        case 1: _t->changeImage(); break;
+        case 2: _t->stopTimer(); break;
+        default: ;
         }
     }
     Q_UNUSED(_a);
@@ -84,9 +89,9 @@ int WindowSecureCheck::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 3;
     }
     return _id;
 }

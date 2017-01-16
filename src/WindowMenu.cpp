@@ -2,9 +2,14 @@
  * MainWindow.cpp
  *
  *  Created on: 17 sie 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Comment:This file is a part of Digital forgery detection program that was
+ *  		an engineering thesis of the author.
+ *  		This file implements functionality of the main menu screen
  */
-#include <iostream>
+
+// libraries and headers
 #include "WindowMenu.h"
 #include <fstream>
 
@@ -17,33 +22,41 @@ WindowMenu::WindowMenu(WindowMain* main)
 	mapperTextEdited = new QSignalMapper (this);
 
     this->setGeometry(100, 100, 500, 400);
-    this->setWindowTitle("JPGAnalizer");
+    this->setWindowTitle("JPGAnalizer - Menu");
     this->setObjectName("Okno_Menu");
 
-    label = new QLabel("Informacje Exiv i diagram", this);
-    label->setGeometry(650, 40, 300, 50);
-    label->setFont(mainWindow->getTextFont());
+    label = new QLabel("MENU GLOWNE", this);
+    textFont = label->font();
+    textFont.setPointSize(14);
+    textFont.setBold(true);
+    label->setGeometry(450, 40, 350, 50);
+    label->setAlignment(Qt::AlignCenter);
+    label->setFont(textFont);
 
     editableLine = new QLineEdit("Sciezka do badanego obrazu", this);
-    editableLine->setGeometry(50, 600, 400, 20);
+    editableLine->setGeometry(30, 780, 550, 20);
 
     buttonChooseImage = new QPushButton("Wybierz obraz", this);
-    buttonChooseImage->setGeometry(450, 580, 200, 60);
+    buttonChooseImage->setGeometry(600, 760, 200, 60);
+    buttonChooseImage->setFont(textFont);
 
     buttonExivInfo = new QPushButton("Pokaz informacje Exiv", this);
-    buttonExivInfo->setGeometry(900, 200, 250, 80);
+    buttonExivInfo->setGeometry(870, 200, 350, 120);
+    buttonExivInfo->setFont(textFont);
 
     buttonSecureImage = new QPushButton("Zabezpiecz obraz", this);
-    buttonSecureImage->setGeometry(900, 350, 250, 80);
+    buttonSecureImage->setGeometry(870, 400, 350, 120);
+    buttonSecureImage->setFont(textFont);
 
     buttonSecureCheck = new QPushButton("Sprawdz zabezpieczenia obrazu", this);
-    buttonSecureCheck->setGeometry(900, 500, 250, 80);
+    buttonSecureCheck->setGeometry(870, 600, 350, 120);
+    buttonSecureCheck->setFont(textFont);
 
     QImageReader reader(QString::fromAscii("./ProgramImages/No-image-found.jpg"));
     defaultImage = reader.read();
 
     imageLabel = new QLabel(this);
-    imageLabel->setGeometry(10, 10, 600, 450);
+    imageLabel->setGeometry(20, 120, 806, 606);
 
     setDefaultImage();
 
@@ -117,7 +130,7 @@ void WindowMenu::chooseFile()
 {
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::ExistingFile);
-	dialog.setNameFilter(tr("Images (*.jpg)"));
+	dialog.setNameFilter(tr("Images (*.jpg *.JPG)"));
 
 	dialog.setViewMode(QFileDialog::Detail);
 
@@ -140,7 +153,7 @@ void WindowMenu::validateImage(QString path)
 	if (mainWindow->checkImageFile(path.toStdString()))
 	{
 		QPixmap pixmap(path);
-		pixmap = pixmap.scaled(600, 450);
+		pixmap = pixmap.scaled(800, 600);
 		imageLabel->setPixmap(pixmap);
 	}
 	else
@@ -155,7 +168,7 @@ void WindowMenu::setDefaultImage()
 {
     QPixmap pixmap;
     pixmap.convertFromImage(defaultImage);
-    pixmap = pixmap.scaled(600, 450);
+    pixmap = pixmap.scaled(800, 600);
     imageLabel->setPixmap(pixmap);
     return;
 }

@@ -16,6 +16,9 @@
 #include <QGridLayout>
 #include <QImage>
 #include <QTimer>
+#include <QFont>
+#include <QSpinBox>
+#include <QSignalMapper>
 
 class WindowSecureCheck : public QWidget
 {
@@ -32,9 +35,10 @@ private:
 
 	QTimer* timer;
 
+	QPixmap positiveResult, negativeResult;
+
 	QPushButton* backButton;
 	QPalette palette;
-	std::string fileName;
 	bool currentImage; 	// mowi ktory obraz aktualnie jest pokazywany
 						// potrzebne do przestawiania obrazkow za pomoca timera
 						// true oznacza ze pokazywany jest zwykly obraz
@@ -43,9 +47,15 @@ private:
 	QPalette raportPalette;
 	QScrollArea* raportScroll;
 
+	QLabel* accLabel;	// akceptowalna roznica
 	QLabel* raportLabel;
 	QGridLayout raportLayout;
 	QWidget* raportWidget;
+	QFont textFont;
+	QSpinBox* spinBox;
+	QPushButton* adjustButton;
+
+	QSignalMapper* mapperAccDif;
 
 	void clearRaport();
 
@@ -57,6 +67,9 @@ public:
 	void setRaport(std::vector<std::pair<bool, std::string> > raport);
 	void setHistogramC(QImage histogram);
 	void setCheckedImage(QImage image);
+
+public slots:
+	void setMapperAccDif();
 
 private slots:
 	void changeImage();

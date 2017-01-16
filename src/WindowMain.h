@@ -2,7 +2,13 @@
  * WindowMain.h
  *
  *  Created on: 17 sie 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Comment:This file is a part of Digital forgery detection program that was
+ *  		an engineering thesis of the author.
+ *  		This file is a description of the main window of the program.
+ *  		The WindowMain class can be considered the controller of this program.
+ *  		It handles most of the events that take place during program run.
  */
 
 #ifndef WINDOWMAIN_H_
@@ -14,19 +20,15 @@
 #include <QStackedWidget>
 #include <QBoxLayout>
 #include <QComboBox>
-#include <QFont>
 #include "WindowExivData.h"
 #include "WindowSecureCheck.h"
 #include "WindowSecureImage.h"
 #include "WindowAllExivData.h"
-
 #include "ExivOperations.h"
 #include "DrawingOperations.h"
-
 #include <QFileDialog>
 #include <QStringList>
 #include <QMessageBox>
-
 class ExivOperations;
 
 class WindowMain : public QMainWindow
@@ -39,18 +41,11 @@ private:
 	WindowSecureImage* secureImage;
 	WindowSecureCheck* secureCheck;
 	WindowAllExivData* allExivData;
-
 	QStackedWidget *stackedWidget;
 	QVBoxLayout *layout;
 	QComboBox *pageComboBox;
 	QLabel image;
-	QFont textFont;
-
 	QMessageBox message;
-
-	// TODO Potem zrobic jakas klase ktora przechowuje to by byl podzial a nie nie wiem co ... |
-	// 																						   V
-
 	ExivOperations* exivOperations;
 	DrawingOperations* drawingOperations;
 
@@ -60,7 +55,7 @@ public:
 
 	bool checkImageFile(std::string path);
 	int* getHistGTones() const;
-	QFont getTextFont() const;
+	std::pair<int, int> getActualSize() const;
 
 public slots:
 	void showMenu();
@@ -70,6 +65,7 @@ public slots:
 	void showAllExivData();
 	void showExivDataAgain();
 
-	void saveImage(QString path); // potem zrobic by przekazywany byl obraz
+	void adjustToNewAccDif(int newAccDif);
+	void saveImage(QString path);
 };
 #endif /* WINDOWMAIN_H_ */

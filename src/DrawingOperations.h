@@ -2,7 +2,12 @@
  * DrawingOperations.h
  *
  *  Created on: 11 wrz 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Comment:This file is a part of Digital forgery detection program that was
+ *  		an engineering thesis of the author.
+ *  		This file is a description of DrawingOperations class which is a part of the model.
+ *  		This class is used for calculation and drawing operations.
  */
 
 #ifndef DRAWINGOPERATIONS_H_
@@ -14,7 +19,6 @@
 #define ROTATION270 3
 
 #include <QImage>
-#include <iostream>
 
 class DrawingOperations
 {
@@ -63,6 +67,7 @@ private:
 
 	void drawHistogramGrey(int greatestGreyNumber);
 	void drawHistogramRGB(int greatestRGBNumber);
+	int* readPixelRGB(int col, int row);
 	void secureImage();
 
 	void prepareHistogramsData();
@@ -76,7 +81,6 @@ private:
 	std::vector<int> readFromSign();
 	std::pair<int,int> readingSizeStep(int mode, int actualX, int actualY);
 	void readOriginalSize(int mode); // tryb 0 dla czytania oryginalnej wielkosci X tryb 1 dla oryginalnego Y
-	//void readOriginalSizeY();
 	int convertDigitsToInt(int* digits);
 
 	bool checkRotation0();
@@ -117,6 +121,9 @@ public:
 	QImage getCheckedImage() const;
 	void checkImageSecurity(std::vector<int> savedGreyTones);
 	std::vector<std::pair<bool, std::string> > getRaportImage() const;
+	std::pair<int, int> getActualSize() const;
+	bool isLargeEnough() const;
+	QImage checkForNewAccDif(int newAccDif);
 };
 
 #endif /* DRAWINGOPERATIONS_H_ */

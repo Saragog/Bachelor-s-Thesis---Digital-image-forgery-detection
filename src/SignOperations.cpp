@@ -108,6 +108,7 @@ int DrawingOperations::convertBinaryToInt(int* binary)
 	int result = 0;
 	for (int bitN = 0; bitN < 15; bitN++)
 	{
+		//std::cout << "Bit nr " << bitN << " wynosi " << binary[bitN] << std::endl;
 		if (binary[bitN] == 1)
 		{
 			result = result * 2 + 1;
@@ -140,7 +141,7 @@ int* DrawingOperations::convertIntToBinary(int number)
 }
 
 void DrawingOperations::drawEdge() 	// zamalowuje 5 pikseli bedacych blisko dolnego prawego rogu na bialo
-									// dzieki czemu rog obrazu jest odporny na zmiejszenie obrazu maksymalnie 2 krotne
+									// dzieki czemu rog obrazu jest odporny na zmiejszenie obrazu maksymalnie o 50%
 									// po takiej zmianie nadal możliwe jest wykrycie obrotu stara metoda
 {
 	securedImage.setPixel(columns-4, rows-2, qRgb(255, 255, 255));
@@ -389,7 +390,6 @@ void DrawingOperations::readOriginalSize(int mode)
 		}
 		if (!bitSet || !separatorFound) // Nie potrafiono zidentyfikowac wartosci bitu
 		{
-			std::cout << "\nBlad w czytaniu oryginalnej wielkosci\n";
 			partialRaport.first = false;
 			if (mode == 0) partialRaport.second = "Blad w czytaniu oryginalnej wielkosci X";
 			else partialRaport.second = "Blad w czytaniu oryginalnej wielkosci Y";
@@ -406,7 +406,35 @@ void DrawingOperations::readOriginalSize(int mode)
 	partialRaport.first = true;
 	if (mode == 0) partialRaport.second = "Oryginalna wielkosc obrazu X wczytana z powodzeniem: " + ostring.str();
 	else partialRaport.second = "Oryginalna wielkosc obrazu Y wczytana z powodzeniem: " + ostring.str();
-	std::cout << "Value = " << value;
+	raportImage.push_back(partialRaport);
+
+	ostring.str("");
+	ostring.clear();
+
+	if (mode == 0 && value == columns)
+	{
+		partialRaport.first = true;
+		ostring << columns;
+		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci X zgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+	}
+	else if (mode == 1 && value == rows)
+	{
+		partialRaport.first = true;
+		ostring << rows;
+		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci Y zgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+	}
+	else if (mode == 0)
+	{
+		partialRaport.first = false;
+		ostring << columns;
+		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci X niezgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+	}
+	else
+	{
+		partialRaport.first = false;
+		ostring << rows;
+		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci Y niezgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+	}
 	raportImage.push_back(partialRaport);
 
 	return;
@@ -651,11 +679,9 @@ std::vector<int> DrawingOperations::readFromSign()
 	}
 	else
 	{
-		std::cout << "Ilosc bledow: " << wrgPxlCntr << std::endl;
 		partialRaport.first = false;
 		ostring << wrgPxlCntr;
 		partialRaport.second = "Informacje o histogramie zapisane na znaku odczytane z problemami - ilosc bledow: " +  ostring.str();
-		std::cout << partialRaport.second << std::endl;
 	}
 
 	raportImage.push_back(partialRaport);

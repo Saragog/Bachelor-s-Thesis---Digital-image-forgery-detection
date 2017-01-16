@@ -11,21 +11,21 @@
 WindowAllExivData::WindowAllExivData (QWidget* main)
 {
 	mainWindow = main;
-    this->setWindowTitle("JPGAnalizer");
+    this->setWindowTitle("JPGAnalizer - All Exif Data");
 
-    label = new QLabel("Wszystkie Informacje Exif znalezione w pliku", this);
-    label->setGeometry(20, 20, 400, 100);
+    label = new QLabel("Wszystkie informacje Exif znalezione w pliku", this);
+    textFont = label->font();
+    textFont.setPointSize(14);
+    textFont.setBold(true);
+    label->setGeometry(400, 40, 450, 50);
+    label->setAlignment(Qt::AlignCenter);
+    label->setFont(textFont);
 
     buttonReturn = new QPushButton("Powrot", this);
-    buttonReturn->setGeometry(50,800, 200, 60);
+    buttonReturn->setGeometry(500, 780, 250, 120);
+    buttonReturn->setFont(textFont);
 
 	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
-    exivInfoScroll = new QScrollArea(this);
-    infoWidget = new QWidget;
-    infoWidget->setLayout(&infoLayout);
-
-    exivInfoScroll->setWidgetResizable(true);
-    exivInfoScroll->setGeometry(150, 100, 900, 670);
 
     connect(buttonReturn, SIGNAL(clicked()), mainWindow, SLOT(showExivDataAgain()));
 }
@@ -41,6 +41,7 @@ WindowAllExivData::~WindowAllExivData()
 
 void WindowAllExivData::clearInfo()
 {
+	std::cout << "Czyszcze ...\n";
 	QLayoutItem* temp;
 	while ((temp = infoLayout.takeAt(0)) != 0)
 	{
@@ -53,7 +54,16 @@ void WindowAllExivData::prepareWindow(std::vector<std::string> data)
 {
 	clearInfo();
 
+	exivInfoScroll = new QScrollArea(this);
+
+    infoWidget = new QWidget;
+    infoWidget->setLayout(&infoLayout);
+    infoWidget->setAutoFillBackground(false);
     exivInfoScroll->setWidget(infoWidget);
+
+    exivInfoScroll->setWidgetResizable(true);
+    exivInfoScroll->setGeometry(150, 100, 900, 670);
+
     exivInfoScroll->viewport()->setAutoFillBackground(true);
     exivInfoScroll->viewport()->setPalette(scrollPalette);
 
@@ -61,7 +71,7 @@ void WindowAllExivData::prepareWindow(std::vector<std::string> data)
 	{
 		infoLabel = new QLabel(QString::fromStdString(data.at(step)));
 		infoLabel->setGeometry(100, 200 + 100*step, 100, 50);
-
 		infoLayout.addWidget(infoLabel);
 	}
+	return;
 }

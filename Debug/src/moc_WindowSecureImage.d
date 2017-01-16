@@ -45,7 +45,8 @@ src/moc_WindowSecureImage.d: ../src/moc_WindowSecureImage.cpp \
  /usr/include/qt4/QtGui/qabstractbutton.h /usr/include/qt4/QtGui/qicon.h \
  /usr/include/qt4/QtGui/QPalette /usr/include/qt4/QtGui/qpalette.h \
  /usr/include/qt4/QtCore/QSignalMapper \
- /usr/include/qt4/QtCore/qsignalmapper.h
+ /usr/include/qt4/QtCore/qsignalmapper.h /usr/include/qt4/QtGui/QFont \
+ /usr/include/qt4/QtGui/qfont.h
 
 ../src/WindowSecureImage.h:
 
@@ -198,3 +199,7 @@ src/moc_WindowSecureImage.d: ../src/moc_WindowSecureImage.cpp \
 /usr/include/qt4/QtCore/QSignalMapper:
 
 /usr/include/qt4/QtCore/qsignalmapper.h:
+
+/usr/include/qt4/QtGui/QFont:
+
+/usr/include/qt4/QtGui/qfont.h:
