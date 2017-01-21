@@ -15,6 +15,7 @@
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QFont>
+#include <QTextCodec>
 
 class WindowAllExivData : public QWidget
 {
@@ -35,6 +36,7 @@ public:
 	QGridLayout infoLayout;
 	QWidget* infoWidget;
 	QFont textFont;
+	QTextCodec* codec;
 
 	WindowAllExivData(QWidget* main);
 	virtual ~WindowAllExivData();

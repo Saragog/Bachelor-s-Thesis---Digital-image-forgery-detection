@@ -60,11 +60,10 @@ src/moc_WindowMain.d: ../src/moc_WindowMain.cpp ../src/WindowMain.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
  /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
+ /usr/include/qt4/QtCore/QTextCodec /usr/include/qt4/QtCore/qtextcodec.h \
  ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QImage \
- /usr/include/qt4/QtGui/qimage.h /usr/include/qt4/QtCore/QTimer \
- /usr/include/qt4/QtCore/qtimer.h /usr/include/qt4/QtCore/qbasictimer.h \
- /usr/include/qt4/QtGui/QSpinBox /usr/include/qt4/QtGui/qspinbox.h \
- /usr/include/qt4/QtCore/QSignalMapper \
+ /usr/include/qt4/QtGui/qimage.h /usr/include/qt4/QtGui/QSpinBox \
+ /usr/include/qt4/QtGui/qspinbox.h /usr/include/qt4/QtCore/QSignalMapper \
  /usr/include/qt4/QtCore/qsignalmapper.h ../src/WindowSecureImage.h \
  /usr/include/qt4/QtGui/QLineEdit /usr/include/qt4/QtGui/qlineedit.h \
  /usr/include/qt4/QtGui/qtextcursor.h \
@@ -310,17 +309,15 @@ src/moc_WindowMain.d: ../src/moc_WindowMain.cpp ../src/WindowMain.h \
 
 /usr/include/qt4/QtGui/qfont.h:
 
+/usr/include/qt4/QtCore/QTextCodec:
+
+/usr/include/qt4/QtCore/qtextcodec.h:
+
 ../src/WindowSecureCheck.h:
 
 /usr/include/qt4/QtGui/QImage:
 
 /usr/include/qt4/QtGui/qimage.h:
-
-/usr/include/qt4/QtCore/QTimer:
-
-/usr/include/qt4/QtCore/qtimer.h:
-
-/usr/include/qt4/QtCore/qbasictimer.h:
 
 /usr/include/qt4/QtGui/QSpinBox:
 

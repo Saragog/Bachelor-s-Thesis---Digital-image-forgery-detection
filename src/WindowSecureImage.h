@@ -15,6 +15,7 @@
 #include <QPalette>
 #include <QSignalMapper>
 #include <QFont>
+#include <QTextCodec>
 
 class WindowSecureImage : public QWidget
 {
@@ -32,6 +33,7 @@ public:
 	std::string fileName;
 	QSignalMapper* mapper;
 	QFont textFont;
+	QTextCodec* codec;
 
 	WindowSecureImage(QWidget* main);
 	virtual ~WindowSecureImage();

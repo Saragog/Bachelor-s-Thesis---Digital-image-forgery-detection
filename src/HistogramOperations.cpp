@@ -128,7 +128,7 @@ void DrawingOperations::drawHistogramRGB(int greatestRGBNumber)
     painter.drawText( QPoint(7,75), QString::number(greatestRGBNumber));
     painter.drawText( QPoint(40, 400), "0");
     painter.drawText( QPoint(50, 415), "0");
-    painter.drawText(QPoint(545, 415), "255");
+    painter.drawText(QPoint(545, 415), "256");
     painter.drawText(QPoint(10, 20), "Liczebnosc grupy");
     painter.drawText(QPoint(300, 430), "Numer grupy");
 

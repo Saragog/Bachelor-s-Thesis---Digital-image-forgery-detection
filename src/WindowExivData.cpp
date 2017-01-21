@@ -11,7 +11,7 @@
 WindowExivData::WindowExivData (QWidget* main)
 {
 	mainWindow = main;
-
+	codec = QTextCodec::codecForName("UTF-8");
 	scrollPalette.setColor(QPalette::Background, Qt::lightGray);
 
     this->setWindowTitle("JPGAnalizer - Exif Data");
@@ -20,11 +20,11 @@ WindowExivData::WindowExivData (QWidget* main)
     textFont.setPointSize(14);
     textFont.setBold(true);
 
-    buttonReturn = new QPushButton("Powrot", this);
+    buttonReturn = new QPushButton(codec->toUnicode("Powrót"), this);
     buttonReturn->setGeometry(50,850, 180, 60);
     buttonReturn->setFont(textFont);
 
-    buttonAll = new QPushButton("Pokaz wszystkie informacje exif", this);
+    buttonAll = new QPushButton(codec->toUnicode("Pokaż wszystkie informacje exif"), this);
     buttonAll->setGeometry(250, 850, 330, 60);
     buttonAll->setFont(textFont);
 

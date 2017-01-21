@@ -13,13 +13,13 @@
 #include <QPushButton>
 #include <QPalette>
 #include <QLineEdit>
-#include <QFileDialog>
 #include <QSignalMapper>
 #include <QImageReader>
 #include <QPixmap>
 #include <QImage>
 #include <QMessageBox>
 #include <QFont>
+#include <QTextCodec>
 
 #include "WindowMain.h"
 
@@ -44,6 +44,7 @@ private:
 	QImage defaultImage;
 	QLabel* imageLabel;
 	QFont textFont;
+	QTextCodec* codec;
 	void setDefaultImage();
 
 public:

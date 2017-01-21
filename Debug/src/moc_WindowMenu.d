@@ -42,10 +42,8 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtCore/qvariant.h \
  /usr/include/qt4/QtCore/qmetatype.h /usr/include/qt4/QtCore/qmap.h \
  /usr/include/qt4/QtCore/qhash.h /usr/include/qt4/QtGui/qpen.h \
- /usr/include/qt4/QtGui/qtextoption.h /usr/include/qt4/QtGui/QFileDialog \
- /usr/include/qt4/QtGui/qfiledialog.h /usr/include/qt4/QtCore/qdir.h \
- /usr/include/qt4/QtCore/qfileinfo.h /usr/include/qt4/QtCore/qfile.h \
- /usr/include/qt4/QtGui/qdialog.h /usr/include/qt4/QtCore/QSignalMapper \
+ /usr/include/qt4/QtGui/qtextoption.h \
+ /usr/include/qt4/QtCore/QSignalMapper \
  /usr/include/qt4/QtCore/qsignalmapper.h \
  /usr/include/qt4/QtGui/QImageReader \
  /usr/include/qt4/QtGui/qimagereader.h \
@@ -55,11 +53,12 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/QPixmap /usr/include/qt4/QtGui/qpixmap.h \
  /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h \
  /usr/include/qt4/QtGui/QMessageBox /usr/include/qt4/QtGui/qmessagebox.h \
- /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
- ../src/WindowMain.h /usr/include/qt4/QtGui/QMainWindow \
- /usr/include/qt4/QtGui/qmainwindow.h /usr/include/qt4/QtGui/qtabwidget.h \
- /usr/include/qt4/QtCore/QObject /usr/include/qt4/QtCore/qobject.h \
- /usr/include/qt4/QtGui/QStackedWidget \
+ /usr/include/qt4/QtGui/qdialog.h /usr/include/qt4/QtGui/QFont \
+ /usr/include/qt4/QtGui/qfont.h /usr/include/qt4/QtCore/QTextCodec \
+ /usr/include/qt4/QtCore/qtextcodec.h ../src/WindowMain.h \
+ /usr/include/qt4/QtGui/QMainWindow /usr/include/qt4/QtGui/qmainwindow.h \
+ /usr/include/qt4/QtGui/qtabwidget.h /usr/include/qt4/QtCore/QObject \
+ /usr/include/qt4/QtCore/qobject.h /usr/include/qt4/QtGui/QStackedWidget \
  /usr/include/qt4/QtGui/qstackedwidget.h \
  /usr/include/qt4/QtGui/QBoxLayout /usr/include/qt4/QtGui/qboxlayout.h \
  /usr/include/qt4/QtGui/qlayout.h /usr/include/qt4/QtGui/qlayoutitem.h \
@@ -76,14 +75,13 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
  /usr/include/qt4/QtGui/QScrollArea /usr/include/qt4/QtGui/qscrollarea.h \
  /usr/include/qt4/QtGui/qabstractscrollarea.h \
  /usr/include/qt4/QtGui/QGridLayout /usr/include/qt4/QtGui/qgridlayout.h \
- ../src/WindowSecureCheck.h /usr/include/qt4/QtCore/QTimer \
- /usr/include/qt4/QtCore/qtimer.h /usr/include/qt4/QtCore/qbasictimer.h \
- /usr/include/qt4/QtGui/QSpinBox /usr/include/qt4/QtGui/qspinbox.h \
- ../src/WindowSecureImage.h ../src/WindowAllExivData.h \
- ../src/ExivOperations.h /usr/local/include/exiv2/exiv2.hpp \
- /usr/local/include/exiv2/basicio.hpp /usr/local/include/exiv2/types.hpp \
- /usr/local/include/exiv2/config.h /usr/local/include/exiv2/exv_conf.h \
- /usr/local/include/exiv2/version.hpp /usr/local/include/exiv2/futils.hpp \
+ ../src/WindowSecureCheck.h /usr/include/qt4/QtGui/QSpinBox \
+ /usr/include/qt4/QtGui/qspinbox.h ../src/WindowSecureImage.h \
+ ../src/WindowAllExivData.h ../src/ExivOperations.h \
+ /usr/local/include/exiv2/exiv2.hpp /usr/local/include/exiv2/basicio.hpp \
+ /usr/local/include/exiv2/types.hpp /usr/local/include/exiv2/config.h \
+ /usr/local/include/exiv2/exv_conf.h /usr/local/include/exiv2/version.hpp \
+ /usr/local/include/exiv2/futils.hpp \
  /usr/local/include/exiv2/bmpimage.hpp /usr/local/include/exiv2/exif.hpp \
  /usr/local/include/exiv2/metadatum.hpp \
  /usr/local/include/exiv2/value.hpp /usr/local/include/exiv2/tags.hpp \
@@ -109,7 +107,9 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
  /usr/local/include/exiv2/tgaimage.hpp \
  /usr/local/include/exiv2/tiffimage.hpp \
  /usr/local/include/exiv2/xmpsidecar.hpp ../src/DrawingOperations.h \
- /usr/include/qt4/QtCore/QStringList \
+ /usr/include/qt4/QtGui/QFileDialog /usr/include/qt4/QtGui/qfiledialog.h \
+ /usr/include/qt4/QtCore/qdir.h /usr/include/qt4/QtCore/qfileinfo.h \
+ /usr/include/qt4/QtCore/qfile.h /usr/include/qt4/QtCore/QStringList \
  /usr/include/qt4/QtCore/qstringlist.h
 
 ../src/WindowMenu.h:
@@ -260,18 +260,6 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
 
 /usr/include/qt4/QtGui/qtextoption.h:
 
-/usr/include/qt4/QtGui/QFileDialog:
-
-/usr/include/qt4/QtGui/qfiledialog.h:
-
-/usr/include/qt4/QtCore/qdir.h:
-
-/usr/include/qt4/QtCore/qfileinfo.h:
-
-/usr/include/qt4/QtCore/qfile.h:
-
-/usr/include/qt4/QtGui/qdialog.h:
-
 /usr/include/qt4/QtCore/QSignalMapper:
 
 /usr/include/qt4/QtCore/qsignalmapper.h:
@@ -300,9 +288,15 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
 
 /usr/include/qt4/QtGui/qmessagebox.h:
 
+/usr/include/qt4/QtGui/qdialog.h:
+
 /usr/include/qt4/QtGui/QFont:
 
 /usr/include/qt4/QtGui/qfont.h:
+
+/usr/include/qt4/QtCore/QTextCodec:
+
+/usr/include/qt4/QtCore/qtextcodec.h:
 
 ../src/WindowMain.h:
 
@@ -371,12 +365,6 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
 /usr/include/qt4/QtGui/qgridlayout.h:
 
 ../src/WindowSecureCheck.h:
-
-/usr/include/qt4/QtCore/QTimer:
-
-/usr/include/qt4/QtCore/qtimer.h:
-
-/usr/include/qt4/QtCore/qbasictimer.h:
 
 /usr/include/qt4/QtGui/QSpinBox:
 
@@ -465,6 +453,16 @@ src/moc_WindowMenu.d: ../src/moc_WindowMenu.cpp ../src/WindowMenu.h \
 /usr/local/include/exiv2/xmpsidecar.hpp:
 
 ../src/DrawingOperations.h:
+
+/usr/include/qt4/QtGui/QFileDialog:
+
+/usr/include/qt4/QtGui/qfiledialog.h:
+
+/usr/include/qt4/QtCore/qdir.h:
+
+/usr/include/qt4/QtCore/qfileinfo.h:
+
+/usr/include/qt4/QtCore/qfile.h:
 
 /usr/include/qt4/QtCore/QStringList:
 

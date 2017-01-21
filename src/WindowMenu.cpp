@@ -12,6 +12,7 @@
 // libraries and headers
 #include "WindowMenu.h"
 #include <fstream>
+#include <QFileDialog>
 
 WindowMenu::WindowMenu(WindowMain* main)
 {
@@ -21,11 +22,13 @@ WindowMenu::WindowMenu(WindowMain* main)
 	mapperSecureCheck = new QSignalMapper(this);
 	mapperTextEdited = new QSignalMapper (this);
 
+	codec = QTextCodec::codecForName("UTF-8");
+
     this->setGeometry(100, 100, 500, 400);
     this->setWindowTitle("JPGAnalizer - Menu");
     this->setObjectName("Okno_Menu");
 
-    label = new QLabel("MENU GLOWNE", this);
+    label = new QLabel(codec->toUnicode("Menu Główne"), this);
     textFont = label->font();
     textFont.setPointSize(14);
     textFont.setBold(true);
@@ -33,14 +36,14 @@ WindowMenu::WindowMenu(WindowMain* main)
     label->setAlignment(Qt::AlignCenter);
     label->setFont(textFont);
 
-    editableLine = new QLineEdit("Sciezka do badanego obrazu", this);
+    editableLine = new QLineEdit(codec->toUnicode("Ścieżka do badanego obrazu"), this);
     editableLine->setGeometry(30, 780, 550, 20);
 
     buttonChooseImage = new QPushButton("Wybierz obraz", this);
     buttonChooseImage->setGeometry(600, 760, 200, 60);
     buttonChooseImage->setFont(textFont);
 
-    buttonExivInfo = new QPushButton("Pokaz informacje Exiv", this);
+    buttonExivInfo = new QPushButton(codec->toUnicode("Pokaż informacje Exiv"), this);
     buttonExivInfo->setGeometry(870, 200, 350, 120);
     buttonExivInfo->setFont(textFont);
 
@@ -48,7 +51,7 @@ WindowMenu::WindowMenu(WindowMain* main)
     buttonSecureImage->setGeometry(870, 400, 350, 120);
     buttonSecureImage->setFont(textFont);
 
-    buttonSecureCheck = new QPushButton("Sprawdz zabezpieczenia obrazu", this);
+    buttonSecureCheck = new QPushButton(codec->toUnicode("Sprawdź zabezpieczenia obrazu"), this);
     buttonSecureCheck->setGeometry(870, 600, 350, 120);
     buttonSecureCheck->setFont(textFont);
 
@@ -95,7 +98,6 @@ WindowMenu::~WindowMenu()
 	delete buttonSecureImage;
 	delete buttonSecureCheck;
 	delete buttonChooseImage;
-
 	delete mapperExivInfo;
 	delete mapperSecureImage;
 	delete mapperSecureCheck;
@@ -131,7 +133,6 @@ void WindowMenu::chooseFile()
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::ExistingFile);
 	dialog.setNameFilter(tr("Images (*.jpg *.JPG)"));
-
 	dialog.setViewMode(QFileDialog::Detail);
 
 	QStringList fileNames;
@@ -145,6 +146,7 @@ void WindowMenu::chooseFile()
 		editableLine->setText(fileNames.at(0));
 		validateImage(fileNames.at(0));
 	}
+
 	return;
 }
 

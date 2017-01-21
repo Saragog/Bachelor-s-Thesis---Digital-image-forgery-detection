@@ -11,6 +11,7 @@
 WindowAllExivData::WindowAllExivData (QWidget* main)
 {
 	mainWindow = main;
+	codec = QTextCodec::codecForName("UTF-8");
     this->setWindowTitle("JPGAnalizer - All Exif Data");
 
     label = new QLabel("Wszystkie informacje Exif znalezione w pliku", this);
@@ -21,7 +22,7 @@ WindowAllExivData::WindowAllExivData (QWidget* main)
     label->setAlignment(Qt::AlignCenter);
     label->setFont(textFont);
 
-    buttonReturn = new QPushButton("Powrot", this);
+    buttonReturn = new QPushButton(codec->toUnicode("Powrót"), this);
     buttonReturn->setGeometry(500, 780, 250, 120);
     buttonReturn->setFont(textFont);
 
@@ -41,7 +42,6 @@ WindowAllExivData::~WindowAllExivData()
 
 void WindowAllExivData::clearInfo()
 {
-	std::cout << "Czyszcze ...\n";
 	QLayoutItem* temp;
 	while ((temp = infoLayout.takeAt(0)) != 0)
 	{

@@ -44,16 +44,15 @@ src/moc_WindowSecureCheck.d: ../src/moc_WindowSecureCheck.cpp \
  /usr/include/qt4/QtGui/qlayout.h /usr/include/qt4/QtGui/qlayoutitem.h \
  /usr/include/qt4/QtGui/qboxlayout.h /usr/include/qt4/QtGui/qgridlayout.h \
  /usr/include/qt4/QtGui/QImage /usr/include/qt4/QtGui/qimage.h \
- /usr/include/qt4/QtCore/QTimer /usr/include/qt4/QtCore/qtimer.h \
- /usr/include/qt4/QtCore/qbasictimer.h /usr/include/qt4/QtGui/QFont \
- /usr/include/qt4/QtGui/qfont.h /usr/include/qt4/QtGui/QSpinBox \
- /usr/include/qt4/QtGui/qspinbox.h \
+ /usr/include/qt4/QtGui/QFont /usr/include/qt4/QtGui/qfont.h \
+ /usr/include/qt4/QtGui/QSpinBox /usr/include/qt4/QtGui/qspinbox.h \
  /usr/include/qt4/QtGui/qabstractspinbox.h \
  /usr/include/qt4/QtGui/qvalidator.h /usr/include/qt4/QtCore/qlocale.h \
  /usr/include/qt4/QtCore/qvariant.h /usr/include/qt4/QtCore/qmetatype.h \
  /usr/include/qt4/QtCore/qmap.h /usr/include/qt4/QtCore/qhash.h \
  /usr/include/qt4/QtCore/QSignalMapper \
- /usr/include/qt4/QtCore/qsignalmapper.h
+ /usr/include/qt4/QtCore/qsignalmapper.h \
+ /usr/include/qt4/QtCore/QTextCodec /usr/include/qt4/QtCore/qtextcodec.h
 
 ../src/WindowSecureCheck.h:
 
@@ -205,12 +204,6 @@ src/moc_WindowSecureCheck.d: ../src/moc_WindowSecureCheck.cpp \
 
 /usr/include/qt4/QtGui/qimage.h:
 
-/usr/include/qt4/QtCore/QTimer:
-
-/usr/include/qt4/QtCore/qtimer.h:
-
-/usr/include/qt4/QtCore/qbasictimer.h:
-
 /usr/include/qt4/QtGui/QFont:
 
 /usr/include/qt4/QtGui/qfont.h:
@@ -236,3 +229,7 @@ src/moc_WindowSecureCheck.d: ../src/moc_WindowSecureCheck.cpp \
 /usr/include/qt4/QtCore/QSignalMapper:
 
 /usr/include/qt4/QtCore/qsignalmapper.h:
+
+/usr/include/qt4/QtCore/QTextCodec:
+
+/usr/include/qt4/QtCore/qtextcodec.h:

@@ -11,7 +11,8 @@
 WindowSecureImage::WindowSecureImage(QWidget* main)
 {
 	mainWindow = main;
-    this->setWindowTitle("JPGAnalizer - Zabezpieczanie Obrazu");
+	codec = QTextCodec::codecForName("UTF-8");
+	this->setWindowTitle("JPGAnalizer - Zabezpieczanie Obrazu");
 
 	label = new QLabel("Zabezpieczanie obrazu JPG", this);
 	textFont = label->font();
@@ -21,14 +22,14 @@ WindowSecureImage::WindowSecureImage(QWidget* main)
 	label->setFont(textFont);
 	label->setGeometry(500, 50, 300, 50);
 
-	editableLine = new QLineEdit("Sciezka do zapisu", this);
+	editableLine = new QLineEdit(codec->toUnicode("Ścieżka do zapisu"), this);
 	editableLine->setGeometry(100, 300, 550, 20);
 
 	backButton = new QPushButton("Powrot", this);
 	backButton->setFont(textFont);
 	backButton->setGeometry(150, 600, 350, 120);
 
-	chooseWhereToSaveButton = new QPushButton("Wskaz sciezke do zapisu", this);
+	chooseWhereToSaveButton = new QPushButton(codec->toUnicode("Wskaż ścieżkę do zapisu"), this);
 	chooseWhereToSaveButton->setFont(textFont);
 	chooseWhereToSaveButton->setGeometry(700, 260, 250, 80);
 
@@ -69,13 +70,12 @@ void WindowSecureImage::setImage(QString name)
 
 void WindowSecureImage::chooseWhereToSave()
 {
+	QStringList fileName;
+
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::AnyFile);
 	dialog.setNameFilter(tr("Images (*.jpg)"));
-
 	dialog.setViewMode(QFileDialog::Detail);
-
-	QStringList fileName;
 
 	if (dialog.exec()) fileName = dialog.selectedFiles();
 

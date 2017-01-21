@@ -15,10 +15,10 @@
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QImage>
-#include <QTimer>
 #include <QFont>
 #include <QSpinBox>
 #include <QSignalMapper>
+#include <QTextCodec>
 
 class WindowSecureCheck : public QWidget
 {
@@ -32,8 +32,6 @@ private:
 	QPixmap pixmapCheckedImage;
 	QLabel* histogramCLabel;
 	QLabel* imageLabel;
-
-	QTimer* timer;
 
 	QPixmap positiveResult, negativeResult;
 
@@ -54,8 +52,9 @@ private:
 	QFont textFont;
 	QSpinBox* spinBox;
 	QPushButton* adjustButton;
-
+	QPushButton* changeImagesButton;
 	QSignalMapper* mapperAccDif;
+	QTextCodec* codec;
 
 	void clearRaport();
 
@@ -73,7 +72,6 @@ public slots:
 
 private slots:
 	void changeImage();
-	void stopTimer();
 };
 
 #endif /* WINDOWSECURECHECK_H_ */

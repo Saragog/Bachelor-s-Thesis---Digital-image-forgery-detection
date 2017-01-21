@@ -11,6 +11,7 @@
 WindowSecureCheck::WindowSecureCheck(QWidget* main)
 {
 	this->mainWindow = main;
+	codec = QTextCodec::codecForName("UTF-8");
     this->setWindowTitle("JPGAnalizer - Secure Check");
 
     mapperAccDif = new QSignalMapper(this);
@@ -25,19 +26,26 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
 	textFont.setPointSize(14);
 	textFont.setBold(true);
 
-	backButton = new QPushButton("Powrot", this);
-	backButton->setGeometry(30, 750, 250, 120);
-	backButton->setFont(textFont);
+	changeImagesButton = new QPushButton(this);
+	changeImagesButton->setGeometry(20, 480, 250, 80);
+	changeImagesButton->setFont(textFont);
 
-	accLabel = new QLabel("Dokladnosc sprawdzenia:", this);
-	accLabel->setGeometry(20, 480, 250, 50);
+	accLabel = new QLabel(codec->toUnicode("Dokładność sprawdzenia:"), this);
+	accLabel->setGeometry(20, 580, 250, 50);
 	accLabel->setFont(textFont);
 
-	adjustButton = new QPushButton("Sprawdz dla danej\ndokladnosci", this);
-	adjustButton->setGeometry(30, 600, 250, 120);
+    spinBox = new QSpinBox(this);
+    spinBox->setMinimum(0);
+    spinBox->setMaximum(20);
+    spinBox->setGeometry(20, 630, 250, 40);
+
+	adjustButton = new QPushButton(codec->toUnicode("Sprawdź dla danej\ndokładności"), this);
+	adjustButton->setGeometry(20, 690, 250, 80);
 	adjustButton->setFont(textFont);
 
-	timer = new QTimer(this);
+	backButton = new QPushButton(codec->toUnicode("Powrót"), this);
+	backButton->setGeometry(20, 790, 250, 80);
+	backButton->setFont(textFont);
 
 	positiveResult = QPixmap("./ProgramImages/tick.png");
 	negativeResult = QPixmap("./ProgramImages/x.png");
@@ -52,11 +60,6 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
     raportScroll->setWidgetResizable(true);
     raportScroll->setGeometry(300, 470, 900, 450);
 
-    spinBox = new QSpinBox(this);
-    spinBox->setMinimum(0);
-    spinBox->setMaximum(20);
-    spinBox->setGeometry(20, 540, 250, 40);
-
     connect(adjustButton, SIGNAL(clicked()), this, SLOT(setMapperAccDif()));
 
     connect(adjustButton, SIGNAL(clicked()), mapperAccDif, SLOT(map()));
@@ -66,8 +69,7 @@ WindowSecureCheck::WindowSecureCheck(QWidget* main)
     connect(mapperAccDif, SIGNAL(mapped(int)), mainWindow, SLOT(adjustToNewAccDif(int)));
 
 	connect(backButton, SIGNAL(clicked()), mainWindow, SLOT(showMenu()));
-	connect(backButton, SIGNAL(clicked()), this, SLOT(stopTimer()));
-	connect(timer, SIGNAL(timeout()), this, SLOT(changeImage()));
+	connect(changeImagesButton, SIGNAL(clicked()), this, SLOT(changeImage()));
 }
 
 WindowSecureCheck::~WindowSecureCheck()
@@ -78,8 +80,8 @@ void WindowSecureCheck::setImage(QString path)
 {
 	pixmapImage = QPixmap(path);
 	pixmapImage = pixmapImage.scaled(600, 450);
-
 	spinBox->setValue(3);
+	//changeImagesButton->setText("Pokaż wynikowy obraz");
 
 	return;
 }
@@ -136,9 +138,8 @@ void WindowSecureCheck::setCheckedImage(QImage image)
 	pixmapCheckedImage = QPixmap::fromImage(image);
 	pixmapCheckedImage = pixmapCheckedImage.scaled(600, 450);
 	imageLabel->setPixmap(pixmapImage);
-
+	changeImagesButton->setText(codec->toUnicode("Pokaż wynikowy obraz"));
 	currentImage = true;
-	timer->start(1000);
 
 	return;
 }
@@ -155,18 +156,13 @@ void WindowSecureCheck::changeImage()
 	{
 		currentImage = false;
 		imageLabel->setPixmap(pixmapCheckedImage);
+		changeImagesButton->setText(codec->toUnicode("Pokaż badany obraz"));
 	}
 	else
 	{
 		currentImage = true;
 		imageLabel->setPixmap(pixmapImage);
+		changeImagesButton->setText(codec->toUnicode("Pokaż wynikowy obraz"));
 	}
-
-	return;
-}
-
-void WindowSecureCheck::stopTimer()
-{
-	timer->stop();
 	return;
 }
