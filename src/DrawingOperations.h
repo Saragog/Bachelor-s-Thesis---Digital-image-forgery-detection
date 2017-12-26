@@ -2,12 +2,11 @@
  * DrawingOperations.h
  *
  *  Created on: 11 wrz 2016
- *      Author: Andrzej Dackiewicz
+ *      Autor: Andrzej Dackiewicz
  *
- *  Comment:This file is a part of Digital forgery detection program that was
- *  		an engineering thesis of the author.
- *  		This file is a description of DrawingOperations class which is a part of the model.
- *  		This class is used for calculation and drawing operations.
+ *  Komentarz:Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		został stworzony w ramach pracy inżynierskiej.
+ *  		Ten plik opisuje klasę DrawingOperations
  */
 
 #ifndef DRAWINGOPERATIONS_H_
@@ -19,13 +18,14 @@
 #define ROTATION270 3
 
 #include <QImage>
+#include <QTextCodec>
+#include <QString>
 
 class DrawingOperations
 {
 private:
-	int greyTones[153]; 	// each per 5 / 255 x 3
-
-	int redTones[256]; 		// odcienie kolorow rgb do narysowania na histogram rgb
+	int greyTones[153]; 	// tablica wartości grup sumy RGB
+	int redTones[256]; 		// odcienie kolorow rgb do narysowania na histogram barw RGB
 	int greenTones[256];
 	int blueTones[256];
 
@@ -39,12 +39,12 @@ private:
 							// istnieje po to aby 2 razy tych samych pikseli nie kolorowac
 							// false wskazuje ze nie mozna zamalowac - bo juz jest zamalowany ten piksel
 
-	int signLength; 		// dlugosc znaku (os X)
-	int signHeight;			// szerokosc / wysokosc znaczka (os Y)
-	int sizeFirstPixelX;	// piksel poczatkowy zabezpieczenia dlugosci (X)
-	int sizeFirstPixelY;	// piksel poczatkowy zabezpieczenia wysokosci (Y)
-	int digitColorRange;	// akceptowalne wychylenie koloru piksela w znaku (do okreslenia wartosci zapisanej w pikselu)
-	int sizeSeparatorColorRange; // akceptowalne odchylenie koloru piksela separujacego bity wielkosci oryginalnej obrazu
+	static const int signLength = 38; 			// dlugosc znaku zabezpieczającego (os X)
+	static const int signHeight = 34;			// szerokosc / wysokosc znaku zabezpieczającego (os Y)
+	int sizeFirstPixelX;						// piksel poczatkowy zabezpieczenia dlugosci (X)
+	int sizeFirstPixelY;						// piksel poczatkowy zabezpieczenia wysokosci (Y)
+	static const int digitColorRange = 5;		// akceptowalne wychylenie koloru piksela w znaku (do okreslenia wartosci zapisanej w pikselu)
+	static const int sizeSeparatorColorRange = 25; // akceptowalne odchylenie koloru piksela separujacego bity wielkosci oryginalnej obrazu
 
 	int signBeginningX, signBeginningY;		// parametry poczatku znaku na obrazie (odpowiednio os X i os Y)
 
@@ -53,17 +53,18 @@ private:
 	unsigned char rotation;	// przechowuje informacje o sprawdzeniu obrotu obrazu
 							// mozliwe wartosci to makrodefinicje rozpoczynajace sie od ROTATION
 
-	QImage image;
-	QImage histogramBase;
-	QImage histogramGrey;
-	QImage histogramRGB;
-	QImage histogramGComparison;
-	QImage securedImage;
-	QImage checkedImage;
+	QImage image;			// badany obraz
+	QImage histogramBase;	// rysunek podstawy do rysowania histogramów
+	QImage histogramGrey;	// histogram sumy RGB
+	QImage histogramRGB;	// histogram barw RGB
+	QImage histogramGComparison;	// histogram porównawczy wartości sum RGB
+	QImage securedImage;	// obraz będący wynikiem zabezpieczania
+	QImage checkedImage;	// obraz wynikowy weryfikacji
 	std::string actualFileName;
 
-	std::vector<std::pair<bool, std::string> > raportImage;
-	std::pair<bool, std::string> partialRaport;
+	std::vector<std::pair<bool, QString> > raportImage;	// raport generowany podczas weryfikacji obrazu
+	std::pair<bool, QString> partialRaport;
+	QTextCodec* codec;
 
 	void drawHistogramGrey(int greatestGreyNumber);
 	void drawHistogramRGB(int greatestRGBNumber);
@@ -97,8 +98,7 @@ private:
 	void drawChange(int col, int row); 									// podswietlac bedzie na czerwono zmiane w obrazie
 	void lookForSimilarPixels(int col, int row);						// funkcja sprawdza czy piksele wokol znalezionego niepasujacego piksela
 																		// nie powtarzaja sie jesli tak to je zamaluje
-	void checkAdjacentPixels(int col, int row);						 	// funkcja rekurencyjna sprawdzajaca czy sasiednie obszary nie sa takie same
-																		// jesli sa to zamalowuje je za pomoca drawchange
+	void checkAdjacentPixels(int col, int row);
 	void checkAdjacentUp(int col, int row, int red, int green, int blue);
 	void checkAdjacentLeft(int col, int row, int red, int green, int blue);
 	void checkAdjacentRight(int col, int row, int red, int green, int blue);
@@ -120,7 +120,7 @@ public:
 	QImage getHistogramComparison() const;
 	QImage getCheckedImage() const;
 	void checkImageSecurity(std::vector<int> savedGreyTones);
-	std::vector<std::pair<bool, std::string> > getRaportImage() const;
+	std::vector<std::pair<bool, QString> > getRaportImage() const;
 	std::pair<int, int> getActualSize() const;
 	bool isLargeEnough() const;
 	QImage checkForNewAccDif(int newAccDif);

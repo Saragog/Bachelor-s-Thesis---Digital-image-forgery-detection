@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Inzynierka.cpp
-// Author      : 
-// Version     :
+// Author      : Andrzej Dackiewicz
+// Version     : 1.0
 // Copyright   : Your copyright notice
 // Description : Praca Inzynierska
 //				 Temat: Wykrywanie Falszerstw w obrazach cyfrowych
@@ -10,23 +10,16 @@
 #include "exiv2.hpp"
 #include <iostream>
 #include <QApplication>
-#include <QMainWindow>
+//#include <QMainWindow>
 #include "WindowMain.h"
 
 using namespace std;
 
+// Tutaj rozpoczyna się działanie aplikacji
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
-
-    //QFile file("stylesheet.qss");
-    //file.open(QFile::ReadOnly);
-    //QString styleSheet = QLatin1String(file.readAll());
-    //a.setStyleSheet(styleSheet);
-
     // Uklad wygladu dla calej aplikacji
-
     a.setStyleSheet(
     		"QMainWindow"
     		"		{"
@@ -53,10 +46,7 @@ int main(int argc, char *argv[])
     		"			border: 3px solid #888888;"
     		"		}"
     );
-
     WindowMain mainWindow;
-    a.exec();
-
-    // ___________________________________________________________
+    a.exec(); // uruchomienie aplikacji
 	return 0;
 }

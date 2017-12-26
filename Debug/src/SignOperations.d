@@ -20,6 +20,8 @@ src/SignOperations.d: ../src/SignOperations.cpp \
  /usr/include/qt4/QtCore/qbytearray.h /usr/include/qt4/QtCore/qline.h \
  /usr/include/qt4/QtGui/qpainterpath.h \
  /usr/include/qt4/QtGui/qpaintdevice.h /usr/include/qt4/QtGui/qrgb.h \
+ /usr/include/qt4/QtCore/QTextCodec /usr/include/qt4/QtCore/qtextcodec.h \
+ /usr/include/qt4/QtCore/QString /usr/include/qt4/QtCore/qstring.h \
  /usr/include/qt4/QtGui/QColor /usr/include/qt4/QtGui/qcolor.h \
  /usr/include/qt4/QtCore/qstringlist.h /usr/include/qt4/QtCore/qregexp.h \
  /usr/include/qt4/QtCore/qstringmatcher.h
@@ -93,6 +95,14 @@ src/SignOperations.d: ../src/SignOperations.cpp \
 /usr/include/qt4/QtGui/qpaintdevice.h:
 
 /usr/include/qt4/QtGui/qrgb.h:
+
+/usr/include/qt4/QtCore/QTextCodec:
+
+/usr/include/qt4/QtCore/qtextcodec.h:
+
+/usr/include/qt4/QtCore/QString:
+
+/usr/include/qt4/QtCore/qstring.h:
 
 /usr/include/qt4/QtGui/QColor:
 

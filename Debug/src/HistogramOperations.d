@@ -20,6 +20,8 @@ src/HistogramOperations.d: ../src/HistogramOperations.cpp \
  /usr/include/qt4/QtCore/qbytearray.h /usr/include/qt4/QtCore/qline.h \
  /usr/include/qt4/QtGui/qpainterpath.h \
  /usr/include/qt4/QtGui/qpaintdevice.h /usr/include/qt4/QtGui/qrgb.h \
+ /usr/include/qt4/QtCore/QTextCodec /usr/include/qt4/QtCore/qtextcodec.h \
+ /usr/include/qt4/QtCore/QString /usr/include/qt4/QtCore/qstring.h \
  /usr/include/qt4/QtGui/QPainter /usr/include/qt4/QtGui/qpainter.h \
  /usr/include/qt4/QtGui/qpixmap.h /usr/include/qt4/QtGui/qcolor.h \
  /usr/include/qt4/QtCore/qstringlist.h /usr/include/qt4/QtCore/qregexp.h \
@@ -103,6 +105,14 @@ src/HistogramOperations.d: ../src/HistogramOperations.cpp \
 /usr/include/qt4/QtGui/qpaintdevice.h:
 
 /usr/include/qt4/QtGui/qrgb.h:
+
+/usr/include/qt4/QtCore/QTextCodec:
+
+/usr/include/qt4/QtCore/qtextcodec.h:
+
+/usr/include/qt4/QtCore/QString:
+
+/usr/include/qt4/QtCore/qstring.h:
 
 /usr/include/qt4/QtGui/QPainter:
 

@@ -1,36 +1,45 @@
 src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
- /usr/local/include/exiv2/exiv2.hpp /usr/local/include/exiv2/basicio.hpp \
- /usr/local/include/exiv2/types.hpp /usr/local/include/exiv2/config.h \
- /usr/local/include/exiv2/exv_conf.h /usr/local/include/exiv2/version.hpp \
- /usr/local/include/exiv2/futils.hpp \
- /usr/local/include/exiv2/bmpimage.hpp /usr/local/include/exiv2/exif.hpp \
- /usr/local/include/exiv2/metadatum.hpp \
- /usr/local/include/exiv2/value.hpp /usr/local/include/exiv2/tags.hpp \
- /usr/local/include/exiv2/iptc.hpp /usr/local/include/exiv2/error.hpp \
- /usr/local/include/exiv2/datasets.hpp /usr/local/include/exiv2/image.hpp \
- /usr/local/include/exiv2/xmp.hpp /usr/local/include/exiv2/properties.hpp \
- /usr/local/include/exiv2/convert.hpp \
- /usr/local/include/exiv2/cr2image.hpp \
- /usr/local/include/exiv2/crwimage.hpp \
- /usr/local/include/exiv2/easyaccess.hpp \
- /usr/local/include/exiv2/epsimage.hpp \
- /usr/local/include/exiv2/gifimage.hpp /usr/local/include/exiv2/http.hpp \
- /usr/local/include/exiv2/jp2image.hpp \
- /usr/local/include/exiv2/jpgimage.hpp \
- /usr/local/include/exiv2/mrwimage.hpp \
- /usr/local/include/exiv2/orfimage.hpp \
- /usr/local/include/exiv2/pgfimage.hpp \
- /usr/local/include/exiv2/pngimage.hpp \
- /usr/local/include/exiv2/preview.hpp \
- /usr/local/include/exiv2/psdimage.hpp \
- /usr/local/include/exiv2/rafimage.hpp \
- /usr/local/include/exiv2/rw2image.hpp \
- /usr/local/include/exiv2/tgaimage.hpp \
- /usr/local/include/exiv2/tiffimage.hpp \
- /usr/local/include/exiv2/xmpsidecar.hpp ../src/WindowMain.h \
- /usr/include/qt4/QtGui/QMainWindow /usr/include/qt4/QtGui/qmainwindow.h \
- /usr/include/qt4/QtGui/qwidget.h /usr/include/qt4/QtCore/qconfig.h \
- /usr/include/qt4/QtGui/qwindowdefs.h \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exiv2.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/basicio.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/types.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/config.h \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exv_conf.h \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/version.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/futils.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/bmpimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exif.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/metadatum.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/value.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tags.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/iptc.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/error.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/datasets.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/image.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/xmp.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/properties.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/convert.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/cr2image.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/crwimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/easyaccess.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/epsimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/gifimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/http.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/jp2image.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/jpgimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/mrwimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/orfimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/pgfimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/pngimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/preview.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/psdimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/rafimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/rw2image.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tgaimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tiffimage.hpp \
+ /home/andrzej/Pobrane/exiv2-0.25/include/exiv2/xmpsidecar.hpp \
+ ../src/WindowMain.h /usr/include/qt4/QtGui/QMainWindow \
+ /usr/include/qt4/QtGui/qmainwindow.h /usr/include/qt4/QtGui/qwidget.h \
+ /usr/include/qt4/QtCore/qconfig.h /usr/include/qt4/QtGui/qwindowdefs.h \
  /usr/include/qt4/QtCore/qobjectdefs.h \
  /usr/include/qt4/QtCore/qnamespace.h /usr/include/qt4/QtCore/qglobal.h \
  /usr/include/qt4/QtCore/qfeatures.h /usr/include/qt4/QtCore/qobject.h \
@@ -98,7 +107,8 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
  /usr/include/qt4/QtGui/qtextcursor.h \
  /usr/include/qt4/QtGui/qtextformat.h /usr/include/qt4/QtGui/qpen.h \
  /usr/include/qt4/QtGui/qtextoption.h ../src/WindowAllExivData.h \
- ../src/DrawingOperations.h /usr/include/qt4/QtGui/QFileDialog \
+ ../src/DrawingOperations.h /usr/include/qt4/QtCore/QString \
+ /usr/include/qt4/QtCore/qstring.h /usr/include/qt4/QtGui/QFileDialog \
  /usr/include/qt4/QtGui/qfiledialog.h /usr/include/qt4/QtCore/qdir.h \
  /usr/include/qt4/QtCore/qfileinfo.h /usr/include/qt4/QtCore/qfile.h \
  /usr/include/qt4/QtGui/qdialog.h /usr/include/qt4/QtCore/QStringList \
@@ -107,81 +117,81 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 
 ../src/ExivOperations.h:
 
-/usr/local/include/exiv2/exiv2.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exiv2.hpp:
 
-/usr/local/include/exiv2/basicio.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/basicio.hpp:
 
-/usr/local/include/exiv2/types.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/types.hpp:
 
-/usr/local/include/exiv2/config.h:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/config.h:
 
-/usr/local/include/exiv2/exv_conf.h:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exv_conf.h:
 
-/usr/local/include/exiv2/version.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/version.hpp:
 
-/usr/local/include/exiv2/futils.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/futils.hpp:
 
-/usr/local/include/exiv2/bmpimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/bmpimage.hpp:
 
-/usr/local/include/exiv2/exif.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/exif.hpp:
 
-/usr/local/include/exiv2/metadatum.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/metadatum.hpp:
 
-/usr/local/include/exiv2/value.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/value.hpp:
 
-/usr/local/include/exiv2/tags.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tags.hpp:
 
-/usr/local/include/exiv2/iptc.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/iptc.hpp:
 
-/usr/local/include/exiv2/error.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/error.hpp:
 
-/usr/local/include/exiv2/datasets.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/datasets.hpp:
 
-/usr/local/include/exiv2/image.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/image.hpp:
 
-/usr/local/include/exiv2/xmp.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/xmp.hpp:
 
-/usr/local/include/exiv2/properties.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/properties.hpp:
 
-/usr/local/include/exiv2/convert.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/convert.hpp:
 
-/usr/local/include/exiv2/cr2image.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/cr2image.hpp:
 
-/usr/local/include/exiv2/crwimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/crwimage.hpp:
 
-/usr/local/include/exiv2/easyaccess.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/easyaccess.hpp:
 
-/usr/local/include/exiv2/epsimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/epsimage.hpp:
 
-/usr/local/include/exiv2/gifimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/gifimage.hpp:
 
-/usr/local/include/exiv2/http.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/http.hpp:
 
-/usr/local/include/exiv2/jp2image.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/jp2image.hpp:
 
-/usr/local/include/exiv2/jpgimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/jpgimage.hpp:
 
-/usr/local/include/exiv2/mrwimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/mrwimage.hpp:
 
-/usr/local/include/exiv2/orfimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/orfimage.hpp:
 
-/usr/local/include/exiv2/pgfimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/pgfimage.hpp:
 
-/usr/local/include/exiv2/pngimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/pngimage.hpp:
 
-/usr/local/include/exiv2/preview.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/preview.hpp:
 
-/usr/local/include/exiv2/psdimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/psdimage.hpp:
 
-/usr/local/include/exiv2/rafimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/rafimage.hpp:
 
-/usr/local/include/exiv2/rw2image.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/rw2image.hpp:
 
-/usr/local/include/exiv2/tgaimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tgaimage.hpp:
 
-/usr/local/include/exiv2/tiffimage.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/tiffimage.hpp:
 
-/usr/local/include/exiv2/xmpsidecar.hpp:
+/home/andrzej/Pobrane/exiv2-0.25/include/exiv2/xmpsidecar.hpp:
 
 ../src/WindowMain.h:
 
@@ -422,6 +432,10 @@ src/ExivOperations.d: ../src/ExivOperations.cpp ../src/ExivOperations.h \
 ../src/WindowAllExivData.h:
 
 ../src/DrawingOperations.h:
+
+/usr/include/qt4/QtCore/QString:
+
+/usr/include/qt4/QtCore/qstring.h:
 
 /usr/include/qt4/QtGui/QFileDialog:
 

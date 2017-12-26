@@ -2,8 +2,11 @@
  * MainWindow.h
  *
  *  Created on: 17 sie 2016
- *      Author: andrzej
- */
+ *      Author: Andrzej Dackiewicz
+ *  Komentarz: Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		został stworzony w ramach pracy inżynierskiej.
+ *  		Opisuje klasę WindowMenu
+*/
 
 #ifndef WINDOWMENU_H_
 #define WINDOWMENU_H_
@@ -37,21 +40,21 @@ private:
 	QPushButton* buttonSecureCheck;
 	QPushButton* buttonChooseImage;
 	QPalette palette;
-	QSignalMapper* mapperExivInfo;
+	QSignalMapper* mapperExivInfo;		// signal mapper pozwala na obsługę zdarzenia z parametrami
 	QSignalMapper* mapperSecureImage;
 	QSignalMapper* mapperSecureCheck;
 	QSignalMapper* mapperTextEdited;
-	QImage defaultImage;
+	QImage defaultImage;				// domyślny obraz pokazywany, jeśli adres pod wskazaną ścieżką nie wskazuje na plik obrazu
 	QLabel* imageLabel;
 	QFont textFont;
 	QTextCodec* codec;
 	void setDefaultImage();
 
 public:
-	WindowMenu(WindowMain* main);
-	virtual ~WindowMenu();
+	WindowMenu(WindowMain* main); // konstruktor
+	virtual ~WindowMenu(); 		  // destruktor
 
-public slots:
+public slots:					  // funkcje wywoływane przy zdarzeniach
 	void chooseFile();
 	void setMapperExivInfo();
 	void setMapperSecureImage();
@@ -60,7 +63,7 @@ public slots:
 	void setMapperTextEdited();
 
 private slots:
-	void validateImage(QString path);
+	void validateImage(QString path); // aktualizacja obrazu
 
 };
 

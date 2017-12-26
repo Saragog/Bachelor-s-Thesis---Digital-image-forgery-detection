@@ -2,18 +2,18 @@
  * MainWindow.cpp
  *
  *  Created on: 17 sie 2016
- *      Author: Andrzej Dackiewicz
+ *      Autor: Andrzej Dackiewicz
  *
- *  Comment:This file is a part of Digital forgery detection program that was
- *  		an engineering thesis of the author.
- *  		This file implements functionality of the main menu screen
+ *  Comment:Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		został stworzony w ramach pracy inżynierskiej.
+ *  		Implementuje funkcje klasy WindowMenu
  */
 
-// libraries and headers
 #include "WindowMenu.h"
 #include <fstream>
 #include <QFileDialog>
 
+// konstruktor klasy WindowMenu
 WindowMenu::WindowMenu(WindowMain* main)
 {
 	mainWindow = main;
@@ -23,6 +23,8 @@ WindowMenu::WindowMenu(WindowMain* main)
 	mapperTextEdited = new QSignalMapper (this);
 
 	codec = QTextCodec::codecForName("UTF-8");
+
+	// Wstępne ustalenie wyglądu widoku
 
     this->setGeometry(100, 100, 500, 400);
     this->setWindowTitle("JPGAnalizer - Menu");
@@ -63,12 +65,12 @@ WindowMenu::WindowMenu(WindowMain* main)
 
     setDefaultImage();
 
-    // connecting editing text to validating image ...
+    // połączenie zmiany tekstu z walidacją obrazu
 
     connect(editableLine, SIGNAL(textEdited(QString)), this, SLOT(setMapperTextEdited()));
     connect(editableLine, SIGNAL(textEdited(QString)), mapperTextEdited, SLOT(map()));
 
-    // connecting chooseImage button with appropriate slot
+    // połączenie wciśnięcia przycisku wyboru pliku z funkcją wyboru pliku
 
     connect(buttonChooseImage, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
@@ -91,6 +93,7 @@ WindowMenu::WindowMenu(WindowMain* main)
     connect(mapperTextEdited, SIGNAL(mapped(QString)), this, SLOT(validateImage(QString)));
 }
 
+// Destruktor klasy WindowMenu
 WindowMenu::~WindowMenu()
 {
 	delete label;
@@ -103,6 +106,8 @@ WindowMenu::~WindowMenu()
 	delete mapperSecureCheck;
 }
 
+// ________________________________________________________________________
+// Funkcje mapujące umożliwiają wykorzystanie parametrów w obsłudze zdarzeń
 void WindowMenu::setMapperExivInfo()
 {
     mapperExivInfo->setMapping(buttonExivInfo, editableLine->text());
@@ -127,7 +132,10 @@ void WindowMenu::setMapperTextEdited()
 	mapperTextEdited->setMapping(editableLine, editableLine->text());
 	return;
 }
+//____________________________________________________________________________
 
+// Funkcja chooseFile powoduje pokazanie się okna wyboru pliku
+// Po wyborze pliku aktualizowany jest obraz i ścieżka pliku
 void WindowMenu::chooseFile()
 {
 	QFileDialog dialog(this);
@@ -141,15 +149,16 @@ void WindowMenu::chooseFile()
 
 	if (fileNames.count() == 1)
 	{
-		std::cout << fileNames.at(0).toStdString() << std::endl;
+	//	std::cout << fileNames.at(0).toStdString() << std::endl;
 
 		editableLine->setText(fileNames.at(0));
 		validateImage(fileNames.at(0));
 	}
-
 	return;
 }
 
+// Funkcja validateImage aktualizuje pokazywany obraz
+// Na wejście otrzymuje ścieżkę do pliku z obrazem
 void WindowMenu::validateImage(QString path)
 {
 	if (mainWindow->checkImageFile(path.toStdString()))
@@ -162,10 +171,10 @@ void WindowMenu::validateImage(QString path)
 	{
 		setDefaultImage();
 	}
-
 	return;
 }
 
+// Funkcja setDefaultImage ustala pokazywany obraz na domyślny
 void WindowMenu::setDefaultImage()
 {
     QPixmap pixmap;

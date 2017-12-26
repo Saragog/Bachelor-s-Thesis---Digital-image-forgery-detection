@@ -2,7 +2,11 @@
  * WindowSecureImage.h
  *
  *  Created on: 24 sie 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Komentarz: Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		został stworzony w ramach pracy inżynierskiej.
+ *  		Opisuje klasę WindowSecureCheck pokazującą wyniki działania programu.
  */
 
 #ifndef WINDOWSECURECHECK_H_
@@ -56,14 +60,14 @@ private:
 	QSignalMapper* mapperAccDif;
 	QTextCodec* codec;
 
-	void clearRaport();
+	void clearRaport();	// czyszczenie raportu weryfikacji obrazu
 
 public:
 
 	WindowSecureCheck(QWidget* main);
 	virtual ~WindowSecureCheck();
 	void setImage(QString path);
-	void setRaport(std::vector<std::pair<bool, std::string> > raport);
+	void setRaport(std::vector<std::pair<bool, QString> > raport);
 	void setHistogramC(QImage histogram);
 	void setCheckedImage(QImage image);
 

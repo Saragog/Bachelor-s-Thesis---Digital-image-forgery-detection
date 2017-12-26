@@ -2,7 +2,11 @@
  * WindowSecureImage.h
  *
  *  Created on: 26 sie 2016
- *      Author: andrzej
+ *      Author: Andrzej Dackiewicz
+ *
+ *  Komentarz: Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		   został stworzony w ramach pracy inżynierskiej.
+ *  		   Opisuje klasę WindowSecureImage pokazującą okno zabezpieczania obrazu.
  */
 
 #ifndef WindowSecureImage_H_
@@ -35,8 +39,8 @@ public:
 	QFont textFont;
 	QTextCodec* codec;
 
-	WindowSecureImage(QWidget* main);
-	virtual ~WindowSecureImage();
+	WindowSecureImage(QWidget* main); // konstruktor
+	virtual ~WindowSecureImage();	  // destruktor
 
 	void setImage(QString name);
 

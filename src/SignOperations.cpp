@@ -1,9 +1,22 @@
+/*
+ * SignOperations.cpp
+ *
+ *  Created on: 16 lis 2016
+ *      Autor: Andrzej Dackiewicz
+ *
+ *  Komentarz:Ten plik jest częścią programu wykrywającego fałszerstwa cyfrowe w obrazach, który
+ *  		został stworzony w ramach pracy inżynierskiej.
+ *  		Ten plik zawiera implementację funkcji klasy DrawingOperations odpowiedzialnych za operacje
+ *  		na znaku zabezpieczającym i zabezpieczeniach wielkości obrazu.
+ */
+
 #include "DrawingOperations.h"
 
 #include <QColor>
 #include <string>
 #include <sstream>
 
+// Funkcja drawSign odpowiada za rysowanie znaku zabezpieczającego
 void DrawingOperations::drawSign()
 {
 	int digit;
@@ -96,19 +109,18 @@ void DrawingOperations::drawSign()
 		}
 	}
 
-	drawOriginalSize(0);
-	drawOriginalSize(1);
-	drawEdge();
-
+	drawOriginalSize(0); // rysowanie zabezpieczenia oryginalnej wielkości (os X)
+	drawOriginalSize(1); // rysowanie zabezpieczenia oryginalnej wielkości (os Y)
+	drawEdge();			 // zamalowanie krawędzi dolnej prawej na biało (255,255,255)
 	return;
 }
 
+// Funkcja convertBinaryToInt zamienia ciąg wartości 0 1 na liczbę całkowitą
 int DrawingOperations::convertBinaryToInt(int* binary)
 {
 	int result = 0;
-	for (int bitN = 0; bitN < 15; bitN++)
+	for (int bitN = 0; bitN < 15; bitN++) // maksymalnie 15 bitów
 	{
-		//std::cout << "Bit nr " << bitN << " wynosi " << binary[bitN] << std::endl;
 		if (binary[bitN] == 1)
 		{
 			result = result * 2 + 1;
@@ -118,6 +130,7 @@ int DrawingOperations::convertBinaryToInt(int* binary)
 	return result;
 }
 
+// Funkcja convertIntToBinary zamienia liczbę całkowitą na ciąg bitów
 int* DrawingOperations::convertIntToBinary(int number)
 {
 	static int binary[15];
@@ -136,23 +149,24 @@ int* DrawingOperations::convertIntToBinary(int number)
 			binary[x] = 0;
 		}
 	}
-
 	return binary;
 }
 
-void DrawingOperations::drawEdge() 	// zamalowuje 5 pikseli bedacych blisko dolnego prawego rogu na bialo
-									// dzieki czemu rog obrazu jest odporny na zmiejszenie obrazu maksymalnie o 50%
-									// po takiej zmianie nadal możliwe jest wykrycie obrotu stara metoda
+// Fukcja drawEdge zamalowuje 5 pikseli będących blisko dolnego prawego rogu na biało
+// dzięki temu możliwe jest wykrycie obrotu obrazu
+void DrawingOperations::drawEdge()
 {
 	securedImage.setPixel(columns-4, rows-2, qRgb(255, 255, 255));
 	securedImage.setPixel(columns-3, rows-2, qRgb(255, 255, 255));
 	securedImage.setPixel(columns-2, rows-2, qRgb(255, 255, 255));
 	securedImage.setPixel(columns-2, rows-3, qRgb(255, 255, 255));
 	securedImage.setPixel(columns-2, rows-4, qRgb(255, 255, 255));
-
 	return;
 }
 
+// Funkcja drawOriginalSize rysuje zabezpieczenie oryginalnej wielkości obrazu zależnie od trybu
+// tryb 0 oznacza zabezpieczenie osi X
+// tryb 1 oznacza zabezpieczenie osi Y
 void DrawingOperations::drawOriginalSize(short mode)
 {
 	int* binary;
@@ -165,7 +179,7 @@ void DrawingOperations::drawOriginalSize(short mode)
 		{
 			if (mode == 0)
 			{
-				securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step, rows-2, qRgb(128, 128, 128));
+				securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step, rows-2, qRgb(128, 128, 128));// separator
 				securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step, rows-1, qRgb(128, 128, 128));
 			}
 			else
@@ -180,7 +194,7 @@ void DrawingOperations::drawOriginalSize(short mode)
 			{
 				if (mode == 0)
 				{
-					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-2, qRgb(255, 255, 255));
+					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-2, qRgb(255, 255, 255)); // kolor biały oznacza 1
 					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-1, qRgb(255, 255, 255));
 				}
 				else
@@ -193,7 +207,7 @@ void DrawingOperations::drawOriginalSize(short mode)
 			{
 				if (mode == 0)
 				{
-					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-2, qRgb(0, 0, 0));
+					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-2, qRgb(0, 0, 0)); // kolor czarny oznacza 0
 					securedImage.setPixel(sizeFirstPixelX + bitNumber*6 + step + 3, rows-1, qRgb(0, 0, 0));
 				}
 				else
@@ -206,11 +220,11 @@ void DrawingOperations::drawOriginalSize(short mode)
 
 	}
 
-	for (int step = 0; step < 3; step++) // pierwszy separator
+	for (int step = 0; step < 3; step++) // ostatni separator
 	{
 		if (mode == 0)
 		{
-			securedImage.setPixel(sizeFirstPixelX + 90 + step, rows-2, qRgb(128, 128, 128));
+			securedImage.setPixel(sizeFirstPixelX + 90 + step, rows-2, qRgb(128, 128, 128)); // separator
 			securedImage.setPixel(sizeFirstPixelX + 90 + step, rows-1, qRgb(128, 128, 128));
 		}
 		else
@@ -222,9 +236,11 @@ void DrawingOperations::drawOriginalSize(short mode)
 	return;
 }
 
+// Funkcja readingSizeStep zależnie od rotacji wykonuje krok czytania pikseli w zależności od trybu (czy ma czytać poziom czy pion)
 std::pair<int,int> DrawingOperations::readingSizeStep(int mode, int actualX, int actualY)
 {
 	std::pair<int,int> newPosition;
+	// zależnie od rotacji
 	if (rotation == ROTATION0)
 	{
 		if (mode == 0)
@@ -280,6 +296,7 @@ std::pair<int,int> DrawingOperations::readingSizeStep(int mode, int actualX, int
 	return newPosition;
 }
 
+// Funkcja readOriginalSize służy do czytania oryginalnej wielkości obrazu z zabezpieczenia
 void DrawingOperations::readOriginalSize(int mode)
 {
 	int readBinaryNumber[15];
@@ -290,9 +307,9 @@ void DrawingOperations::readOriginalSize(int mode)
 	bool separatorFound;
 	std::pair<int,int> newPosition;
 	std::ostringstream ostring;
-
+	// inicjowanie tablicy bitów
 	for (int bit = 0; bit < 15; bit++) readBinaryNumber[bit] = 0;
-
+	// zależnie od rotacji początkowa pozycja pikseli z których mamy czytać
 	if (rotation == ROTATION0)
 	{
 		if (mode == 0)
@@ -346,7 +363,7 @@ void DrawingOperations::readOriginalSize(int mode)
 		}
 	}
 	separatorFound = false;
-	while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1 && readPixelDigit(actualX,actualY)==9) // dopuki caly czas bialy to lecimy w lewo
+	while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1 && readPixelDigit(actualX,actualY)==9) // dopuki caly czas białe piksele to idziemy w lewo
 	{
 		newPosition = readingSizeStep(mode, actualX, actualY);
 		actualX = newPosition.first;
@@ -355,7 +372,7 @@ void DrawingOperations::readOriginalSize(int mode)
 	while (bitIndex >= 0)
 	{
 		bitSet = false;
-		while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1)
+		while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1) // przechodzenie przez separator
 		{
 			value = readPixelDigit(actualX,actualY);
 			if (value == 11) separatorFound = true;
@@ -364,12 +381,12 @@ void DrawingOperations::readOriginalSize(int mode)
 			actualX = newPosition.first;
 			actualY = newPosition.second;
 		}
-		while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1)
+		while (actualX >= 0 && actualX <= columns-1 && actualY >= 0 && actualY <= rows-1) // czytanie pikseli i wstawianie odpowiedniej wartości bitu
 		{
 			value = readPixelDigit(actualX,actualY);
 			if (value == 11)
 			{
-				//std::cout << "\nZnalazlem separator\n";
+				// znaleziono separator
 				break;
 			}
 			if (!bitSet && value == 0) // czarny
@@ -384,15 +401,15 @@ void DrawingOperations::readOriginalSize(int mode)
 				bitIndex--;
 				bitSet = true;
 			}
-			newPosition = readingSizeStep(mode, actualX, actualY);
+			newPosition = readingSizeStep(mode, actualX, actualY); // krok kolejny czytania
 			actualX = newPosition.first;
 			actualY = newPosition.second;
 		}
 		if (!bitSet || !separatorFound) // Nie potrafiono zidentyfikowac wartosci bitu
 		{
 			partialRaport.first = false;
-			if (mode == 0) partialRaport.second = "Blad w czytaniu oryginalnej wielkosci X";
-			else partialRaport.second = "Blad w czytaniu oryginalnej wielkosci Y";
+			if (mode == 0) partialRaport.second = codec->toUnicode("Błąd w czytaniu oryginalnej wielkości X");
+			else partialRaport.second = codec->toUnicode("Błąd w czytaniu oryginalnej wielkości Y");
 			raportImage.push_back(partialRaport);
 			return;
 		}
@@ -401,45 +418,39 @@ void DrawingOperations::readOriginalSize(int mode)
 			separatorFound = false;
 		}
 	}
+	// tworzenie części raportu
 	value = convertBinaryToInt(readBinaryNumber);
-	ostring << value;
 	partialRaport.first = true;
-	if (mode == 0) partialRaport.second = "Oryginalna wielkosc obrazu X wczytana z powodzeniem: " + ostring.str();
-	else partialRaport.second = "Oryginalna wielkosc obrazu Y wczytana z powodzeniem: " + ostring.str();
+	if (mode == 0) partialRaport.second = codec->toUnicode("Oryginalna wielkość obrazu X wczytana z powodzeniem: ") + QString::number(value);
+	else partialRaport.second = codec->toUnicode("Oryginalna wielkość obrazu Y wczytana z powodzeniem: ") + QString::number(value);
 	raportImage.push_back(partialRaport);
-
-	ostring.str("");
-	ostring.clear();
 
 	if (mode == 0 && value == columns)
 	{
 		partialRaport.first = true;
-		ostring << columns;
-		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci X zgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+		partialRaport.second = codec->toUnicode("Zabezpieczenie oryginalnej wielkości X zgodne z aktualną wielkością obrazu wynoszącą: ") + QString::number(columns);
 	}
 	else if (mode == 1 && value == rows)
 	{
 		partialRaport.first = true;
-		ostring << rows;
-		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci Y zgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+		partialRaport.second = codec->toUnicode("Zabezpieczenie oryginalnej wielkości Y zgodne z aktualna wielkością obrazu wynoszącą: ") + QString::number(rows);
 	}
 	else if (mode == 0)
 	{
 		partialRaport.first = false;
-		ostring << columns;
-		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci X niezgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+		partialRaport.second = codec->toUnicode("Zabezpieczenie oryginalnej wielkości X niezgodne z aktualną wielkoscią obrazu wynoszącą: ") + QString::number(columns);
 	}
 	else
 	{
 		partialRaport.first = false;
-		ostring << rows;
-		partialRaport.second = "Zabezpieczenie oryginalnej wielkosci Y niezgodne z aktualna wielkoscia obrazu wynoszaca: " + ostring.str();
+		partialRaport.second = codec->toUnicode("Zabezpieczenie oryginalnej wielkości Y niezgodne z aktualna wielkością obrazu wynoszącą: ") + QString::number(rows);
 	}
 	raportImage.push_back(partialRaport);
 
 	return;
 }
 
+// Funkcja readPixelDigit pobiera położenie piksela i zwraca liczbę odpowiadającą pikselowi
 unsigned char DrawingOperations::readPixelDigit(int col, int row)
 {
 	QRgb pixel;
@@ -540,23 +551,22 @@ unsigned char DrawingOperations::readPixelDigit(int col, int row)
 	return digit;
 }
 
+// Funkcja convertDigitsToInt zamienia ciąg bitów na liczbę całkowitą
 int DrawingOperations::convertDigitsToInt(int* digits)
 {
 	int number = 0;
-
 	for (int step = 0; step < 7; step++)
 	{
 		number *= 10;
 		number += digits[step];
 	}
-
 	return number;
 }
 
-
+// Funkcja readFromSign czyta liczebność 153 grup sum barw RGB ze znaku zabezpieczającego
 std::vector<int> DrawingOperations::readFromSign()
 {
-	std::vector<int> readGreyTones; // ilosci pikseli w odcieni szarosci odczytane z obrazka ( z zabezpieczenia w postaci bloku )
+	std::vector<int> readGreyTones; // liczby pikseli w odcieniu grupy odczytane z obrazka ( z zabezpieczenia w postaci bloku )
 	int readDigit;
 	int digits[7];
 	int temp;
@@ -569,7 +579,7 @@ std::vector<int> DrawingOperations::readFromSign()
 
 	toneIndex = 0;
 
-	switch (rotation)
+	switch (rotation) // zależnie od rotacji inaczej rozpoczynamy czytanie
 	{
 		case ROTATION0:
 		{
@@ -600,14 +610,14 @@ std::vector<int> DrawingOperations::readFromSign()
 			break;
 		}
 	}
-
+	// pokolei czytamy liczby dla 153 grup sum barw RGB
 	while (toneIndex < 153)
 	{
 		for (int step = 0; step < 5 && toneIndex < 153; step++, toneIndex++)
 		{
 			for (int numberPart = 0; numberPart < 7; numberPart++)
 			{
-				switch (rotation)
+				switch (rotation) // zależnie od rotacji czytamy kolejne piksele
 				{
 					case ROTATION0:
 					{
@@ -630,10 +640,10 @@ std::vector<int> DrawingOperations::readFromSign()
 						break;
 					}
 				}
-
+				// jeśli piksel nie reprezentuje liczby w zakresie 0-9 to oznacza, że natrafiliśmy na błędny piksel
 				if (readDigit == 10 || readDigit == 11)
 				{
-					// blad jest w znaku, piksel ma wartosc niewazna !!!
+					// blad jest w znaku, piksel ma wartosc niewazna
 					digits[numberPart] = 0;
 					wrgPxlCntr++;
 				}
@@ -646,7 +656,7 @@ std::vector<int> DrawingOperations::readFromSign()
 			temp = convertDigitsToInt(digits);
 			readGreyTones.push_back(temp);
 		}
-
+		// krok zależnie od rotacji
 		switch (rotation)
 		{
 			case ROTATION0:
@@ -671,17 +681,16 @@ std::vector<int> DrawingOperations::readFromSign()
 			}
 		}
 	}
-
+	// wypisanie części raportu o liczebności błędnych pikseli w znaku zabezpieczającym
 	if (!wrgPxlCntr)
 	{
 		partialRaport.first = true;
-		partialRaport.second = "Informacje o histogramie zapisane na znaku odczytane bez problemow";
+		partialRaport.second = codec->toUnicode("Informacje o histogramie zapisane na znaku odczytane bez problemów");
 	}
 	else
 	{
 		partialRaport.first = false;
-		ostring << wrgPxlCntr;
-		partialRaport.second = "Informacje o histogramie zapisane na znaku odczytane z problemami - ilosc bledow: " +  ostring.str();
+		partialRaport.second = codec->toUnicode("Informacje o histogramie zapisane na znaku odczytane z problemami - ilość błędów: ") +  QString::number(wrgPxlCntr);
 	}
 
 	raportImage.push_back(partialRaport);
